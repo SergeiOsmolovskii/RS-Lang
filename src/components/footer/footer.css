@@ -1,0 +1,38 @@
+.footer {
+  display: flex;
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+  height: 70px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footer-info {
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+  justify-content: space-between;
+}
+
+.footer-logo {
+  display: block;
+  width: 80px;
+  height: 30px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url("/src/assets/svg/rss.svg");
+  transition: 0.3s;
+}
+
+.copyright {
+  padding-right: 20px;
+}
+
+.github-username {
+  display: block;
+  color: #fff;
+  text-decoration: none;
+  padding: 0 20px;
+  transition: 0.3s;
+}
