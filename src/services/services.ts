@@ -28,6 +28,3 @@ export const renderHeaderButtons = (): HTMLElement => {
   });
   return headerButtons;
 };
-  
-
-
