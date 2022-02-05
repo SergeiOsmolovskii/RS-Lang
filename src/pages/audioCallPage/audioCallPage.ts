@@ -8,7 +8,7 @@ class AudioCallPage extends Page {
     this.page = insertElement("div", ["page"], "", "");
   }
 
-  render(): HTMLElement {
+  async render(): Promise<HTMLElement> {
     const title = insertElement("h2", ["title"], "Аудиовызов", this.page);
     return this.page;
   }

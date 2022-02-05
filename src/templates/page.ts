@@ -6,7 +6,7 @@ abstract class Page {
     this.page.id = id;
   }
 
-  render(): HTMLElement {
+  async render(): Promise<HTMLElement> {
     return this.page;
   }
 }
