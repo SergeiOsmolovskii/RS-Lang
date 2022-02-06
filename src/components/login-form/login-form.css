@@ -1,11 +1,23 @@
-.log-in {
+.log-in, .log-out, .user-icon {
   height: 30px;
   width: 30px;
-  background: url(../../assets/svg/login.svg) center no-repeat;
   cursor: pointer;
 }
 
-.login-owerlay {
+.log-in {
+  background: url(../../assets/svg/login.svg) center no-repeat;
+}
+
+.log-out {
+  background: url(../../assets/svg/logout.svg) center no-repeat;
+}
+
+.user-icon {
+  margin-right: 20px;
+  background: url(../../assets/svg/user.svg) center no-repeat;
+}
+
+.overlay {
   position: absolute;
   z-index: 999;
   top: 0;
@@ -58,4 +70,8 @@
 .registration-submit-button {
   width: 100%;
   cursor: pointer;
+}
+
+.user-profile {
+  display: flex;
 }
