@@ -5,7 +5,7 @@ import Page from "../../templates/page";
 class TextbookPage extends Page {
   constructor(id: string) {
     super(id);
-    this.page = insertElement('div', ['page'], '','');
+    this.page.classList.add('page');
   }
 
   render(): HTMLElement {

@@ -2,7 +2,7 @@ abstract class Page {
   protected page: HTMLElement;
 
   constructor(id: string) {
-    this.page = document.createElement("div");
+    this.page = document.createElement('main');
     this.page.id = id;
   }
 
