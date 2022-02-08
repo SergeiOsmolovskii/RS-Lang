@@ -1,6 +1,4 @@
-
-
-export const baseUrl  = 'https://rs-lang-learn.herokuapp.com';
+export const baseUrl = 'https://rs-lang-learn.herokuapp.com';
 
 export enum Path {
   words = '/words',
@@ -34,10 +32,10 @@ export interface IQueryParams {
   value: string | number;
 }
 
-const createQueryString = (queryParams:Array<IQueryParams>) => queryParams.length 
-  ? `?${queryParams.map(param => `${param.key}=${param.value}`).join('&')}` : '';
+const createQueryString = (queryParams: Array<IQueryParams>) =>
+  queryParams.length ? `?${queryParams.map((param) => `${param.key}=${param.value}`).join('&')}` : '';
 
-export const getWords = async (queryParams:IQueryParams[]): Promise<IGetData> => {
+export const getWords = async (queryParams: IQueryParams[]): Promise<IGetData> => {
   const response: Response = await fetch(`${baseUrl}${Path.words}${createQueryString(queryParams)}`);
   return {
     items: await response.json(),
@@ -45,4 +43,3 @@ export const getWords = async (queryParams:IQueryParams[]): Promise<IGetData> =>
 };
 
 export const getWord = async (id: number): Promise<IWord> => (await fetch(`${baseUrl}${Path.words}/${id}`)).json();
-

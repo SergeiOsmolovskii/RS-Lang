@@ -58,7 +58,8 @@ export class App {
   }
 
   start(): void {
-    App.renderNewPage(PageIds.MainPage);
+    const currentId = window.location.hash.slice(1)
+    App.renderNewPage(currentId);
     this.enableRouteChange();
   }
 }

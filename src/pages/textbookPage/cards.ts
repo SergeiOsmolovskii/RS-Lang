@@ -1,5 +1,6 @@
-import { baseUrl, getWords, IGetData, IWord } from "../../api/textBookAPI/api";
-import { insertElement, playAudio } from "../../services/services";
+import { baseUrl, getWords, IGetData, IWord } from '../../api/textBookAPI/api';
+import { insertElement, playAudio } from '../../services/services';
+import { getLocalStorage } from '../../services/storage';
 
 export class CardsContainer {
   public container: HTMLElement;
@@ -9,21 +10,25 @@ export class CardsContainer {
     this.container.classList.add('cards-container');
   }
 
-   draw(data:Array<IWord>): void {
+  draw(data: Array<IWord>): void {
     this.clear();
-    data.forEach(element => {
+    data.forEach((element) => {
       const cardItem = insertElement('div', ['card-item'], '', this.container);
       const cardImg = insertElement('img', ['card-img'], '', cardItem) as HTMLImageElement;
       cardImg.src = `${baseUrl}/${element.image}`;
       cardImg.alt = element.word;
       const cardInfo = insertElement('div', ['card-info'], '', cardItem);
-      const cardHeader = insertElement('div', ['card-header'], '',cardInfo);
-      const cardTitle = insertElement('h3', ['card-title'], element.word , cardHeader);
+      const cardHeader = insertElement('div', ['card-header'], '', cardInfo);
+      const cardTitle = insertElement('h3', ['card-title'], element.word, cardHeader);
       const transcription = insertElement('p', ['card-title'], element.transcription, cardHeader);
       const translate = insertElement('p', ['card-title'], element.wordTranslate, cardHeader);
-      const audioControl = insertElement('div', ['audio-control'], '',cardItem);
+      const audioControl = insertElement('div', ['audio-control'], '', cardItem);
       audioControl.onclick = () => {
-        playAudio([`${baseUrl}/${element.audio}`, `${baseUrl}/${element.audioMeaning}`, `${baseUrl}/${element.audioExample}`]);
+        playAudio([
+          `${baseUrl}/${element.audio}`,
+          `${baseUrl}/${element.audioMeaning}`,
+          `${baseUrl}/${element.audioExample}`,
+        ]);
       };
       const textMeaning = insertElement('p', ['card-text'], element.textMeaning, cardInfo);
       const textMeaningTranslate = insertElement('p', ['card-text'], element.textMeaningTranslate, cardInfo);
@@ -32,18 +37,20 @@ export class CardsContainer {
     });
   }
 
-  clear() : void {
-    this.container.innerHTML =''
+  clear(): void {
+    this.container.innerHTML = '';
   }
 
-  async renderWords(): Promise<IGetData> {
-    const words = (await getWords([{key: 'group', value: 0}, {key: 'page', value: 0}]))
-    return words;
- }
-
   async render(): Promise<HTMLElement> {
-  const arr: IWord[] = <IWord[]> (await this.renderWords()).items;
-  this.draw(arr);
-  return this.container;
+    const page = getLocalStorage('page') ? Number(getLocalStorage('page')) : 0;
+    const group = getLocalStorage('group') ? Number(getLocalStorage('group')) : 0;
+    const wordsData = <IWord[]>(
+      await getWords([
+        { key: 'group', value: group },
+        { key: 'page', value: page },
+      ])
+    ).items;
+    this.draw(wordsData);
+    return this.container;
   }
 }

@@ -34,6 +34,18 @@ export const buttonsPage = [
   },
 ];
 
+export const buttonsPagination = {
+  length: 30,
+  class: ['page-item'],
+  text: '',
+  };
+
+export const buttonsGroups = {
+  length: 6,
+  class: ['group-item'],
+  text: 'уровень ',
+};
+
 export const FOOTER_CONTENT_HTML = `
     <div class="footer-info">
       <p class="copyright">©</p>
