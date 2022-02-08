@@ -7,6 +7,7 @@ import SprintPage from "../pages/sprintPage/sprintPage";
 import StatisticPage from "../pages/statisticPage/statisticPage";
 import TextbookPage from "../pages/textbookPage/textbookPage";
 import Page from "../templates/page";
+import { logOut } from "../components/login-form/login-form";
 
 export class App {
   private static container: HTMLElement = document.body;
@@ -47,6 +48,8 @@ export class App {
       (await pageHTML).id = this.defaultPageId;
       const footerHTML = new Footer("footer", ["footer"]);
       App.container.append(headerHTML.render(), await pageHTML, footerHTML.render());
+      const logOutButton = document.querySelector('.log-out') as HTMLElement;
+      logOutButton?.addEventListener('click', logOut);
     }
   }
 

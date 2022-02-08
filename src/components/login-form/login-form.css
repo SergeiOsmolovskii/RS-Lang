@@ -1,0 +1,77 @@
+.log-in, .log-out, .user-icon {
+  height: 30px;
+  width: 30px;
+  cursor: pointer;
+}
+
+.log-in {
+  background: url(../../assets/svg/login.svg) center no-repeat;
+}
+
+.log-out {
+  background: url(../../assets/svg/logout.svg) center no-repeat;
+}
+
+.user-icon {
+  margin-right: 20px;
+  background: url(../../assets/svg/user.svg) center no-repeat;
+}
+
+.overlay {
+  position: absolute;
+  z-index: 999;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.login-form,
+.registration-form {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  padding: 40px;
+  transform: translate(-50%, -50%);
+}
+
+.login-form__main {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-form__registration,
+.registration-form__log-in {
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: rgb(122 122 255);
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.login-form h3,
+.registration-form h3,
+.login-form__main input,
+.login-submit-button,
+.registration-submit-button {
+  margin-bottom: 10px;
+}
+
+.login-form__main input,
+.login-submit-button,
+.registration-submit-button {
+  width: 100%;
+  min-width: 380px;
+  padding: 5px;
+  border: 2px solid #fff;
+}
+
+.login-submit-button,
+.registration-submit-button {
+  width: 100%;
+  cursor: pointer;
+}
+
+.user-profile {
+  display: flex;
+}
