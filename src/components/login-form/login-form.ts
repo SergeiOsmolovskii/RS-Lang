@@ -1,6 +1,12 @@
 import './login-form.css';
 import { insertElement } from '../../services/services';
-import { IRegistrationData, IAuthorization, getCurrentUser, createUser, authorization } from '../../api/registration';
+import { createUser, authorization } from '../../api/registration';
+import { IAuthorization, IRegistrationData, storage, IUserWordOptions } from '../../api/api';
+import { getCurrentUser } from '../../api/users';
+
+import { setUserWord } from '../../api/userWords';
+import { getAllAggregatedWords, getAggregatedWord } from '../../api/aggregatedWords';
+
 const body = document.querySelector('body');
 
 export const renderLogInButton = (): HTMLElement => {
@@ -88,8 +94,6 @@ async function appendRegistrationForm (): Promise<void> {
   form?.addEventListener('submit', registrationNewUser);
 }
 
-
-
 function removeFormOverlay (this: HTMLElement, e: Event): void {
   if (e.target === this) {
     this.remove();
@@ -108,6 +112,7 @@ const closeOverlayListener = (): void => {
 
 export const logOut = (): void => {
   localStorage.removeItem('currentUserToken');
+  localStorage.removeItem('currentUserRefreshToken');
   localStorage.removeItem('currentUserID');
   location.reload();
 }
@@ -156,6 +161,10 @@ const authorizationUser = async (e: Event): Promise<void> => {
 
   localStorage.setItem('currentUserID', authorizationData.userId);
   localStorage.setItem('currentUserToken', authorizationData.token);
+  localStorage.setItem('currentUserRefreshToken', authorizationData.refreshToken);
+
+  storage.userId = authorizationData.userId;
+
 
   location.reload();
 }
