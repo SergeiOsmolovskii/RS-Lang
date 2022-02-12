@@ -21,17 +21,17 @@ class AudioCallPage extends Page {
   private count: number = 0;
   private localSeries: number = 0;
   private localTotalWords: any = [];
+  private localTrueAnswer: number = 0;
   private free!: (e: Event) => void;
 
   constructor(id: string) {
     super(id);
-    this.page = insertElement("div", ["page"], "", "");
+    this.page = insertElement("main", ["page"], "", "");
   }
   
   async render(): Promise<HTMLElement> {
-    const title = insertElement("h2", ["title"], "Аудиовызов", this.page);
     this.page?.insertAdjacentHTML('beforeend', renderFormLevel());
-    const buttonStart = this.page.querySelector('.start-game');
+    const buttonStart = this.page.querySelector('.start-game-audio-call');
     buttonStart?.addEventListener('click', this.clearPage);
     buttonStart?.addEventListener('click', () => this.renderGameTitle());
     this.checkInput = Array.from(this.page.querySelectorAll('.item-input'));
@@ -64,10 +64,8 @@ class AudioCallPage extends Page {
     clearAnswers.remove();
   }
 
-  
   async renderGameTitle() {
     this.resultFetch = await getWords(getRandom(0, 29), this.checkNumber);
-    console.log(this.resultFetch)
     const currentPage: Element | null = <Element>document.querySelector('.page');
     currentPage.insertAdjacentHTML('beforeend', renderSvgExit());
     if(!document.querySelector('.answer-point')){
@@ -81,39 +79,25 @@ class AudioCallPage extends Page {
     this.answerFife = <Element>document.querySelector('.answer-5');
     this.listContainer = <Element>document.querySelector('.answers');
     this.progress = document.querySelectorAll('.heart');
-
     let arrAnswer = [this.answerOne, this.answerTwo, this.answerThree, this.answerFour, this.answerFife]
     const allAnswer = Array.from(Array(20).keys());
     const randomAll = shuffle(allAnswer);
     randomAll.length = 5;
     this.trueAnswer = randomAll[getRandom(0, 4)];
-
-    // let arrPermament = [];
-    // if(localStorage.getItem('adioCallWordsTotal')){
-    //   this.localTotalWords = localStorage.getItem('adioCallWordsTotal');
-    // }
-
     for(let i = 0; i < 5; i++){
-      this.localTotalWords.push(this.resultFetch[randomAll[i]].id);
-      arrAnswer[i].innerHTML = this.resultFetch[randomAll[i]].wordTranslate;
-      const giveLocal = localStorage.getItem('adioCallWordsTotal');
-      if(giveLocal?.includes(this.resultFetch[randomAll[i]].id)) {
-        console.log(giveLocal)
+      const giveLocal = localStorage.getItem('audioCallWordsTotal');
+      if(!giveLocal?.includes(this.resultFetch[randomAll[i]].id)) {
+        this.localTotalWords.push(this.resultFetch[randomAll[i]].id);
       }
-
+      arrAnswer[i].innerHTML = this.resultFetch[randomAll[i]].wordTranslate;
     }
-
-    localStorage.setItem(`adioCallWordsTotal`, JSON.stringify(this.localTotalWords));
+    localStorage.setItem(`audioCallWordsTotal`, JSON.stringify(this.localTotalWords));
     this.free = (e: Event) => this.resultAnswer(e);
     this.listContainer.addEventListener('click', this.free, false);
-
-
-
     const audioNew: HTMLAudioElement = new Audio(`https://rs-lang-learn.herokuapp.com/${this.resultFetch[this.trueAnswer].audio}`);
     this.audioPlay = document.querySelector('.svg-volume') as HTMLElement;
     audioNew.play();
     this.audioPlay.addEventListener('click', () => audioNew.play());
-
     this.exitGame = <Element>document.querySelector('.img-exit-position');
     this.exitGame?.addEventListener('click', () => this.clearPage());
     this.exitGame?.addEventListener('click', () => this.render());
@@ -132,6 +116,8 @@ class AudioCallPage extends Page {
         this.audioPlay.insertAdjacentHTML('afterend', renderNextButton());
         ++this.count;
         ++this.localSeries;
+        ++this.localTrueAnswer;
+        localStorage.setItem('audioCallAmountTrueAnswer', `${this.localTrueAnswer}`);
       } else {
         target.style.backgroundColor = "red";
         this.progress[this.count].style.backgroundColor = "red";
@@ -140,26 +126,24 @@ class AudioCallPage extends Page {
         this.audioPlay.style.height = `260px`;
         this.audioPlay.insertAdjacentHTML('afterend', renderNextButton());
         ++this.count;
-
         let clearSeries = this.localSeries;
-        clearSeries = 0;
-        if(this.localSeries > Number(localStorage.getItem('adioCallSeriesTotal'))){
-          localStorage.setItem('adioCallSeriesTotal', `${this.localSeries}`);
+        if(this.localSeries > Number(localStorage.getItem('audioCallSeriesTotal'))){
+          localStorage.setItem('audioCallSeriesTotal', `${clearSeries}`);
           this.localSeries = 0;
-        }
+          }
+        clearSeries = 0;
       }
-
     }
     const nextStep = <Element>document.querySelector('.nextWord');
-    nextStep.addEventListener('click', () => this.renderGameTitle());
+    const nextStepFunction = () => this.renderGameTitle();
+    nextStep.addEventListener('click', nextStepFunction);
     nextStep.addEventListener('click', () => this.clearNextPage());
     if(this.count === 15){
+      nextStep.removeEventListener('click', nextStepFunction);
+      nextStep.addEventListener('click', () => this.clearPage());
       nextStep.innerHTML = 'Сыграем ещё?';
-      setTimeout(() => nextStep.addEventListener('click', () =>{
-        this.clearPage();
-      }), 5000);
+      nextStep.addEventListener('click', () => this.render());
     }
   }
 }
-
 export default AudioCallPage;

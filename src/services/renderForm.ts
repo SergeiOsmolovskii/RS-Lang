@@ -1,5 +1,9 @@
 export const renderFormLevel = (): string =>`
 <div class="games-level">
+  </div>
+    <button class="start-game-audio-call">Аудиовызов</button>
+    <button class="start-game-sprint">Спринт</button>
+  </div>
   <div class="level-1">
     <input type="radio" id="A1" class="item-input" name="game" value="0" checked="">
     <label class="level-item" for="A1">
@@ -36,8 +40,8 @@ export const renderFormLevel = (): string =>`
       <span class="label-level">C2 Proficiency</span>
     </label>
   </div>
-  <button class="start-game">Начать</button>  
-</div>`
+</div>
+`
 
 export const renderSvgExit = (): string =>`
 <div class="img-exit-position">
