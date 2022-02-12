@@ -15,12 +15,12 @@ export interface IWords {
     textExampleTranslate: string
 }
 
-export const getWords = async(group: number) => {
-  const response = await fetch(`https://rs-lang-learn.herokuapp.com/words?group=${group}`, {
+export const getWords = async(page: number, group: number) => {
+  const response = await fetch(`https://rs-lang-learn.herokuapp.com/words?page=${page}&group=${group}`, {
     headers: {
       'Accept': 'application/json',
     },
   });
-  const content: IWords = await response.json();
+  const content: IWords[] = await response.json();
   return content
 };

@@ -2,11 +2,11 @@ abstract class Page {
   protected page: HTMLElement;
 
   constructor(id: string) {
-    this.page = document.createElement('main');
+    this.page = document.createElement("div");
     this.page.id = id;
   }
 
-  render(): HTMLElement {
+  async render(): Promise<HTMLElement> {
     return this.page;
   }
 }

@@ -1,0 +1,49 @@
+.answers{
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  justify-items: center;
+}
+
+.svg-volume{
+  background: url(/src/assets/svg/audio.svg) no-repeat;
+  height: 90px;
+  width: 90px;
+  cursor: pointer;
+  margin: 100px 0 140px;
+}
+
+.svg-exit{
+  background: url(/src/assets/svg/close.svg) center no-repeat;
+  height: 35px;
+  width: 35px;
+  cursor: pointer;
+}
+
+.img-volume-position{
+  display: grid;
+  justify-items: center;
+}
+
+.img-exit-position{
+  display: grid;
+  justify-items: end;
+}
+
+.heart{
+  height: 15px;
+  width: 15px;
+  background-color: white;
+  border-radius: 50%;
+}
+
+.answer-point{
+  display: grid;
+  grid-template-columns: repeat(15, auto);
+  justify-content: center;
+  grid-gap: 15px;
+  margin-top: 100px;
+}
+
+.nextWord{
+  margin: 25px 0 25px;
+}

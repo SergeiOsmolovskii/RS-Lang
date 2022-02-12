@@ -8,7 +8,7 @@ class TextbookPage extends Page {
     this.page.classList.add('page');
   }
 
-  render(): HTMLElement {
+  async render(): Promise<HTMLElement> {
     const title = insertElement('h2', ['title'], 'Учебник', this.page) ;
     return this.page;
   }

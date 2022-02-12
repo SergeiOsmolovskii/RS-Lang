@@ -5,10 +5,10 @@ import Page from "../../templates/page";
 class StatisticPage extends Page {
   constructor(id: string) {
     super(id);
-    this.page.classList.add('page');
+    this.page = insertElement("div", ["page"], "", "");
   }
 
-  render(): HTMLElement {
+  async render(): Promise<HTMLElement> {
     const title = insertElement('h2', ['title'], 'Статистика', this.page) ;
     return this.page;
   }
