@@ -56,3 +56,5 @@ export const FOOTER_CONTENT_HTML = `
     </div>
     <a class="footer-logo" href="https://rs.school/js/" target="_blank"></a>
 `;
+
+export const URL = 'https://rs-lang-learn.herokuapp.com';

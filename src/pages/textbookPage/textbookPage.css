@@ -16,6 +16,14 @@
   background-color: #fff;
 }
 
+.hard {
+  background-color: rgb(235, 236, 173);
+} 
+
+.easy {
+  background-color: rgb(134, 134, 127);
+}
+
 .card-img {
   width: 281px;
   height: 281px;
@@ -42,6 +50,50 @@
   font-size: 16px;
   color: #000;
 }
+
+.card-buttons {
+  display: flex;
+  margin: 10px 0;
+  align-items: center;
+  justify-content: space-around;
+
+}
+
+.card-btn {
+  display: block;
+  color: #fff;
+  text-transform: capitalize;
+  font-size: 14px;
+  padding: 5px 10px;
+}
+
+.btn-color1,
+.group1 {
+  background-color: rgb(84, 189, 207);
+}
+
+.btn-color2,
+.group2 {
+  background-color: rgb(8, 107, 124);
+}
+
+.btn-color3{
+  background-color: rgb(247, 191, 109);
+}
+
+.btn-color4{
+  background-color: rgb(240, 160, 40);
+}
+
+.btn-color5{
+  background-color: rgb(248, 185, 169);
+}
+
+.btn-color6{
+  background-color: rgb(199, 95, 81);
+}
+
+
 
 .audio-control {
   position: absolute;

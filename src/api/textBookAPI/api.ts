@@ -1,26 +1,11 @@
+import { IWord } from "../api";
+
 export const baseUrl = 'https://rs-lang-learn.herokuapp.com';
 
 export enum Path {
   words = '/words',
   users = '/users',
   signIn = '/signin',
-}
-
-export interface IWord {
-  id: string;
-  group: number;
-  page: number;
-  word: string;
-  image: string;
-  audio: string;
-  audioMeaning: string;
-  audioExample: string;
-  textMeaning: string;
-  textExample: string;
-  transcription: string;
-  wordTranslate: string;
-  textMeaningTranslate: string;
-  textExampleTranslate: string;
 }
 
 export interface IGetData {

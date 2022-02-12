@@ -33,9 +33,8 @@ export class TextbookNav {
         (document.querySelectorAll(`.${field}-item`) as NodeListOf<HTMLElement>).forEach((el) =>
           el.classList.remove('active')
         );
-        target.classList.add('active');
         const numItem = <string>target.dataset[field];
-        console.log(numItem);
+        target.classList.add('active');
         setLocalStorage(field, numItem);
         TextbookPage.renderCardContainer();
       }
