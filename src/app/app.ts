@@ -3,6 +3,7 @@ import Header from "../components/header/header";
 import { PageIds } from "../options/options";
 import AudioCallPage from "../pages/audioCallPage/audioCallPage";
 import MainPage from "../pages/mainPage/mainPage";
+import MiniGamesPage from "../pages/games/game";
 import SprintPage from "../pages/sprintPage/sprintPage";
 import StatisticPage from "../pages/statisticPage/statisticPage";
 import TextbookPage from "../pages/textbookPage/textbookPage";
@@ -42,6 +43,10 @@ export class App {
       case PageIds.TextbookPage:
         page = new TextbookPage(idPage);
         break;
+      case PageIds.Games:
+        page = new MiniGamesPage(idPage);
+        break;
+
     }
 
     if (page) {
@@ -63,7 +68,6 @@ export class App {
       App.container.append(headerHTML.render(), await pageHTML, footerHTML.render());
       const logOutButton = document.querySelector('.log-out') as HTMLElement;
       logOutButton?.addEventListener('click', logOut);
-      console.log(storage);
     }
   }
 
@@ -75,7 +79,8 @@ export class App {
   }
 
   start(): void {
-    App.renderNewPage(PageIds.MainPage);
+    const currentId = window.location.hash.slice(1)
+    App.renderNewPage(currentId);
     this.enableRouteChange();
   }
 }

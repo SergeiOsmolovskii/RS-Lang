@@ -13,9 +13,12 @@
 }
 
 .svg-exit{
+  position: absolute;
   background: url(/src/assets/svg/close.svg) center no-repeat;
   height: 35px;
   width: 35px;
+  top: 18%;
+  right: 4%;
   cursor: pointer;
 }
 
@@ -32,8 +35,9 @@
 .heart{
   height: 15px;
   width: 15px;
-  background-color: white;
+  background-color: rgb(3, 2, 2);
   border-radius: 50%;
+  background-color: #000000e3;
 }
 
 .answer-point{

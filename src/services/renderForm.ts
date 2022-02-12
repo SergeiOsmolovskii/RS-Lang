@@ -1,8 +1,8 @@
-export const renderFormLevel = (): string =>`
+export const renderFormLevel = `
 <div class="games-level">
-  </div>
-    <button class="start-game-audio-call">Аудиовызов</button>
-    <button class="start-game-sprint">Спринт</button>
+  <div>
+    <a href="#game/audio-call" class="start-game-audio-call">Аудиовызов</a>
+    <a href="#game/sprint" class="start-game-sprint">Спринт</a>
   </div>
   <div class="level-1">
     <input type="radio" id="A1" class="item-input" name="game" value="0" checked="">
@@ -42,32 +42,29 @@ export const renderFormLevel = (): string =>`
   </div>
 </div>
 `
-
-export const renderSvgExit = (): string =>`
-<div class="img-exit-position">
-  <button class="svg-exit"></button>
-</div>
+export const renderSvgExit = `
+<a href="#game" class="svg-exit"></a>
 `
-export const renderProgressGame = (): string =>`
+export const renderProgressGame = `
 <div class="answer-point">
-  <div class="heart health-1"></div>
-  <div class="heart health-2"></div>
-  <div class="heart health-3"></div>
-  <div class="heart health-4"></div>
-  <div class="heart health-5"></div>
-  <div class="heart health-6"></div>
-  <div class="heart health-7"></div>
-  <div class="heart health-8"></div>
-  <div class="heart health-9"></div>
-  <div class="heart health-10"></div>
-  <div class="heart health-11"></div>
-  <div class="heart health-12"></div>
-  <div class="heart health-13"></div>
-  <div class="heart health-14"></div>
-  <div class="heart health-15"></div>
+  <div class="heart"></div>
+  <div class="heart"></div>
+  <div class="heart"></div>
+  <div class="heart"></div>
+  <div class="heart"></div>
+  <div class="heart"></div>
+  <div class="heart"></div>
+  <div class="heart"></div>
+  <div class="heart"></div>
+  <div class="heart"></div>
+  <div class="heart"></div>
+  <div class="heart"></div>
+  <div class="heart"></div>
+  <div class="heart"></div>
+  <div class="heart"></div>
 </div>
 `
-export const renderGame = (): string =>`
+export const renderGame = `
 <div class="img-volume-position">
   <button class="svg-volume"></button>
 </div> 
@@ -99,7 +96,34 @@ export const renderGame = (): string =>`
   </div>
 </div>
 `
-
-export const renderNextButton = (): string =>`
+export const renderNextButton = `
 <button class="nextWord">Следующий</button>
+`
+export const timerForm = `
+<div class="border-line">
+  <h3>36</h3>
+</div>
+`
+export const renderFormSprintGame = `
+<div class="point-progress">
+  <div class="heart"></div>
+  <div class="heart"></div>
+  <div class="heart"></div>
+</div>
+<span class="english-word">Hello</span>
+<div class="arrow-position">
+  <div class="arrow"></div>
+  <div class="arrow arrow-transform"></div>
+</div>
+<span class="russian-word">Привет</span>
+<div class="contain-answer-button">
+  <button class="arrow-position-left">
+    <div class="svg-direction svg-direction-transform"></div>
+    <span class="svg-arrow-left">Неверно</span>
+  </button>
+  <button class="arrow-position-right">
+    <span class="svg-arrow-right">Верно</span>
+    <div class="svg-direction"></div>
+  </button>
+</div>
 `

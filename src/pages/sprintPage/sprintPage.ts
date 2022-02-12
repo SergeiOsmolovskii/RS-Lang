@@ -1,15 +1,19 @@
 import "./sprintPage.css"
 import { insertElement } from "../../services/services";
 import Page from "../../templates/page";
+import { timerForm, renderFormSprintGame, renderSvgExit } from "../../services/renderForm";
 
 class SprintPage extends Page {
   constructor(id: string) {
     super(id);
-    this.page = insertElement('div', ['page'], '','');
+    this.page = insertElement('main', ['page'], '','');
   }
 
   async render(): Promise<HTMLElement> {
-    const title = insertElement('h2', ['title'], 'Спринт', this.page) ;
+    this.page.insertAdjacentHTML('beforeend', timerForm);
+    this.page.insertAdjacentHTML('beforeend', renderSvgExit);
+    this.page.insertAdjacentHTML('beforeend', renderFormSprintGame);
+
     return this.page;
   }
 }
