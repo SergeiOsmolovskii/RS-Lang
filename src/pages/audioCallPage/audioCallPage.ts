@@ -17,7 +17,7 @@ class AudioCallPage extends MiniGamesPage {
   private progress: any = null;
   private localSeries: number = 0;
   private localTotalWords: any = [];
-  private localTrueAnswer: number = 0;
+  private localTrueAnswer: any = localStorage.getItem('audioCallAmountTrueAnswer');
   private free!: (e: Event) => void;
 
   constructor(id: string) {
@@ -27,10 +27,11 @@ class AudioCallPage extends MiniGamesPage {
   
   async render(): Promise<HTMLElement> {
     this.resultFetch = await getWords(getRandom(0, 29), this.checkNumber);
+    localStorage.setItem('date', `${this.dateGame}`);
     if(!document.querySelector('.answer-point')){
       this.page.insertAdjacentHTML('beforeend', renderProgressGame);
+      this.page.insertAdjacentHTML('beforeend', renderSvgExit);
     }
-    this.page.insertAdjacentHTML('beforeend', renderSvgExit);
     this.page.insertAdjacentHTML('beforeend', renderGame);
     this.answerOne = <Element>this.page.querySelector('.answer-1');
     this.answerTwo = <Element>this.page.querySelector('.answer-2');
@@ -39,19 +40,14 @@ class AudioCallPage extends MiniGamesPage {
     this.answerFife = <Element>this.page.querySelector('.answer-5');
     this.listContainer = <Element>this.page.querySelector('.answers');
     this.progress = this.page.querySelectorAll('.heart');
-    let arrAnswer = [this.answerOne, this.answerTwo, this.answerThree, this.answerFour, this.answerFife]
+    const arrAnswer = [this.answerOne, this.answerTwo, this.answerThree, this.answerFour, this.answerFife]
     const allAnswer = Array.from(Array(20).keys());
     const randomAll = shuffle(allAnswer);
     randomAll.length = 5;
     this.trueAnswer = randomAll[getRandom(0, 4)];
     for(let i = 0; i < 5; i++){
-      const giveLocal = localStorage.getItem('audioCallWordsTotal');
-      if(!giveLocal?.includes(this.resultFetch[randomAll[i]].id)) {
-        this.localTotalWords.push(this.resultFetch[randomAll[i]].id);
-      }
       arrAnswer[i].innerHTML = this.resultFetch[randomAll[i]].wordTranslate;
     }
-    localStorage.setItem(`audioCallWordsTotal`, JSON.stringify(this.localTotalWords));
     this.free = (e: Event) => this.resultAnswer(e);
     this.listContainer.addEventListener('click', this.free, false);
     const audioNew: HTMLAudioElement = new Audio(`https://rs-lang-learn.herokuapp.com/${this.resultFetch[this.trueAnswer].audio}`);
@@ -62,10 +58,8 @@ class AudioCallPage extends MiniGamesPage {
   }
 
   clearNextPage() {
-    const exitGame = <Element>this.page.querySelector('.svg-exit');
     const clearVolumePosition: Element | null = <Element>this.page.querySelector('.img-volume-position');
     const clearAnswers: Element | null = <Element>this.page.querySelector('.answers');
-    exitGame.remove();
     clearVolumePosition.remove();
     clearAnswers.remove();
   }
@@ -85,6 +79,14 @@ class AudioCallPage extends MiniGamesPage {
         ++this.localSeries;
         ++this.localTrueAnswer;
         localStorage.setItem('audioCallAmountTrueAnswer', `${this.localTrueAnswer}`);
+        let localTotalWordss: any = JSON.parse(`${localStorage.getItem('audioCallWordsTotal')}`);
+          if(localTotalWordss === null) {
+            localTotalWordss = [this.resultFetch[this.trueAnswer].id];
+            localStorage.setItem(`audioCallWordsTotal`, JSON.stringify(localTotalWordss));
+          } else if(!localTotalWordss?.includes(this.resultFetch[this.trueAnswer].id)) {
+            localTotalWordss.push(this.resultFetch[this.trueAnswer].id)
+            localStorage.setItem(`audioCallWordsTotal`, JSON.stringify(localTotalWordss));
+          }
       } else {
         target.style.backgroundColor = "red";
         this.progress[this.count].style.backgroundColor = "red";
