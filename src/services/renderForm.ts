@@ -113,6 +113,8 @@ export const renderFormSprintGame = `
   </div>
   <span class="russian-word">Привет</span>
 </div>
+`
+export const renderFormSptintAnswerButton = `
 <div class="contain-answer-button">
   <button class="arrow-position-left">
     <div class="svg-direction svg-direction-transform"></div>
