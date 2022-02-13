@@ -1,15 +1,53 @@
+.audio-call-page{
+  position: relative;
+  background: linear-gradient(270deg, #737FE9, #A395DA);
+  padding: 15px;
+  max-width: 1172px;
+  height: 638px;
+  width: 100%;
+  margin: 0 auto;
+  border-radius: 65px;
+}
+
 .answers{
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   justify-items: center;
 }
 
-.svg-volume{
-  background: url(/src/assets/svg/audio.svg) no-repeat;
-  height: 90px;
-  width: 90px;
+.answer-item{
+  border-radius: 6px;
+  width: 170px;
+  height: 70px;
+  background-color: #ffffff;
   cursor: pointer;
-  margin: 100px 0 140px;
+}
+
+.answer-item:hover{
+  background-color: #fbd1bb;
+  transition: 1s linear;
+}
+
+.animate-color{
+  transition-duration: 1s;
+  transition-property: background-color;
+}
+
+.animate-img{
+  transition-duration: 5s;
+  transition-property: background-img;
+}
+
+.svg-volume{
+  position: relative;
+  background: url(/src/assets/svg/audio.svg) center no-repeat;
+  width: 390px;
+  height: 260px;
+  cursor: pointer;
+  margin: 50px 0 50px;
+  border-radius: 25%;
+  background-color: transparent;
+  padding: 0;
 }
 
 .svg-exit{
@@ -17,8 +55,8 @@
   background: url(/src/assets/svg/close.svg) center no-repeat;
   height: 35px;
   width: 35px;
-  top: 18%;
-  right: 4%;
+  top: 6%;
+  right: 43px;
   cursor: pointer;
 }
 
@@ -35,9 +73,8 @@
 .heart{
   height: 15px;
   width: 15px;
-  background-color: rgb(3, 2, 2);
   border-radius: 50%;
-  background-color: #000000e3;
+  background-color: #ffff;
 }
 
 .answer-point{
@@ -45,9 +82,36 @@
   grid-template-columns: repeat(15, auto);
   justify-content: center;
   grid-gap: 15px;
-  margin-top: 100px;
+  margin-top: 50px;
 }
 
 .nextWord{
-  margin: 25px 0 25px;
+  border-radius: 6px;
+  display: grid;
+  margin: 25px auto;
+  width: 100px;
+  height: 35px;
+  align-items: center;
+  cursor: pointer;
+}
+
+.circle{
+  position: absolute;
+  background-color: #FCAA23;
+  opacity: 0.9;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  animation: scale 0.5s ease-out;  
+}
+button:focus {
+  outline: none;
+}
+
+@keyframes scale {
+  to {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+  }
 }
