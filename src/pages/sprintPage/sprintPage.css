@@ -81,3 +81,9 @@
 .svg-direction-transform{
   transform: rotate(180deg);
 }
+
+.timer{
+  text-align: center;
+  width: 21px;
+  height: 22px;
+}

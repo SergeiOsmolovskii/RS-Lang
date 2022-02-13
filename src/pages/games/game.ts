@@ -2,12 +2,12 @@ import "./game.css"
 import { insertElement } from "../../services/services";
 import Page from "../../templates/page";
 import { renderFormLevel } from "../../services/renderForm";
-import audioCallPage from "../audioCallPage/audioCallPage";
 
 class MiniGamesPage extends Page {
   public checkInput: HTMLInputElement[] | null = null;
   public checkNumber: number = 0;
   public count: number = 0;
+  public dateGame: Date = new Date();
 
   constructor(id: string) {
     super(id);
