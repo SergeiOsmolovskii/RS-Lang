@@ -46,3 +46,11 @@ export const shuffle = (arr: number[]) => {
   return arr;
 }
 
+export const clicker = (el: HTMLElement) =>{
+    const circle = document.createElement('div');
+    circle.classList.add('circle');
+    circle.style.left = 195 + 'px';
+    circle.style.top = 130 + 'px';
+    el.appendChild(circle);
+    setTimeout(() => circle.remove(), 500);
+}

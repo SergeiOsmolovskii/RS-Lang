@@ -15,7 +15,6 @@ class MiniGamesPage extends Page {
   }
 
   async render(): Promise<HTMLElement> {
-    console.log(this.page)
     this.page.insertAdjacentHTML('beforeend', renderFormLevel);
     this.checkInput = Array.from(this.page.querySelectorAll('.item-input'));
     this.checkInput?.forEach(el => el.addEventListener('change', () => this.checkLevel()));
@@ -31,9 +30,8 @@ class MiniGamesPage extends Page {
   }
 
   clearPage() {
-    const currentPage: Element | null = <Element>document.querySelector('.page');
-    while (currentPage.firstChild) {
-      currentPage.firstChild.remove();
+    while (this.page.firstChild) {
+      this.page.firstChild.remove();
     }
     this.count = 0;
   }
