@@ -97,7 +97,7 @@ class AudioCallPage extends MiniGamesPage {
         if(this.localSeries > Number(localStorage.getItem('audioCallSeriesTotal'))){
           localStorage.setItem('audioCallSeriesTotal', `${clearSeries}`);
           this.localSeries = 0;
-          }
+        }
         clearSeries = 0;
       }
     }

@@ -99,23 +99,20 @@ export const renderGame = `
 export const renderNextButton = `
 <button class="nextWord">Следующий</button>
 `
-export const timerForm = `
+export const renderTimerForm = `
 <div class="border-line">
-  <h3>36</h3>
+  <h3 class="timer">60</h3>
 </div>
 `
 export const renderFormSprintGame = `
-<div class="point-progress">
-  <div class="heart"></div>
-  <div class="heart"></div>
-  <div class="heart"></div>
+<div class="answers-options">
+  <span class="english-word">Hello</span>
+  <div class="arrow-position">
+    <div class="arrow"></div>
+    <div class="arrow arrow-transform"></div>
+  </div>
+  <span class="russian-word">Привет</span>
 </div>
-<span class="english-word">Hello</span>
-<div class="arrow-position">
-  <div class="arrow"></div>
-  <div class="arrow arrow-transform"></div>
-</div>
-<span class="russian-word">Привет</span>
 <div class="contain-answer-button">
   <button class="arrow-position-left">
     <div class="svg-direction svg-direction-transform"></div>
@@ -125,5 +122,12 @@ export const renderFormSprintGame = `
     <span class="svg-arrow-right">Верно</span>
     <div class="svg-direction"></div>
   </button>
+</div>
+`
+export const renderFormSprintProgress = `
+<div class="point-progress">
+  <div class="heart"></div>
+  <div class="heart"></div>
+  <div class="heart"></div>
 </div>
 `
