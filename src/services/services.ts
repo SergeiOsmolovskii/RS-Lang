@@ -54,3 +54,14 @@ export const clicker = (el: HTMLElement) =>{
     el.appendChild(circle);
     setTimeout(() => circle.remove(), 500);
 }
+
+let changeDegLeft = 0;
+let changeDegright = 0;
+export const changeQuoteNumber = (doc: any) => {
+  changeDegLeft = changeDegLeft + 720;
+  changeDegright = changeDegright - 720;
+  doc[0].style.transform = `rotate(${changeDegLeft-27}deg)`;
+  doc[1].style.transform = `rotate(${changeDegright+164}deg)`;
+  doc[0].style.transition = '0.8s';
+  doc[1].style.transition = '0.8s';
+}

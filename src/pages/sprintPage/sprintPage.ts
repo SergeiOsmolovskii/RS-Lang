@@ -1,7 +1,7 @@
 import "./sprintPage.css"
-import { insertElement, getRandom, shuffle } from "../../services/services";
+import { insertElement, getRandom, shuffle, changeQuoteNumber } from "../../services/services";
 import MiniGamesPage from "../games/game";
-import { renderTimerForm, renderFormSprintGame, renderSvgExit, renderFormSprintProgress } from "../../services/renderForm";
+import { renderTimerForm, renderFormSprintGame, renderSvgExit, renderFormSprintProgress, renderFormSptintAnswerButton } from "../../services/renderForm";
 import { getWords, IWords } from '../../api/getWords';
 
 class SprintPage extends MiniGamesPage {
@@ -14,9 +14,10 @@ class SprintPage extends MiniGamesPage {
   private russianWord: Element | null = null;
   private localSeries: number = 0;
   private localTrueAnswer: any = localStorage.getItem('sprintAmountTrueAnswer');
+  private progress: any = null;
   constructor(id: string) {
     super(id);
-    this.page = insertElement('main', ['page'], '','');
+    this.page = insertElement('main', ['sprint-page'], '','');
   }
 
   async render(): Promise<HTMLElement> {
@@ -27,8 +28,9 @@ class SprintPage extends MiniGamesPage {
       this.page.insertAdjacentHTML('beforeend', renderFormSprintProgress);
       this.page.insertAdjacentHTML('beforeend', renderTimerForm);
       this.page.insertAdjacentHTML('beforeend', renderSvgExit);
+      this.page.insertAdjacentHTML('beforeend', renderFormSprintGame);
     }
-    this.page.insertAdjacentHTML('beforeend', renderFormSprintGame);
+    this.page.insertAdjacentHTML('beforeend', renderFormSptintAnswerButton);
     this.choiseFalseAnswer = <Element>this.page.querySelector('.arrow-position-left');
     this.choiseTrueAnswer = <Element>this.page.querySelector('.arrow-position-right');
     this.englishWord = <Element>this.page.querySelector('.english-word');
@@ -37,9 +39,12 @@ class SprintPage extends MiniGamesPage {
     const randomAll = shuffle(allAnswer);
     randomAll.length = 2;
     this.trueAnswer = randomAll[getRandom(0, 1)];
-    this.englishWord.innerHTML = this.resultFetch[randomAll[1]].word;
-    console.log(this.resultFetch)
-    this.russianWord.innerHTML = this.resultFetch[this.trueAnswer].wordTranslate;
+    let rusStr = this.resultFetch[randomAll[1]].word;
+    let englishStr = this.resultFetch[this.trueAnswer].wordTranslate;
+    rusStr = rusStr[0].toUpperCase() + rusStr.substring(1);
+    englishStr = englishStr[0].toUpperCase() + englishStr.substring(1);
+    this.englishWord.innerHTML = rusStr;
+    this.russianWord.innerHTML = englishStr;
     this.choiseFalseAnswer.addEventListener('click', () => this.choiseDirectionLeft());
     this.choiseTrueAnswer.addEventListener('click', () => this.choiseDirectionRight());
     return this.page;
@@ -51,8 +56,10 @@ class SprintPage extends MiniGamesPage {
     }else{
       this.choiseWrong();
     }
-    this.clearNextPage();
-    this.render()
+    this.progress = this.page.querySelectorAll('.arrow');
+    changeQuoteNumber(this.progress);
+    this.clearPage();
+    this.render();
   }
 
   choiseDirectionRight(){
@@ -61,15 +68,10 @@ class SprintPage extends MiniGamesPage {
     }else{
       this.choiseWrong();
     }
-    this.clearNextPage();
+    this.progress = this.page.querySelectorAll('.arrow');
+    changeQuoteNumber(this.progress);
     this.render();
-  }
-
-  clearNextPage() {
-    const clearOptions: Element | null = <Element>this.page.querySelector('.answers-options');
-    const clearAnswers: Element | null = <Element>this.page.querySelector('.contain-answer-button');
-    clearOptions.remove();
-    clearAnswers.remove();
+    this.clearPage();
   }
 
   choiseWrong() {
@@ -79,6 +81,11 @@ class SprintPage extends MiniGamesPage {
         this.localSeries = 0;
       }
       clearSeries = 0;
+  }
+
+  clearPage() {
+    const clearAnswers: HTMLElement | null = <HTMLElement>document.querySelector('.contain-answer-button');
+    clearAnswers.remove();
   }
 
   choiseRight() {
@@ -91,12 +98,9 @@ class SprintPage extends MiniGamesPage {
     if(localTotalWordss === null) {
       let localTotalWordss = [this.resultFetch[this.trueAnswer].id];
       localStorage.setItem(`sprintWordsTotal`, JSON.stringify(localTotalWordss));
-      console.log(localTotalWordss)
     } else if(!localTotalWordss?.includes(this.resultFetch[this.trueAnswer].id)) {
-      console.log(localTotalWordss)
       const local = this.resultFetch[this.trueAnswer].id;
       localTotalWordss.push(local)
-      console.log(localTotalWordss)
       localStorage.setItem(`sprintWordsTotal`, JSON.stringify(localTotalWordss));
     }
   }
