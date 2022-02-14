@@ -1,4 +1,5 @@
-import { buttonsPage } from '../options/options';
+import { buttonsGroups1, buttonsPage } from '../options/options';
+import { getLocalStorage } from './storage';
 
 export function insertElement(
   tagName: string,
@@ -29,6 +30,21 @@ export const renderHeaderButtons = (): HTMLElement => {
   return headerButtons;
 };
 
+export const renderGroupsButtons = (): HTMLElement => {
+  const groupButtonsContainer = insertElement('ul', ['groups-btn']);
+  const value = getLocalStorage('group') ? getLocalStorage('group') : '0';
+  buttonsGroups1.forEach((button) => {
+    const buttonHTML = insertElement('li', [...button.class], button.label);
+    buttonHTML.dataset.group = button.group;
+    if (button.group === value) {
+      buttonHTML.classList.add('active');
+    };
+    groupButtonsContainer.append(buttonHTML);
+
+  });
+  return groupButtonsContainer;
+};
+
 export const playAudio = (playList: Array<string>): void => {
   let playNum = 0;
   const audio = document.createElement('audio');
@@ -44,3 +60,24 @@ export const playAudio = (playList: Array<string>): void => {
     }
   };
 };
+
+export const getRandom = (min: number, max: number) => {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+export const shuffle = (arr: number[]) => {
+  let j, x;
+  for (let i = arr.length - 1; i > 0; i--) {
+      j = Math.floor(Math.random() * (i + 1));
+      x = arr[i];
+      arr[i] = arr[j];
+      arr[j] = x;
+  }
+  return arr;
+}
+
+export const getRange = (start: number, end: number) => {
+  Array(end - start + 1).fill(0).map((v, i) => i + start)
+}

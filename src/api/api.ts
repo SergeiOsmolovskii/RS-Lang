@@ -74,7 +74,6 @@ export interface IUserWords {
 }
 
 export interface IUserWordOptions {
-	wordId: string,
 	trueAnswersCount: number,
 	falseAnswersCount: number,
 	trueAnswersSeria: number,

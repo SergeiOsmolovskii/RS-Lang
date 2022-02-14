@@ -4,6 +4,7 @@ import Page from '../../templates/page';
 import { CardsContainer } from './cards';
 import { Pagination } from './pagination';
 import { NavGroups } from './navGroups';
+import { Regime } from '../../options/options';
 
 class TextbookPage extends Page {
   private static cardsContainer: CardsContainer;
@@ -18,14 +19,14 @@ class TextbookPage extends Page {
     this.navGroups = new NavGroups();
   }
 
-  static async renderCardContainer() {
-    const cardsContainerHTML = await TextbookPage.cardsContainer.render();
+  static async renderCardContainer(regime: Regime) {
+    const cardsContainerHTML = await TextbookPage.cardsContainer.render(regime);
     return cardsContainerHTML;
   }
 
   async render(): Promise<HTMLElement> {
     const title = insertElement('h2', ['title'], 'Учебник', this.page);
-    this.page.append(this.navGroups.render(), this.pagination.render(), await TextbookPage.cardsContainer.render());
+    this.page.append(this.navGroups.render(), this.pagination.render(), await TextbookPage.cardsContainer.render(Regime.group));
     return this.page;
   }
 }

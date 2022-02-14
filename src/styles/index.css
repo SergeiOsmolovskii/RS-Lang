@@ -26,16 +26,12 @@ ul {
 
 body {
   margin: 0;
-  color: #fff;
-  background: #4a4b4e;
+  color: #000;
   font-family: sans-serif;
 }
 
 .page {
-  padding: 15px;
-  max-width: 1600px;
-  height: calc(100vh - 130px);
-  width: 100%;
+  width: 90%;
   margin: 0 auto;
   padding: 40px 20px;
 }
