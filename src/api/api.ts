@@ -71,7 +71,7 @@ export interface IQueryParams {
 
 export interface IUserWords {
   difficulty: string,
-  optional: IUserWordOptions
+  optional?: IUserWordOptions
 }
 
 export interface IUserWordOptions {
@@ -84,7 +84,7 @@ export interface IUserWordOptions {
 /* AggregatedWord */
 
 export interface IAggregatedWord {
-	id: string;
+	_id: string;
 	group: number;
 	page: number;
 	word: string;
@@ -98,7 +98,7 @@ export interface IAggregatedWord {
 	wordTranslate: string;
 	textMeaningTranslate: string;
 	textExampleTranslate: string;
-	userWord: IUserWords
+	userWord?: IUserWords
 }
 
 /* Statistic */

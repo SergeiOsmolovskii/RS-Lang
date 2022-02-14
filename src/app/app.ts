@@ -1,3 +1,5 @@
+import { storage } from "../api/api";
+import { getCurrentUser } from "../api/users";
 import Footer from "../components/footer/footer";
 import Header from "../components/header/header";
 import { PageIds } from "../options/options";
@@ -8,9 +10,6 @@ import SprintPage from "../pages/sprintPage/sprintPage";
 import StatisticPage from "../pages/statisticPage/statisticPage";
 import TextbookPage from "../pages/textbookPage/textbookPage";
 import Page from "../templates/page";
-import { logOut } from "../components/login-form/login-form";
-import { getCurrentUser } from "../api/users";
-import { storage } from "../api/api";
 
 export class App {
   private static container: HTMLElement = document.body;
@@ -60,7 +59,6 @@ export class App {
         storage.userId = userId;
         storage.isAuthorized = true;
       }
-
       const headerHTML = new Header("header", ["header"]);
       const pageHTML = page.render();
       (await pageHTML).id = this.defaultPageId;
