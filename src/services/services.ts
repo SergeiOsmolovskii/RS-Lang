@@ -78,6 +78,22 @@ export const shuffle = (arr: number[]) => {
   return arr;
 }
 
-export const getRange = (start: number, end: number) => {
-  Array(end - start + 1).fill(0).map((v, i) => i + start)
+export const clicker = (el: HTMLElement) =>{
+    const circle = document.createElement('div');
+    circle.classList.add('circle');
+    circle.style.left = 195 + 'px';
+    circle.style.top = 130 + 'px';
+    el.appendChild(circle);
+    setTimeout(() => circle.remove(), 500);
+}
+
+let changeDegLeft = 0;
+let changeDegright = 0;
+export const changeQuoteNumber = (doc: any) => {
+  changeDegLeft = changeDegLeft + 720;
+  changeDegright = changeDegright - 720;
+  doc[0].style.transform = `rotate(${changeDegLeft-27}deg)`;
+  doc[1].style.transform = `rotate(${changeDegright+164}deg)`;
+  doc[0].style.transition = '0.8s';
+  doc[1].style.transition = '0.8s';
 }

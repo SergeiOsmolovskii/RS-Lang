@@ -12,6 +12,7 @@ export enum Path {
 	user = '/users',
 	aggregatedWords = '/aggregatedWords',
 	settings = '/settings',
+	statistics = '/statistics', 
 	signin = '/signin',
 	tokens = '/tokens'
 }
@@ -98,4 +99,30 @@ export interface IAggregatedWord {
 	textMeaningTranslate: string;
 	textExampleTranslate: string;
 	userWord?: IUserWords
+}
+
+/* Statistic */
+
+export interface IStatistic {
+	id: "",
+	learnedWords: number,
+	general: IGeneralStatistic,
+	games: IGames
+}
+
+export interface IGeneralStatistic {
+	day: Date | string,
+	newWordsPerDay: string,
+}
+
+export interface IGames {
+	sprint: IGamesStatistic,
+	audioCall: IGamesStatistic
+}
+
+export interface IGamesStatistic {
+	gamesPlay: number,
+	correct: number,
+	wrong: number,
+	bestSeries: number
 }

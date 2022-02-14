@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@900&display=swap');
 * {
   box-sizing: border-box;
 }
@@ -26,7 +27,8 @@ ul {
 
 body {
   margin: 0;
-  color: #000;
+  color: #4a4b4e;
+  background: #fff;
   font-family: sans-serif;
 }
 

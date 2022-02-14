@@ -1,9 +1,10 @@
 export enum PageIds {
   MainPage = "",
-  AudioCallPage = "audio-call",
+  AudioCallPage = "game/audio-call",
   StatisticPage = "statistic",
-  SprintPage = "sprint",
+  SprintPage = "game/sprint",
   TextbookPage = "textbook",
+  Games = "game"
 }
 
 export enum Regime {
@@ -23,20 +24,16 @@ export const buttonsPage = [
     class: ["nav-link"],
   },
   {
-    id: PageIds.AudioCallPage,
-    label: "аудиовызов",
-    class: ["nav-link"],
-  },
-  {
-    id: PageIds.SprintPage,
-    label: "спринт",
-    class: ["nav-link"],
-  },
-  {
     id: PageIds.StatisticPage,
     label: "статистика",
     class: ["nav-link"],
   },
+  {
+    id: PageIds.Games,
+    label: "игры",
+    class: ["nav-link"],
+  },
+
 ];
 
 export const buttonsPagination = {

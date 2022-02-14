@@ -1,0 +1,133 @@
+.sprint-page{
+  position: relative;
+  background: linear-gradient(270deg, #737FE9, #A395DA);
+  padding: 15px;
+  max-width: 1172px;
+  height: 638px;
+  width: 100%;
+  margin: 0 auto;
+  border-radius: 65px;
+}
+
+.border-line{
+  color: rgb(14, 12, 12);
+  border: 8px solid rgb(243, 186, 0);
+  border-radius: 50%;
+  padding: 15px;
+  position: absolute;
+  top: 18%;
+  right: 84%;
+}
+
+.answers-options{
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 900;
+  font-size: 36px;
+  line-height: 32px;
+  color:#010101;
+}
+
+.point-progress{
+  display: grid;
+  grid-template-columns: auto auto auto;
+  justify-content: center;
+  grid-gap: 15px;
+  margin: 100px 0 100px 0;
+}
+
+.arrow{
+  background: url(/src/assets/svg/arrow.svg) center no-repeat;
+  height: 65px;
+  width: 65px;
+  transform: rotate(-27deg);
+  transition: 2s linear;
+}
+
+.arrow-position{
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: center;
+  grid-gap: 140px;
+  margin: 10px 0 10px 0;
+}
+
+.arrow-transform {
+  transform: rotate(164deg);
+  transition: 2s linear;
+}
+
+.english-word{
+  display: flex;
+  justify-content: center;
+}
+
+.russian-word{
+  display: flex;
+  justify-content: center;
+}
+
+.svg-direction{
+  background: url(/src/assets/svg/arrow-direction.svg) center no-repeat;
+  height: 35px;
+  width: 35px;
+}
+
+.contain-answer-button{
+  display: flex;
+  justify-content: center;
+  margin: 100px 0 50px 0;
+  grid-gap: 42px;
+}
+
+.arrow-position-left{
+  display: grid;
+  justify-content: center;
+  grid-template-columns: auto auto;
+  align-items: center;
+  grid-gap: 16px;
+  width: 150px;
+  height: 50px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.arrow-position-right{
+  display: grid;
+  justify-content: center;
+  grid-template-columns: auto auto;
+  align-items: center;
+  grid-gap: 20px;
+  width: 150px;
+  height: 50px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.svg-arrow-right{
+  padding-left: 16px;
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  color: #010101;
+}
+
+.svg-arrow-left{
+  padding-right: 8px;
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  color: #010101;
+}
+
+.svg-direction-transform{
+  transform: rotate(180deg);
+}
+
+.timer{
+  text-align: center;
+  width: 21px;
+  height: 22px;
+}
