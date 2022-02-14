@@ -42,4 +42,13 @@ export const FOOTER_CONTENT_HTML = `
     <a class="footer-logo" href="https://rs.school/js/" target="_blank"></a>
 `;
 
-export const URL = 'https://rs-lang-learn.herokuapp.com';
+export const GAMES_TYPE = [
+  {
+    ru: "Спринт",
+    eng: "sprint",
+  },
+  {
+    ru: "Аудиовызов",
+    eng: "audioCalls",
+  },
+];

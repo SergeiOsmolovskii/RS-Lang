@@ -1,5 +1,6 @@
 .header {
   display: flex;
+  align-items: center;
   padding: 15px;
   height: 123px;
   max-width: 1600px;
