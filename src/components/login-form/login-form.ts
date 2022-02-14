@@ -1,11 +1,8 @@
 import './login-form.css';
 import { insertElement } from '../../services/services';
 import { createUser, authorization } from '../../api/registration';
-import { IAuthorization, IRegistrationData, storage, IUserWordOptions } from '../../api/api';
+import { IAuthorization, IRegistrationData, storage } from '../../api/api';
 import { getCurrentUser } from '../../api/users';
-
-import { setUserWord } from '../../api/userWords';
-import { getAllAggregatedWords, getAggregatedWord } from '../../api/aggregatedWords';
 
 const body = document.querySelector('body');
 
@@ -17,6 +14,10 @@ export const renderLogInButton = (): HTMLElement => {
 
 export const renderProfileBlock = (): string => `
   <div class="user-profile">
+    <div class="user-profile__info">
+      <p>${storage.userName}</p>
+      <p>${storage.userEmail}</p>
+    </div>
     <button class="user-icon"> </button>
     <button class="log-out"> </button>
   </div>
@@ -35,7 +36,7 @@ const renderLogInForm = (): string => `
         </label>
       </div>
       <button class="login-submit-button" type="submit">Войти</button>
-      <div>
+      <div class="login-form__info">
           <span>Ещё не зарегистрированы? </span>
           <button class="login-form__registration" type="button">Зарегистрироваться</button>
       </div>
@@ -62,7 +63,7 @@ const renderRegistrForm = (): string => `
       </label>
     </div>
     <button class="registration-submit-button" type="submit">Зарегистрироваться</button>
-    <div>
+    <div class="registration-form__info">
         <span>Уже есть аккаунт? </span>
         <button class="registration-form__log-in" type="button">Войти</button>
     </div>
@@ -117,7 +118,8 @@ export const logOut = (): void => {
   location.reload();
 }
 
-const registrationNewUser = async (e: Event): Promise<void> => {
+export const registrationNewUser = async (e: Event): Promise<void> => {
+  e.target?.removeEventListener('submit', registrationNewUser);
   e.preventDefault();
 
   const userName = document.getElementById('registration-name') as HTMLInputElement;
@@ -131,40 +133,42 @@ const registrationNewUser = async (e: Event): Promise<void> => {
     return;
   }
   
-  const userID: IRegistrationData = await createUser({
+  const userID: IRegistrationData | undefined = await createUser({
     "name": userName.value,
     "email": userEmail.value,
     "password": userPassword.value
   });
 
-  const authorizationData: IAuthorization = await authorization({
+  const authorizationData: IAuthorization | undefined = await authorization({
     "email": userEmail.value,
     "password": userPassword.value
   });
 
-  localStorage.setItem('currentUserID', userID.id);
-  localStorage.setItem('currentUserToken', authorizationData.token);
-  await getCurrentUser(userID.id, authorizationData.token);
-  location.reload();
+  if (userID && authorizationData) {
+    localStorage.setItem('currentUserID', userID.id);
+    localStorage.setItem('currentUserToken', authorizationData.token);
+    await getCurrentUser(userID.id, authorizationData.token);
+    location.reload();
+  }
 }
 
-const authorizationUser = async (e: Event): Promise<void> => {
+export const authorizationUser = async (e: Event): Promise<void> => {
+  e.target?.removeEventListener('submit', authorizationUser);
   e.preventDefault();
 
   const userEmail = document.getElementById('user-email') as HTMLInputElement;
   const userPassword = document.getElementById('user-password') as HTMLInputElement;
   
-  const authorizationData: IAuthorization = await authorization({
+  const authorizationData: IAuthorization | undefined = await authorization({
     "email": userEmail.value,
     "password": userPassword.value
   });
 
-  localStorage.setItem('currentUserID', authorizationData.userId);
-  localStorage.setItem('currentUserToken', authorizationData.token);
-  localStorage.setItem('currentUserRefreshToken', authorizationData.refreshToken);
-
-  storage.userId = authorizationData.userId;
-
-
-  location.reload();
+  if (authorizationData) {
+    localStorage.setItem('currentUserID', authorizationData.userId);
+    localStorage.setItem('currentUserToken', authorizationData.token);
+    localStorage.setItem('currentUserRefreshToken', authorizationData.refreshToken); 
+    storage.userId = authorizationData.userId;
+    location.reload();
+  }
 }
