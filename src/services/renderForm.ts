@@ -133,3 +133,16 @@ export const renderFormSprintProgress = `
   <div class="heart"></div>
 </div>
 `
+
+export const renderSprintResultAnswer = `
+<div class="result-answer">
+  <span>Результаты</span>
+  <span class="quantity-true-points"></span>
+  <div class="percent-answers"></div>
+  <div class="wrap-answer">
+    <div class="sprint-true-answer"></div>
+    <div class="sprint-false-answer"></div>
+  </div>
+  <button class="next-game">Играть</button>
+</div>
+`
