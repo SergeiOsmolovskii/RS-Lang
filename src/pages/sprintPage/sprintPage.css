@@ -1,4 +1,9 @@
 .sprint-page{
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  color:#010101;
   position: relative;
   background: linear-gradient(270deg, #737FE9, #A395DA);
   padding: 15px;
@@ -33,7 +38,7 @@
   grid-template-columns: auto auto auto;
   justify-content: center;
   grid-gap: 15px;
-  margin: 100px 0 100px 0;
+  margin: 20px 0 80px 0;
 }
 
 .arrow{
@@ -113,6 +118,11 @@
   color: #010101;
 }
 
+.arrow-button:hover{
+  background-color: #fbd1bb;
+  transition: 1s linear;
+}
+
 .svg-arrow-left{
   padding-right: 8px;
   font-family: 'Nunito';
@@ -128,11 +138,12 @@
 
 .timer{
   text-align: center;
+  font-size: 14px;
   width: 21px;
   height: 22px;
 }
 
-.result-answer{
+.window-open-answer{
   position: absolute;
   font-family: 'Nunito';
   font-style: normal;
@@ -148,8 +159,8 @@
   display: grid;
   justify-items: center;
   align-items: start;
+  border-radius: 5px;
 }
-
 
 .percent-answers{
   display: grid;
@@ -182,12 +193,67 @@
   background-color: rgb(243, 186, 0);
 }
 
-.sprint-true-answer{
+.wrap-game{
   display: grid;
   grid-template-columns: 1fr 3fr;
+  grid-gap: 4px 0;
 }
 
-.sprint-false-answer{
+.wrap-answer{
+  overflow: scroll;
+  height: 300px;
+  font-size: 18px;
+  width: 500px;
+  justify-items: start;
+}
+
+.wrap-result{
+  margin-top: 10px;
+  margin-bottom: 10px;
   display: grid;
-  grid-template-columns: 1fr 3fr;
+  grid-template-columns: 1fr 1fr;
+  justify-items: end;
+  grid-gap: 5px;
+}
+
+.number-amount-green{
+  width: 25px;
+  height: 25px;
+  background-color: green;
+  border-radius: 50%;
+  text-align: center;
+  justify-self: start;
+}
+
+.line{
+  max-width: 97%;
+  height: 3px;
+  background-color: rgb(243, 186, 0);;
+  margin-left: 8px;
+  margin-top: 15px;
+}
+
+.number-amount-red{
+  width: 25px;
+  height: 25px;
+  background-color: red;
+  border-radius: 50%;
+  text-align: center;
+  justify-self: start;
+}
+
+.mini-audio{
+  margin-left: 47px;
+}
+
+.point-sum{
+  position: absolute;
+  top: 108px;
+  left: 59%;
+}
+
+.point{
+  display: grid;
+  justify-items: center;
+  margin-top: 50px;
 }
