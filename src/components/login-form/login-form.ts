@@ -3,6 +3,7 @@ import { insertElement } from '../../services/services';
 import { createUser, authorization } from '../../api/registration';
 import { IAuthorization, IRegistrationData, storage } from '../../api/api';
 import { getCurrentUser } from '../../api/users';
+import { setUserStatistic } from '../../api/statistic';
 
 const body = document.querySelector('body');
 
@@ -148,6 +149,31 @@ export const registrationNewUser = async (e: Event): Promise<void> => {
     localStorage.setItem('currentUserID', userID.id);
     localStorage.setItem('currentUserToken', authorizationData.token);
     await getCurrentUser(userID.id, authorizationData.token);
+    await setUserStatistic(userID.id, {
+      learnedWords: 0,
+      optional: {
+        general: {
+          day: new Date,
+          newWordsPerDay: 0,
+        },
+        games: {
+          sprint: {
+            newWords: 0,
+            trueAnswers: 0,
+            bestSeries: 0,
+            gamesPlay: 0,
+            worngAnswers: 0,
+          },
+          audioCall: {
+            newWords: 0,
+            trueAnswers: 0,
+            bestSeries: 0,
+            gamesPlay: 0,
+            worngAnswers: 0,
+          }
+        }
+      }
+    });  
     location.reload();
   }
 }

@@ -16,12 +16,11 @@
 
 .statistic-block__subtitle {
   max-width: 180px;
-  margin-right: 40px;
   font-family: Nunito;
-  font-size: 36px;
-  line-height: 49px;
+  font-size: 30px;
   color: #fff;
   text-transform: uppercase;
+  margin: 15px;
 }
 
 .inner-circle {
@@ -42,7 +41,7 @@
 
 .true-answers__svg text {
   font-family: Nunito;
-  font-size: 36px;
+  font-size: 24px;
   fill: #000;
   text-anchor: middle;
 }
@@ -57,27 +56,29 @@
 .statistic-block__words {
   display: flex;
   align-items: center;
-  padding: 25px 35px;
+  justify-content: space-between;
+  padding: 20px;
   background-color: #AA96DD;
   border-radius: 31px;
+  box-shadow: 10px 10px 10px rgb(0 0 0 / 25%);
 }
 
-.statistic-block__new-words {
-  padding: 25px 29px;
+.statistic-block__new-words, .statistic-block__long-seria {
+  padding: 15px;
   background-color: #fff;
   border-radius: 31px;
 }
 
 .new-words-count {
-  min-width: 80px;
+  min-width: 70px;
   margin: 0;
+  text-align: center;
   font-family: Nunito;
-  font-size: 64px;
-  line-height: 87px;
+  font-size: 50px;
 }
 
-.statistic-block__words:first-child {
-  margin-bottom: 50px;
+.statistic-block__words:first-child, .statistic-block__words:nth-child(2) {
+  margin-bottom: 25px;
 }
 
 .games {
@@ -113,7 +114,9 @@
 }
 
 .game-words__count {
+  min-width: 66px;
   padding: 15px;
+  text-align: center;
   font-family: Nunito;
   font-size: 30px;
   background-color: #fff;

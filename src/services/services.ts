@@ -1,4 +1,5 @@
-import { buttonsPage } from '../options/options';
+import { buttonsGroups1, buttonsPage } from '../options/options';
+import { getLocalStorage } from './storage';
 
 export function insertElement(
   tagName: string,
@@ -27,6 +28,37 @@ export const renderHeaderButtons = (): HTMLElement => {
     headerButtons.append(buttonHTML);
   });
   return headerButtons;
+};
+
+export const renderGroupsButtons = (): HTMLElement => {
+  const groupButtonsContainer = insertElement('ul', ['groups-btn']);
+  const value = getLocalStorage('group') ? getLocalStorage('group') : '0';
+  buttonsGroups1.forEach((button) => {
+    const buttonHTML = insertElement('li', [...button.class], button.label);
+    buttonHTML.dataset.group = button.group;
+    if (button.group === value) {
+      buttonHTML.classList.add('active');
+    };
+    groupButtonsContainer.append(buttonHTML);
+
+  });
+  return groupButtonsContainer;
+};
+
+export const playAudio = (playList: Array<string>): void => {
+  let playNum = 0;
+  const audio = document.createElement('audio');
+  audio.src = playList[playNum];
+  audio.play();
+  audio.onended = () => {
+    if (playNum === playList.length - 1) {
+      audio.pause();
+    } else {
+      playNum = playNum + 1;
+      audio.src = playList[playNum];
+      audio.play();
+    }
+  };
 };
 
 export const getRandom = (min: number, max: number) => {

@@ -71,7 +71,7 @@ export interface IQueryParams {
 
 export interface IUserWords {
   difficulty: string,
-  optional: IUserWordOptions
+  optional?: IUserWordOptions
 }
 
 export interface IUserWordOptions {
@@ -84,7 +84,7 @@ export interface IUserWordOptions {
 /* AggregatedWord */
 
 export interface IAggregatedWord {
-	id: string;
+	_id: string;
 	group: number;
 	page: number;
 	word: string;
@@ -98,21 +98,22 @@ export interface IAggregatedWord {
 	wordTranslate: string;
 	textMeaningTranslate: string;
 	textExampleTranslate: string;
-	userWord: IUserWords
+	userWord?: IUserWords
 }
 
 /* Statistic */
 
 export interface IStatistic {
-	id: "",
 	learnedWords: number,
-	general: IGeneralStatistic,
-	games: IGames
+	optional: {
+		general: IGeneralStatistic,
+		games: IGames
+	}
 }
 
 export interface IGeneralStatistic {
 	day: Date | string,
-	newWordsPerDay: string,
+	newWordsPerDay: number,
 }
 
 export interface IGames {
@@ -121,8 +122,9 @@ export interface IGames {
 }
 
 export interface IGamesStatistic {
+	newWords: number,
+	trueAnswers: number,
+	bestSeries: number,
 	gamesPlay: number,
-	correct: number,
-	wrong: number,
-	bestSeries: number
+	worngAnswers: number
 }
