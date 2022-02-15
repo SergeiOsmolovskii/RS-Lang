@@ -118,8 +118,11 @@
   color: #010101;
 }
 
+.arrow-button{
+  border: 1px solid rgb(243, 186, 0);
+}
 .arrow-button:hover{
-  background-color: #fbd1bb;
+  background-color: rgb(243, 186, 0);
   transition: 1s linear;
 }
 
@@ -138,9 +141,9 @@
 
 .timer{
   text-align: center;
-  font-size: 14px;
-  width: 21px;
-  height: 22px;
+  font-size: 18px;
+  width: 24px;
+  height: 24px;
 }
 
 .window-open-answer{
@@ -159,7 +162,7 @@
   display: grid;
   justify-items: center;
   align-items: start;
-  border-radius: 5px;
+  border-radius: 16px;
 }
 
 .percent-answers{
@@ -228,7 +231,7 @@
 .line{
   max-width: 97%;
   height: 3px;
-  background-color: rgb(243, 186, 0);;
+  background-color: rgb(243, 186, 0);
   margin-left: 8px;
   margin-top: 15px;
 }

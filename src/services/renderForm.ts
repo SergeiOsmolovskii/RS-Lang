@@ -97,7 +97,7 @@ export const renderGame = `
 </div>
 `
 export const renderNextButton = `
-<button class="nextWord">Следующий</button>
+<button class="next-word">Следующий</button>
 `
 export const renderTimerForm = `
 <div class="border-line">

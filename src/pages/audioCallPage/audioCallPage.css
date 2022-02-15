@@ -17,15 +17,20 @@
 
 .answer-item{
   border-radius: 6px;
-  width: 170px;
-  height: 70px;
+  min-width: 115px;
+  height: 40px;
   background-color: #ffffff;
   cursor: pointer;
+  border: 2px solid rgb(243, 186, 0);
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  color: #010101;
 }
 
 .answer-item:hover{
-  background-color: #fbd1bb;
-  transition: 1s linear;
+  background-color: rgb(243, 186, 0);
+  transition: 0.7s linear;
 }
 
 .animate-color{
@@ -85,7 +90,7 @@
   margin-top: 50px;
 }
 
-.nextWord{
+.next-word{
   border-radius: 6px;
   display: grid;
   margin: 25px auto;
@@ -93,6 +98,12 @@
   height: 35px;
   align-items: center;
   cursor: pointer;
+  border: 2px solid rgb(243, 186, 0);
+}
+
+.next-word:hover{
+  background-color: rgb(243, 186, 0);
+  transition: 0.7s linear;
 }
 
 .circle{

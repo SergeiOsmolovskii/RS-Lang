@@ -1,5 +1,5 @@
 import "./sprintPage.css"
-import { insertElement, getRandom, shuffle, changeQuoteNumber,renderResult } from "../../services/services";
+import { insertElement, getRandom, shuffle, changeQuoteNumber, renderResult } from "../../services/services";
 import MiniGamesPage from "../games/game";
 import { renderTimerForm, renderFormSprintGame, renderSvgExit, renderFormSprintProgress, renderFormSptintAnswerButton, renderSprintResultAnswer } from "../../services/renderForm";
 import { getWords, IWords } from '../../api/getWords';
@@ -26,7 +26,7 @@ class SprintPage extends MiniGamesPage {
   private progress: any = null;
   private localTotalWordssRight: IWords[] = [];
   private localTotalWordssMistakes: IWords[] = [];
-  private seconds: number = 5;
+  private seconds: number = 60;
   constructor(id: string) {
     super(id);
     this.page = insertElement('main', ['sprint-page'], '','');
@@ -118,7 +118,7 @@ class SprintPage extends MiniGamesPage {
   }
 
   timer() {
-    this.seconds = 5;
+    this.seconds = 60;
     const timer = setInterval(() => {
       const timerShow: Element | null = <Element>this.page.querySelector(".timer");
       timerShow.innerHTML = `${this.seconds}`;
@@ -128,7 +128,7 @@ class SprintPage extends MiniGamesPage {
       console.log(timer)
       if(this.seconds === 0){
         this.page.insertAdjacentHTML('beforeend', renderSprintResultAnswer);
-        this.localSprintGetPut();
+        this.localAudio();
         this.renderConclusion();
         this.renderPoint = <Element>this.page.querySelector('.point');
         this.pointSum = <Element>this.page.querySelector('.point-sum');
@@ -139,8 +139,9 @@ class SprintPage extends MiniGamesPage {
     }, 1000)
   }
 
-  localSprintGetPut(){
+  localAudio(){
     ++this.sprintGameParam.gamesPlayed;
+    this.sprintGameParam.bestSeries = this.localSeries;
     const getLocal: string | null = localStorage.getItem('sprintGameParam');
     if(getLocal === null){ 
       localStorage.setItem('sprintGameParam', JSON.stringify(this.sprintGameParam));
@@ -149,8 +150,6 @@ class SprintPage extends MiniGamesPage {
       const endGame = this.sprintGameParam.gamesPlayed + parseObg.gamesPlayed;
       this.sprintGameParam.gamesPlayed = endGame ;
       this.sprintGameParam.trueAnswers = this.localTrueAnswer + parseObg.trueAnswers;
-      console.log(`Текущая серия   ${this.localSeries}`)
-      console.log(`Бэк серия   ${parseObg.bestSeries}`)
       if(this.localSeries > parseObg.bestSeries){
         this.sprintGameParam.bestSeries = this.localSeries;
         setLocalStorage('sprintGameParam', this.sprintGameParam);
