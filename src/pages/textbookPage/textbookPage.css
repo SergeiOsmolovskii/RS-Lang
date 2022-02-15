@@ -29,7 +29,7 @@
   background-color: rgb(235, 236, 173);
 } 
 
-.easy {
+.studied {
   background-color: #aa96dd;
 }
 
@@ -82,12 +82,14 @@
   align-self: flex-end;
   display: block;
   color: #fff;
+  font-family: "Nunito", sans-serif;
   border-radius: 12px;
   text-transform: capitalize;
   font-size: 16px;
   padding: 5px 10px;
   margin-left: 10px;
   transition: all 0.3s;
+  cursor: pointer;
 }
 
 .card-btn:hover {
@@ -118,7 +120,12 @@
   background-color: rgb(199, 95, 81);
 }
 
+.btn-color7{
+  background-color: #aa96dd;
+}
+
 .group-hard {
+  font-family: "Nunito", sans-serif;
   background-color: #aa96dd;
   color: #fff;
   text-transform: uppercase;

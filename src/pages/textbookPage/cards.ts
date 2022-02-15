@@ -1,8 +1,8 @@
 import { getAllAggregatedWords } from '../../api/aggregatedWords';
 import { baseUrl, IAggregatedWord, storage } from '../../api/api';
 import { getWords } from '../../api/getWords';
-import { setUserWord } from '../../api/userWords';
-import { Regime } from '../../options/options';
+import { setUserWord, updateUserWord } from '../../api/userWords';
+import { Difficulty, Regime } from '../../options/options';
 import { insertElement, playAudio } from '../../services/services';
 import { getLocalStorage } from '../../services/storage';
 import TextbookPage from './textbookPage';
@@ -15,7 +15,7 @@ export class CardsContainer {
     this.container.classList.add('cards-container');
   }
 
-  draw(data: Array<IAggregatedWord>, idStyle: number): void {
+  draw(regime: Regime, data: Array<IAggregatedWord>, idStyle: number): void {
     this.clear();
     data.forEach((element) => {
       const cardItem = insertElement('div', ['card-item'], '', this.container);
@@ -41,42 +41,57 @@ export class CardsContainer {
       const textExample = insertElement('p', ['card-text'], element.textExample, cardInfo);
       const textExampleTranslate = insertElement('p', ['card-text'], element.textExampleTranslate, cardInfo);
       if (storage.isAuthorized) {
-        const cardsButtonsHTML = this.renderCardsButtons(idStyle, element._id);
+        const cardsButtonsHTML = this.renderCardsButtons(regime, idStyle, element._id);
         cardInfo.append(cardsButtonsHTML);
         if (element.userWord) {
-          if (element.userWord.difficulty == 'hard') {
+          if (element.userWord.difficulty === Difficulty.hardWords) {
             cardItem.classList.add('hard');
           }
-          if (element.userWord.difficulty == 'easy') {
-            cardItem.classList.add('easy');
+          if (element.userWord.difficulty == Difficulty.studiedWord) {
+            cardItem.classList.add('studied');
           }
         }
       }
     });
   }
 
-  private renderCardsButtons(idStyle: number, elementId: string): HTMLElement {
+  private renderCardsButtons(regime: Regime, idStyle: number, elementId: string): HTMLElement {
     const cardsButtonsWrapper = insertElement('div', ['card-buttons']);
-    const btnHard = <HTMLButtonElement>(
-      insertElement('button', ['card-btn', `btn-color${idStyle + 1}`], 'сложное', cardsButtonsWrapper)
-    );
-    const btnEasy = <HTMLButtonElement>(
-      insertElement('button', ['card-btn', `btn-color${idStyle + 1}`], 'изученое', cardsButtonsWrapper)
-    );
-    btnHard.addEventListener('click', async (event: Event) => {
-      await setUserWord(elementId, {
-        difficulty: 'hard',
-        optional: { trueAnswersCount: 0, falseAnswersCount: 0, trueAnswersSeria: 0, falseAnswersSeria: 0 },
+    if (regime === Regime.group) {
+      const btnHard = <HTMLButtonElement>(
+        insertElement('button', ['card-btn', `btn-color${idStyle + 1}`], 'сложное', cardsButtonsWrapper)
+      );
+      const btnStudied = <HTMLButtonElement>(
+        insertElement('button', ['card-btn', `btn-color${idStyle + 1}`], 'изученое', cardsButtonsWrapper)
+      );
+
+      btnHard.addEventListener('click', async (event: Event) => {
+        await setUserWord(elementId, {
+          difficulty: Difficulty.hardWords,
+          optional: { trueAnswersCount: 0, falseAnswersCount: 0, trueAnswersSeria: 0, falseAnswersSeria: 0 },
+        });
+        TextbookPage.renderCardContainer(Regime.group);
       });
-      TextbookPage.renderCardContainer(Regime.group);
-    });
-    btnEasy.addEventListener('click', async (event: Event) => {
-      await setUserWord(elementId, {
-        difficulty: 'easy',
-        optional: { trueAnswersCount: 0, falseAnswersCount: 0, trueAnswersSeria: 0, falseAnswersSeria: 0 },
+
+      btnStudied.addEventListener('click', async (event: Event) => {
+        await setUserWord(elementId, {
+          difficulty: Difficulty.studiedWord,
+          optional: { trueAnswersCount: 0, falseAnswersCount: 0, trueAnswersSeria: 0, falseAnswersSeria: 0 },
+        });
+        TextbookPage.renderCardContainer(Regime.group);
       });
-      TextbookPage.renderCardContainer(Regime.group);
-    });
+    }
+    
+    if (regime === Regime.hard) {
+      const btnHard = <HTMLButtonElement>(
+        insertElement('button', ['card-btn', `btn-color7`], 'убрать из сложныx', cardsButtonsWrapper)
+      );
+
+      btnHard.addEventListener('click', async (event: Event) => {
+        await updateUserWord(elementId, {difficulty: Difficulty.normalWord});
+        TextbookPage.renderCardContainer(Regime.hard);
+      });
+    }
     return cardsButtonsWrapper;
   }
 
@@ -92,16 +107,16 @@ export class CardsContainer {
       const wordsData = storage.isAuthorized
         ? await getAllAggregatedWords(`${group}`, '0', '20', `{"page":${page}}`)
         : ( await getWords(+`${page}`, +`${group}`));
-      this.draw(wordsData, group);
+      this.draw(regime, wordsData, group);
     }
 
     if (regime === Regime.hard) {
-      const wordsData = await getAllAggregatedWords('', '0', '600', '{"userWord.difficulty":"hard"}');
+      const wordsData = await getAllAggregatedWords('', '0', '600', `{"userWord.difficulty":"${Difficulty.hardWords}"}`);
       if (wordsData.length === 0) {
         this.clear();
         const message = insertElement('div', ['message-box'], 'Здесь пока ничего нет', this.container);
       } else {
-        this.draw(wordsData, group);
+        this.draw(regime, wordsData, group);
       }
     }
 
