@@ -8,11 +8,10 @@ export const getUserStatistic = async () => {
     },
   });
   const content: IStatistic = await response.json();
-  console.log(content);
   return content;
 }
 
-export const setUserStatistic = async (userID: string, body: any) => {
+export const setUserStatistic = async (userID: string, body: IStatistic) => {
   const response = await fetch(`${baseUrl}${Path.user}/${userID}${Path.statistics}`, {
     method: 'PUT',
     headers: {
@@ -22,6 +21,5 @@ export const setUserStatistic = async (userID: string, body: any) => {
     body: JSON.stringify(body)
   });
   const content: IStatistic = await response.json();
-  console.log(content);
   return content;
 }

@@ -145,6 +145,9 @@ export const registrationNewUser = async (e: Event): Promise<void> => {
     "password": userPassword.value
   });
 
+  let wordsPerDateMap = new Map<string, number>();
+  wordsPerDateMap.set(new Date().toDateString(), 0)
+
   if (userID && authorizationData) {
     localStorage.setItem('currentUserID', userID.id);
     localStorage.setItem('currentUserToken', authorizationData.token);
@@ -152,24 +155,21 @@ export const registrationNewUser = async (e: Event): Promise<void> => {
     await setUserStatistic(userID.id, {
       learnedWords: 0,
       optional: {
-        general: {
-          day: new Date,
-          newWordsPerDay: 0,
-        },
+        general: Object.fromEntries(wordsPerDateMap),
         games: {
           sprint: {
             newWords: 0,
             trueAnswers: 0,
             bestSeries: 0,
-            gamesPlay: 0,
-            worngAnswers: 0,
+            gamesPlayed: 0,
+            wrongAnswers: 0,
           },
           audioCall: {
             newWords: 0,
             trueAnswers: 0,
             bestSeries: 0,
-            gamesPlay: 0,
-            worngAnswers: 0,
+            gamesPlayed: 0,
+            wrongAnswers: 0,
           }
         }
       }

@@ -27,23 +27,55 @@ class StatisticPage extends Page {
       const sprintGameParam: IGameParam = JSON.parse(localStorage.getItem('sprintGameParam') as string);
       const audioCallGameParam: IGameParam = JSON.parse(localStorage.getItem('audioCallGameParam') as string);
       const bestSeries = calcBestSeries(audioCallGameParam.bestSeries, sprintGameParam.bestSeries);
-      const trueAnswers = Math.round(calcTruAnswersPercent(sprintGameParam.gamesPlayed, sprintGameParam.trueAnswers, audioCallGameParam.newWords, audioCallGameParam.trueAnswers));
+      const trueAnswers = Math.round(
+        calcTruAnswersPercent(
+          sprintGameParam.gamesPlayed,
+          sprintGameParam.trueAnswers,
+          audioCallGameParam.newWords,
+          audioCallGameParam.trueAnswers
+        )
+      );
       const storke = ((TRUE_ANSWERS_STROKE * trueAnswers) / 100);
       const gamesStatisticParam: IGameParam[] = [sprintGameParam, audioCallGameParam];
-      statisticBlock.insertAdjacentHTML('beforeend', await statistic(trueAnswers, sprintGameParam.newWords + audioCallGameParam.newWords, bestSeries, storke));
+      statisticBlock.insertAdjacentHTML(
+        "beforeend",
+        await statistic(
+          trueAnswers,
+          sprintGameParam.newWords + audioCallGameParam.newWords,
+          bestSeries,
+          storke
+        )
+      );
       statisticBlock.insertAdjacentHTML('beforeend', gamesStatistic(gamesStatisticParam));
     } else {
       const storageStatistic = await getUserStatistic();
 
-      const bestSeries = calcBestSeries(storageStatistic.optional.games.sprint.bestSeries, storageStatistic.optional.games.audioCall.bestSeries);
-      const trueAnswers = Math.round(calcTruAnswersPercent(storageStatistic.optional.games.sprint.gamesPlay, storageStatistic.optional.games.sprint.trueAnswers, storageStatistic.optional.games.audioCall.newWords, storageStatistic.optional.games.audioCall.trueAnswers));
+      const bestSeries = calcBestSeries(
+        storageStatistic.optional.games.sprint.bestSeries,
+        storageStatistic.optional.games.audioCall.bestSeries
+      );
+      const trueAnswers = Math.round(
+        calcTruAnswersPercent(
+          storageStatistic.optional.games.sprint.gamesPlayed,
+          storageStatistic.optional.games.sprint.trueAnswers,
+          storageStatistic.optional.games.audioCall.newWords,
+          storageStatistic.optional.games.audioCall.trueAnswers
+        )
+      );
       
       const storke = ((TRUE_ANSWERS_STROKE * trueAnswers) / 100);
       const gamesStatisticParam: IGamesStatistic[] = [storageStatistic.optional.games.sprint, storageStatistic.optional.games.audioCall];
-      statisticBlock.insertAdjacentHTML('beforeend', await statistic(trueAnswers, storageStatistic.optional.games.sprint.newWords + storageStatistic.optional.games.audioCall.newWords, bestSeries , storke));
-      statisticBlock.insertAdjacentHTML('beforeend', gamesStatistic(gamesStatisticParam));
+      statisticBlock.insertAdjacentHTML(
+        "beforeend",
+        await statistic(
+          trueAnswers,
+          storageStatistic.optional.games.sprint.newWords + storageStatistic.optional.games.audioCall.newWords,
+          bestSeries,
+          storke
+        )
+      );
+      statisticBlock.insertAdjacentHTML("beforeend", gamesStatistic(gamesStatisticParam));
     }
-
     return this.page;
   }
 }
@@ -98,8 +130,8 @@ const gamesStatistic = (gamesStatisticParam: any): string => {
 
         <div class="game-words__block"> 
           <p class="game-words ${GAMES_TYPE[i].eng}-game__series">Серия верных ответов</p>
-        <div class="game-words__count" id="${GAMES_TYPE[i].eng}-game__total-words">${gamesStatisticParam[i].bestSeries}</div>
-      </div>
+          <div class="game-words__count" id="${GAMES_TYPE[i].eng}-game__total-words">${gamesStatisticParam[i].bestSeries}</div>
+        </div>
       </div>
     `
   }

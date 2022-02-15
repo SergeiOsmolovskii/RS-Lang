@@ -78,7 +78,6 @@ export interface IUserWordOptions {
 	trueAnswersCount: number,
 	falseAnswersCount: number,
 	trueAnswersSeria: number,
-	falseAnswersSeria: number
 }
 
 /* AggregatedWord */
@@ -102,11 +101,10 @@ export interface IAggregatedWord {
 }
 
 /* Statistic */
-
 export interface IStatistic {
 	learnedWords: number,
 	optional: {
-		general: IGeneralStatistic,
+		general: object,
 		games: IGames
 	}
 }
@@ -125,6 +123,6 @@ export interface IGamesStatistic {
 	newWords: number,
 	trueAnswers: number,
 	bestSeries: number,
-	gamesPlay: number,
-	worngAnswers: number
+	gamesPlayed: number,
+	wrongAnswers: number
 }
