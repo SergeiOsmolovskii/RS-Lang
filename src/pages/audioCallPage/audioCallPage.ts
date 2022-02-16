@@ -13,6 +13,7 @@ class AudioCallPage extends MiniGamesPage {
   private answerFour: Element | null = null;
   private answerFife: Element | null = null;
   private audioCallGameParam: IGameParam = {newWords: 0, trueAnswers: 0, bestSeries: 0, gamesPlayed: 0};
+  private sprintGameParam: IGameParam = {newWords: 0, trueAnswers: 0, bestSeries: 0, gamesPlayed: 0};
   private localTotalWordssRight: IWords[] = [];
   private localTotalWordssMistakes: IWords[] = [];
   private resultFetch: IWords[] = [];
@@ -52,7 +53,7 @@ class AudioCallPage extends MiniGamesPage {
     randomAll.length = 5;
     this.trueAnswer = randomAll[getRandom(0, 4)];
     for(let i = 0; i < 5; i++){
-      arrAnswer[i].innerHTML = this.resultFetch[randomAll[i]].wordTranslate;
+      arrAnswer[i].innerHTML = `${this.resultFetch[randomAll[i]].wordTranslate}`;
     }
     this.freeResultAnswer = (e: Event) => this.resultAnswer(e);
     this.freeAudioAnswer = () => clicker(this.audioPlay);
@@ -104,31 +105,51 @@ class AudioCallPage extends MiniGamesPage {
     nextStep.addEventListener('click', nextStepFunction);
     nextStep.addEventListener('click', () => this.clearNextPage());
     if(this.count === 15){
-      this.localSprintGetPut();
+      this.localaudioCallGetPut();
       nextStep.innerHTML = 'Результат'
       nextStep.removeEventListener('click', nextStepFunction);
       nextStep.addEventListener('click', () => this.renderConclusion());
     }
   }
 
-  localSprintGetPut(){
+  localaudioCallGetPut(){
     ++this.audioCallGameParam.gamesPlayed;
     this.audioCallGameParam.bestSeries = this.localSeries;
+    const finalArr: IWords[] = [...this.localTotalWordssMistakes, ...this.localTotalWordssRight];
+
     const getLocal: string | null = localStorage.getItem('audioCallGameParam');
-    if(getLocal === null){ 
-      localStorage.setItem('audioCallGameParam', JSON.stringify(this.audioCallGameParam));
+    const getLocalAmountWords: string | null = localStorage.getItem('totalWord');
+    const arrWord = finalArr.map(item => item.word);
+    const exceptionalValues = [...new Set(arrWord)];
+
+
+    if(getLocal === null || getLocalAmountWords === null){
+      this.audioCallGameParam.newWords = arrWord.length
+      setLocalStorage('audioCallGameParam', this.audioCallGameParam);
+      setLocalStorage('totalWord', exceptionalValues);
+      setLocalStorage('sprintGameParam',this.sprintGameParam);
     } else {
-      const parseObg: IGameParam = JSON.parse(getLocal);
-      const endGame = this.audioCallGameParam.gamesPlayed + parseObg.gamesPlayed;
-      this.audioCallGameParam.gamesPlayed = endGame ;
-      this.audioCallGameParam.trueAnswers = this.localTrueAnswer + parseObg.trueAnswers;
-      console.log(`Текущая серия   ${this.localSeries}`)
-      console.log(`Бэк серия   ${parseObg.bestSeries}`)
-      if(this.localSeries > parseObg.bestSeries){
+      const parseTotalWord: string[] = JSON.parse(getLocalAmountWords);
+      const filtWord = exceptionalValues.filter(item => !parseTotalWord.includes(item));
+      const resultExceptionalValues = [...parseTotalWord,...filtWord];
+      setLocalStorage('totalWord', resultExceptionalValues);
+
+
+
+
+
+      const parseAnswerWord: IGameParam = JSON.parse(getLocal);
+      this.audioCallGameParam.newWords = parseAnswerWord.newWords + filtWord.length;
+
+      const parseAnswers: IGameParam = JSON.parse(getLocal);
+      const endGame = this.audioCallGameParam.gamesPlayed + parseAnswers.gamesPlayed;
+      this.audioCallGameParam.gamesPlayed = endGame;
+      this.audioCallGameParam.trueAnswers = this.localTrueAnswer + parseAnswers.trueAnswers;
+      if(this.localSeries > parseAnswers.bestSeries){
         this.audioCallGameParam.bestSeries = this.localSeries;
         setLocalStorage('audioCallGameParam', this.audioCallGameParam);
       }else{
-        this.audioCallGameParam.bestSeries = parseObg.bestSeries;
+        this.audioCallGameParam.bestSeries = parseAnswers.bestSeries;
         setLocalStorage('audioCallGameParam', this.audioCallGameParam);
       }
     }

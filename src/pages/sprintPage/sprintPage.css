@@ -12,6 +12,7 @@
   width: 100%;
   margin: 0 auto;
   border-radius: 65px;
+  box-shadow: 10px 10px 10px rgb(0 0 0 / 25%);
 }
 
 .border-line{
@@ -71,6 +72,7 @@
   display: flex;
   justify-content: center;
 }
+
 
 .svg-direction{
   background: url(/src/assets/svg/arrow-direction.svg) center no-repeat;
@@ -163,6 +165,17 @@
   justify-items: center;
   align-items: start;
   border-radius: 16px;
+  animation-duration: 2s;
+  animation-name: slidein;
+}
+
+@keyframes slidein {
+  from {
+    background-color: transparent;
+  }
+  to {
+    background-color: #ffff;
+  }
 }
 
 .percent-answers{

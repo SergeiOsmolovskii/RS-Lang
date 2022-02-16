@@ -14,13 +14,12 @@ class SprintPage extends MiniGamesPage {
   private pointSum: Element | null = null;
   private resultFetch: IWords[] = [];
   private trueAnswer: number = 0;
-  private pointTrue: number = 0;
-  private pointFalse: number = 0;
   private englishWord: Element | null = null;
   private russianWord: Element | null = null;
   private localSeries: number = 0;
   private currentGetSeries: number = 0;
-  private sprintGameParam: IGameParam = {newWords: 0, trueAnswers: 0, bestSeries: 0, gamesPlayed: 0}
+  private sprintGameParam: IGameParam = {newWords: 0, trueAnswers: 0, bestSeries: 0, gamesPlayed: 0};
+  private audioCallGameParam: IGameParam = {newWords: 0, trueAnswers: 0, bestSeries: 0, gamesPlayed: 0};
   private localTrueAnswer: number = 0;
   private point: number = 0;
   private progress: any = null;
@@ -43,9 +42,9 @@ class SprintPage extends MiniGamesPage {
       this.page.insertAdjacentHTML('beforeend', renderFormSprintGame);
     }
     this.page.insertAdjacentHTML('beforeend', renderFormSptintAnswerButton);
-    this.choiseFalseAnswer = <Element>this.page.querySelector('.arrow-position-left');
-    this.choiseTrueAnswer = <Element>this.page.querySelector('.arrow-position-right');
-    this.englishWord = <Element>this.page.querySelector('.english-word');
+    this.choiseFalseAnswer = <HTMLElement>this.page.querySelector('.arrow-position-left');
+    this.choiseTrueAnswer = <HTMLElement>this.page.querySelector('.arrow-position-right');
+    this.englishWord = <HTMLElement>this.page.querySelector('.english-word');
     this.russianWord = <Element>this.page.querySelector('.russian-word');
     const allAnswer = Array.from(Array(20).keys());
     const randomAll = shuffle(allAnswer);
@@ -85,8 +84,6 @@ class SprintPage extends MiniGamesPage {
   }
 
   choiseWrong() {
-    console.log('ошибка')
-    ++this.pointFalse
     if(this.localSeries < this.currentGetSeries){
       this.localSeries = this.currentGetSeries;
     }
@@ -95,7 +92,6 @@ class SprintPage extends MiniGamesPage {
   }
 
   choiseRight() {
-    ++this.pointTrue
     ++this.currentGetSeries;
     ++this.sprintGameParam.trueAnswers;
     ++this.localTrueAnswer;
@@ -118,17 +114,16 @@ class SprintPage extends MiniGamesPage {
   }
 
   timer() {
-    this.seconds = 60;
+    this.seconds = 10;
     const timer = setInterval(() => {
       const timerShow: Element | null = <Element>this.page.querySelector(".timer");
       timerShow.innerHTML = `${this.seconds}`;
       --this.seconds;
       const exitGame = this.page.querySelector(".svg-exit");
       exitGame?.addEventListener('click',() => clearInterval(timer));
-      console.log(timer)
       if(this.seconds === 0){
         this.page.insertAdjacentHTML('beforeend', renderSprintResultAnswer);
-        this.localAudio();
+        this.localSprint();
         this.renderConclusion();
         this.renderPoint = <Element>this.page.querySelector('.point');
         this.pointSum = <Element>this.page.querySelector('.point-sum');
@@ -139,16 +134,29 @@ class SprintPage extends MiniGamesPage {
     }, 1000)
   }
 
-  localAudio(){
+  localSprint(){
     ++this.sprintGameParam.gamesPlayed;
     this.sprintGameParam.bestSeries = this.localSeries;
+    const finalArr: IWords[] = [...this.localTotalWordssMistakes, ...this.localTotalWordssRight];
     const getLocal: string | null = localStorage.getItem('sprintGameParam');
-    if(getLocal === null){ 
+    const getLocalAmountWords: string | null = localStorage.getItem('totalWord');
+    const arrWord = finalArr.map(item => item.word);
+    const exceptionalValues = [...new Set(arrWord)];
+    if(getLocal === null || getLocalAmountWords === null){ 
+      this.sprintGameParam.newWords = arrWord.length;
       localStorage.setItem('sprintGameParam', JSON.stringify(this.sprintGameParam));
+      setLocalStorage('totalWord', exceptionalValues);
+      setLocalStorage('audioCallGameParam' ,this.audioCallGameParam);
     } else {
+      const parseTotalWord: string[] = JSON.parse(getLocalAmountWords);
+      const filtWord = exceptionalValues.filter(item => !parseTotalWord.includes(item));
+      const resultExceptionalValues = [...parseTotalWord,...filtWord];
+      setLocalStorage('totalWord', resultExceptionalValues);
+      const parseAnswerWord: IGameParam = JSON.parse(getLocal);
+      this.sprintGameParam.newWords = parseAnswerWord.newWords + filtWord.length;
       const parseObg: IGameParam = JSON.parse(getLocal);
       const endGame = this.sprintGameParam.gamesPlayed + parseObg.gamesPlayed;
-      this.sprintGameParam.gamesPlayed = endGame ;
+      this.sprintGameParam.gamesPlayed = endGame;
       this.sprintGameParam.trueAnswers = this.localTrueAnswer + parseObg.trueAnswers;
       if(this.localSeries > parseObg.bestSeries){
         this.sprintGameParam.bestSeries = this.localSeries;
@@ -158,39 +166,46 @@ class SprintPage extends MiniGamesPage {
         setLocalStorage('sprintGameParam', this.sprintGameParam);
       }
     }
-    this.localTrueAnswer = 0;
     this.sprintGameParam = {newWords: 0, trueAnswers: 0, bestSeries: 0, gamesPlayed: 0};
     this.localSeries = 0;
     this.currentGetSeries = 0;
-    this.point = 0;
   }
 
   renderConclusion() {
-    const amountPoints = <Element>document.querySelector('.quantity-true-points');
+    const amountPoints = <HTMLElement>document.querySelector('.quantity-true-points');
     const amountPercent = <HTMLElement>document.querySelector('.percent-answers');
     const amountSprintTrueAnswer = <HTMLElement>document.querySelector('.game-true-answer');
     const amountSprintFalseAnswer = <HTMLElement>document.querySelector('.game-false-answer');
     const numberSprintTrueAnswer = <HTMLElement>document.querySelector('.number-amount-green');
     const numberSprintFalseAnswer = <HTMLElement>document.querySelector('.number-amount-red');
     const nextGame = <HTMLElement>document.querySelector('.next-game');
-    numberSprintTrueAnswer.textContent = `${this.pointTrue}`;
-    numberSprintFalseAnswer.textContent = `${this.pointFalse}`;
+    numberSprintTrueAnswer.textContent = `${this.localTrueAnswer}`;
+    numberSprintFalseAnswer.textContent = `${this.count-this.localTrueAnswer}`;
     renderResult(this.localTotalWordssMistakes, amountSprintFalseAnswer);
     renderResult(this.localTotalWordssRight, amountSprintTrueAnswer);
     const maxPercent = Math.round((this.localTrueAnswer/this.count) * 100);
     amountPoints.textContent= `${this.point} Очков`;
+    amountPoints.addEventListener('animationend', () => {
+      amountPoints.textContent = `${amountPoints.textContent}'animation ended'`;
+      amountPoints.classList.remove('active');
+      amountPoints.textContent= `${this.point} Очков`;
+    });
+
+
+
     if(isNaN(maxPercent)){
       amountPercent.textContent = `${0}%`;
       amountPercent.style.background = `red`;
     }else{
       amountPercent.textContent = `${maxPercent}%`;
       amountPercent.style.background = `linear-gradient(to right, green ${maxPercent}%, red ${100 - maxPercent}%)`;
+      amountPercent.style.transition = `0.7s linear`
     }
+    this.localTrueAnswer = 0;
     this.count = 0;
     this.localTotalWordssRight = [];
     this.localTotalWordssMistakes = [];
-    this.pointTrue = 0;
-    this.pointFalse = 0;
+    this.point = 0;
     nextGame.addEventListener('click',() => this.render());
     nextGame.addEventListener('click',() => this.clearPage());
     nextGame.addEventListener('click',() => this.timer());
