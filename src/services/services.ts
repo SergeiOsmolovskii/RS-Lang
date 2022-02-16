@@ -1,5 +1,6 @@
 import { buttonsGroups1, buttonsPage } from '../options/options';
 import { getLocalStorage } from './storage';
+import { IWord } from '../api/api';
 
 export function insertElement(
   tagName: string,
@@ -94,6 +95,15 @@ export const changeQuoteNumber = (doc: any) => {
   changeDegright = changeDegright - 720;
   doc[0].style.transform = `rotate(${changeDegLeft-27}deg)`;
   doc[1].style.transform = `rotate(${changeDegright+164}deg)`;
-  doc[0].style.transition = '0.8s';
-  doc[1].style.transition = '0.8s';
+  doc[0].style.transition = '1s';
+  doc[1].style.transition = '1s';
+}
+
+export const renderResult = (arr: IWord[], parent: HTMLElement) => {
+  arr.forEach((el,i) => {
+    let elementVolume = insertElement('div', ['audio-control'],'', parent);
+    elementVolume.classList.add('mini-audio');
+
+    insertElement('div', ['word'],`${el.word} - ${el.wordTranslate}`, parent);
+  });
 }
