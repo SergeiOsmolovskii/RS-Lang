@@ -102,10 +102,25 @@ export const FOOTER_CONTENT_HTML = `
     <a class="github-username" href="/#team">о команде</a>
     <p class="copyright">© 2022</p>
   </div>
-
 `;
+
+
+export const GAMES_TYPE = [
+  {
+    ru: "Спринт",
+    eng: "sprint",
+  },
+  {
+    ru: "Аудиовызов",
+    eng: "audioCalls",
+  },
+];
+
+export const WORD_PER_GAME = 20;
+export const TRUE_ANSWERS_STROKE = 283;
 
 export const MAIN_PAGE_CONTENT_HTML = `
   <h3 class="main-page-title">учи английский <span class="main-page-title__orange">играя!</span></h3>
   <p class="main-page-info">Проходи интерактивные игры и пополняй свой словарный запас каждый день</p>
 `;
+

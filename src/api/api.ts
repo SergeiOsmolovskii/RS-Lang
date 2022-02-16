@@ -78,7 +78,6 @@ export interface IUserWordOptions {
 	trueAnswersCount: number,
 	falseAnswersCount: number,
 	trueAnswersSeria: number,
-	falseAnswersSeria: number
 }
 
 /* AggregatedWord */
@@ -102,17 +101,17 @@ export interface IAggregatedWord {
 }
 
 /* Statistic */
-
 export interface IStatistic {
-	id: "",
 	learnedWords: number,
-	general: IGeneralStatistic,
-	games: IGames
+	optional: {
+		general: object,
+		games: IGames
+	}
 }
 
 export interface IGeneralStatistic {
 	day: Date | string,
-	newWordsPerDay: string,
+	newWordsPerDay: number,
 }
 
 export interface IGames {
@@ -121,13 +120,12 @@ export interface IGames {
 }
 
 export interface IGamesStatistic {
-	gamesPlay: number,
-	correct: number,
-	wrong: number,
-	bestSeries: number
+	newWords: number,
+	trueAnswers: number,
+	bestSeries: number,
+	gamesPlayed: number,
+	wrongAnswers: number
 }
-
-/* Game */
 
 export interface IGameParam {
 	newWords: number,

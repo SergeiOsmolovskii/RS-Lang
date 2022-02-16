@@ -66,14 +66,14 @@ export class CardsContainer {
     btnHard.addEventListener('click', async (event: Event) => {
       await setUserWord(elementId, {
         difficulty: 'hard',
-        optional: { trueAnswersCount: 0, falseAnswersCount: 0, trueAnswersSeria: 0, falseAnswersSeria: 0 },
+        optional: { trueAnswersCount: 0, falseAnswersCount: 0, trueAnswersSeria: 0},
       });
       TextbookPage.renderCardContainer(Regime.group);
     });
     btnEasy.addEventListener('click', async (event: Event) => {
       await setUserWord(elementId, {
         difficulty: 'easy',
-        optional: { trueAnswersCount: 0, falseAnswersCount: 0, trueAnswersSeria: 0, falseAnswersSeria: 0 },
+        optional: { trueAnswersCount: 0, falseAnswersCount: 0, trueAnswersSeria: 0},
       });
       TextbookPage.renderCardContainer(Regime.group);
     });

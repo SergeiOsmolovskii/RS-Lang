@@ -57,6 +57,17 @@ export class App {
       const userId = localStorage.getItem('currentUserID');
       const userToken = localStorage.getItem('currentUserToken');
 
+      if(!localStorage.getItem('audioCallGameParam') && !localStorage.getItem('audioCallGameParam')) {
+        const startSettingParam = {
+          newWords: 0,
+          trueAnswers: 0,
+          bestSeries: 0,
+          gamesPlayed: 0
+        }
+        localStorage.setItem('audioCallGameParam', JSON.stringify(startSettingParam));
+        localStorage.setItem('sprintGameParam', JSON.stringify(startSettingParam));
+      }
+
       if (userId !== null && userToken !== null) {
         const currentUser = await getCurrentUser(userId, userToken);
         storage.userName = currentUser.name as string;
@@ -64,6 +75,7 @@ export class App {
         storage.userId = userId;
         storage.isAuthorized = true;
       }
+
       const headerHTML = new Header("header", ["header"]);
       const pageHTML = page.render();
       (await pageHTML).id = this.defaultPageId;
