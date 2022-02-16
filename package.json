@@ -38,6 +38,7 @@
         "webpack-dev-server": "^4.4.0"
     },
     "dependencies": {
+        "chart.js": "^3.7.1",
         "nouislider": "^15.5.0"
     }
 }

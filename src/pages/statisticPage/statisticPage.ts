@@ -5,6 +5,7 @@ import Page from "../../templates/page";
 import { WORD_PER_GAME, TRUE_ANSWERS_STROKE } from "../../options/options";
 import { IGamesStatistic, storage } from "../../api/api";
 import { getUserStatistic } from "../../api/statistic";
+import { addGraphNewWordsForAllDays, addGraphNewWordsPerDay } from "./graph";
 
 interface IGameParam {
   newWords: number,
@@ -76,9 +77,33 @@ class StatisticPage extends Page {
         )
       );
       statisticBlock.insertAdjacentHTML("beforeend", gamesStatistic(gamesStatisticParam));
+
+      addGraphs(this.page)
     }
     return this.page;
   }
+}
+
+const addGraphs = async (page: HTMLElement) => {
+
+  const graphCanvasNewWordsPerDay = document.createElement('canvas');
+  const graphNewWordsForAllDays = document.createElement('canvas');
+  const graphContainer = document.createElement('div');
+  const firstGraphContainer = document.createElement('div');
+  const secondGraphContainer = document.createElement('div');
+  firstGraphContainer.classList.add('graph');
+  secondGraphContainer.classList.add('graph');
+
+  graphContainer.classList.add('graph-container');
+  page.append(graphContainer);
+
+  graphContainer.append(firstGraphContainer);
+  firstGraphContainer.append(graphCanvasNewWordsPerDay)
+  graphContainer.append(secondGraphContainer);
+  secondGraphContainer.append(graphNewWordsForAllDays);
+
+  await addGraphNewWordsPerDay(graphCanvasNewWordsPerDay);
+  await addGraphNewWordsForAllDays(graphNewWordsForAllDays);
 }
 
 const statistic = async ( answrsCount: number, newWords: number, longestSeria: number, storkParam: number) => `
