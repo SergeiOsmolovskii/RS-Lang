@@ -97,7 +97,7 @@ export const renderGame = `
 </div>
 `
 export const renderNextButton = `
-<button class="nextWord">Следующий</button>
+<button class="next-word">Следующий</button>
 `
 export const renderTimerForm = `
 <div class="border-line">
@@ -116,32 +116,43 @@ export const renderFormSprintGame = `
 `
 export const renderFormSptintAnswerButton = `
 <div class="contain-answer-button">
-  <button class="arrow-position-left">
+  <button class="arrow-button arrow-position-left">
     <div class="svg-direction svg-direction-transform"></div>
     <span class="svg-arrow-left">Неверно</span>
   </button>
-  <button class="arrow-position-right">
+  <button class="arrow-button arrow-position-right">
     <span class="svg-arrow-right">Верно</span>
     <div class="svg-direction"></div>
   </button>
 </div>
 `
 export const renderFormSprintProgress = `
+<div class="point">0</div>
 <div class="point-progress">
   <div class="heart"></div>
   <div class="heart"></div>
   <div class="heart"></div>
 </div>
+<div class="point-sum">+10</div>
 `
 
 export const renderSprintResultAnswer = `
-<div class="result-answer">
+<div class="window-open-answer">
   <span>Результаты</span>
   <span class="quantity-true-points"></span>
   <div class="percent-answers"></div>
   <div class="wrap-answer">
-    <div class="sprint-true-answer"></div>
-    <div class="sprint-false-answer"></div>
+    <div class="wrap-result">
+      <span>Верно</span>
+      <div class="number-amount-green"></div>
+    </div>
+    <div class="wrap-game game-true-answer"></div>
+    <div class="line"></div>
+    <div class="wrap-result">
+      <span>Неверно</span>
+      <div class="number-amount-red"></div>
+    </div>
+    <div class="wrap-game game-false-answer"></div>
   </div>
   <button class="next-game">Играть</button>
 </div>

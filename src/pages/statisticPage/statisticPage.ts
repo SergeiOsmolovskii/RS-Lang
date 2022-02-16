@@ -49,6 +49,7 @@ class StatisticPage extends Page {
       statisticBlock.insertAdjacentHTML('beforeend', gamesStatistic(gamesStatisticParam));
     } else {
       const storageStatistic = await getUserStatistic();
+      console.log(storageStatistic)
 
       const bestSeries = calcBestSeries(
         storageStatistic.optional.games.sprint.bestSeries,

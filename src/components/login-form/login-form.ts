@@ -146,7 +146,7 @@ export const registrationNewUser = async (e: Event): Promise<void> => {
   });
 
   let wordsPerDateMap = new Map<string, number>();
-  wordsPerDateMap.set(new Date().toDateString(), 0)
+  wordsPerDateMap.set(new Date().toLocaleDateString(), 0);
 
   if (userID && authorizationData) {
     localStorage.setItem('currentUserID', userID.id);

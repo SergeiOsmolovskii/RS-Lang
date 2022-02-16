@@ -126,3 +126,10 @@ export interface IGamesStatistic {
 	gamesPlayed: number,
 	wrongAnswers: number
 }
+
+export interface IGameParam {
+	newWords: number,
+  trueAnswers: number,
+  bestSeries: number,
+  gamesPlayed: number
+}
