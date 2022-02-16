@@ -11,6 +11,8 @@ import StatisticPage from "../pages/statisticPage/statisticPage";
 import TextbookPage from "../pages/textbookPage/textbookPage";
 import Page from "../templates/page";
 import { logOut } from "../components/login-form/login-form";
+import TeamPage from "../pages/teamPage/teamPage";
+
 
 export class App {
   private static container: HTMLElement = document.body;
@@ -46,7 +48,9 @@ export class App {
       case PageIds.Games:
         page = new MiniGamesPage(idPage);
         break;
-
+      case PageIds.TeamPage:
+        page = new TeamPage(idPage);
+        break;
     }
 
     if (page) {

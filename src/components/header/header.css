@@ -5,6 +5,7 @@
   width: 90%;
   height: 123px;
   margin: 0 auto;
+  margin-bottom: 20px;
 }
 
 .header-controls {
@@ -22,11 +23,98 @@
 .nav-link {
   display: block;
   margin-left: 20px;
-  font-size: 14px;
+  font-size: 24px;
   text-transform: uppercase;
   padding: 5px;
-  border: 2px solid #fff;
+  color: #a395da;
+  font-weight: 900;
   border-radius: 5px;
   white-space: nowrap;
   transition: all 0.3s linear;
+}
+
+.nav-link:hover {
+  color: #4a4b4e;
+}
+
+.logo {
+  width: 124px;
+  height: 124px;
+  background-image: url('/src/assets/svg/logo.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.logo-title {
+  margin-left: -30px;
+  font-size: 48px;
+  font-weight: 700;
+  color: #aa96dd;
+}
+
+@media (max-width: 1400px) {
+ 
+  .header {
+    height: 110px;
+  }
+
+  .logo {
+    width: 110px;
+    height: 110px;
+  }
+  
+  .logo-title {
+    font-size: 36px;
+  }
+
+  .nav-link {
+    margin-left: 15px;
+    font-size: 20px;
+    text-transform: uppercase;
+  }
+
+}
+
+@media (max-width: 1200px) {
+
+  .header {
+    height: 100px;
+
+  }
+ 
+  .logo {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .logo-title {
+    font-size: 30px;
+  }
+
+  .nav-link {
+    margin-left: 10px;
+    font-size: 18px;
+  }
+
+}
+
+@media (max-width: 1000px) {
+
+  .header {
+    height: 100px;
+    margin-bottom: 20px;
+  }
+
+  .logo {
+    width: 90px;
+    height: 90px;
+  }
+  
+  .logo-title {
+    margin-left: -20px;
+    font-size: 28px;
+  }
+
 }
