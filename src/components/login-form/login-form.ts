@@ -71,7 +71,7 @@ const renderRegistrForm = (): string => `
 </div>
 `;
 
-const appendLoginForm = async (): Promise<void> => {
+ const appendLoginForm = async (): Promise<void> => {
   await removeForm();
   body?.insertAdjacentHTML('beforeend', renderLogInForm());
   closeOverlayListener();
@@ -83,7 +83,7 @@ const appendLoginForm = async (): Promise<void> => {
 
 }
 
-async function appendRegistrationForm (): Promise<void> {
+export async function appendRegistrationForm (): Promise<void> {
   await removeForm();
   body?.insertAdjacentHTML('beforeend', renderRegistrForm());
   closeOverlayListener();

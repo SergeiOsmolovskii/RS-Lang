@@ -8,6 +8,7 @@ a {
   text-decoration: none;
 }
 
+h1,
 h2,
 h3 {
   margin: 0;
@@ -29,7 +30,7 @@ body {
   margin: 0;
   color: #4a4b4e;
   background: #fff;
-  font-family: sans-serif;
+  font-family: "Nunito", sans-serif;
 }
 
 .page {
@@ -41,4 +42,10 @@ body {
 .title {
   text-align: center;
   margin-bottom: 30px;
+}
+
+.logo-link,
+.logo-container {
+  display: flex;
+  align-items: center;
 }

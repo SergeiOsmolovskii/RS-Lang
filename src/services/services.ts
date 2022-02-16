@@ -1,3 +1,4 @@
+import { storage } from '../api/api';
 import { buttonsGroups1, buttonsPage } from '../options/options';
 import { getLocalStorage } from './storage';
 import { IWord } from '../api/api';
@@ -24,10 +25,12 @@ export function insertElement(
 export const renderHeaderButtons = (): HTMLElement => {
   const headerButtons = insertElement('nav', ['nav'], '');
   buttonsPage.forEach((button) => {
-    const buttonHTML = <HTMLAnchorElement>insertElement('a', [...button.class], button.label, '');
-    buttonHTML.href = `#${button.id}`;
-    headerButtons.append(buttonHTML);
-  });
+    if (storage.isAuthorized || (!storage.isAuthorized && !button.forAuthorized)){
+        const buttonHTML = <HTMLAnchorElement>insertElement('a', [...button.class], button.label, '');
+        buttonHTML.href = `#${button.id}`;
+        headerButtons.append(buttonHTML);
+      } 
+   });
   return headerButtons;
 };
 
