@@ -2,8 +2,9 @@
 .statistic-block {
   display: flex;
   justify-content: space-between;
-  color:#000;
+  margin-bottom: 50px;
   font-family: Nunito;
+  color:#000;
 }
 
 .title-statistic {
@@ -143,4 +144,20 @@
   background: url('../../assets/svg/audioCall-logo.svg'), linear-gradient(180deg, #AA96DD 0%, rgba(115, 127, 233, 0.77) 100%);
   background-position: center;
   background-repeat: no-repeat;
+}
+
+.graph-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 0 auto;
+}
+
+.graph {
+  width: 45%;
+  box-shadow: 10px 10px 10px rgb(0 0 0 / 25%);
+}
+
+.graph canvas {
+  background-color: #F6F6F6;
 }
