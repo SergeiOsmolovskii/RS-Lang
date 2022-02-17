@@ -21,7 +21,7 @@ class StatisticPage extends Page {
   }
 
   async render(): Promise<HTMLElement> {
-    const title = insertElement('h2', ['title-statistic'], 'Статистика за сутки', this.page);
+    const title = insertElement('h2', ['title-statistic'], 'Статистика за все время', this.page);
     const statisticBlock = insertElement('div', ['statistic-block'], '', this.page);
 
     if (!storage.isAuthorized) {
@@ -50,8 +50,6 @@ class StatisticPage extends Page {
       statisticBlock.insertAdjacentHTML('beforeend', gamesStatistic(gamesStatisticParam));
     } else {
       const storageStatistic = await getUserStatistic();
-      console.log(storageStatistic)
-
       const bestSeries = calcBestSeries(
         storageStatistic.optional.games.sprint.bestSeries,
         storageStatistic.optional.games.audioCall.bestSeries
@@ -77,6 +75,7 @@ class StatisticPage extends Page {
         )
       );
       statisticBlock.insertAdjacentHTML("beforeend", gamesStatistic(gamesStatisticParam));
+      const title = insertElement('h2', ['title-statistic'], 'Успеваемость', this.page);
 
       addGraphs(this.page)
     }
@@ -172,6 +171,5 @@ const calcTruAnswersPercent = (sprintGames: number, sprintTrueAnswers: number, a
 const calcBestSeries = (sprintSeria: number, audioCallsSeria: number) => {
   return Math.max(sprintSeria, audioCallsSeria);
 }
-
 
 export default StatisticPage;
