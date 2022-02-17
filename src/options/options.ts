@@ -24,25 +24,21 @@ export const buttonsPage = [
     id: PageIds.MainPage,
     label: "главная страница",
     class: ["nav-link"],
-    forAuthorized: false,
   },
   {
     id: PageIds.TextbookPage,
     label: "учебник",
     class: ["nav-link"],
-    forAuthorized: false,
   },
   {
     id: PageIds.Games,
     label: "игры",
     class: ["nav-link"],
-    forAuthorized: false,
   },
   {
     id: PageIds.StatisticPage,
     label: "статистика",
     class: ["nav-link"],
-    forAuthorized: true,
   },
 ];
 

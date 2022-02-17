@@ -1,9 +1,8 @@
-import { storage } from '../api/api';
 import { buttonsGroups1, buttonsPage, Difficulty, Regime } from '../options/options';
+import { IWord, storage } from '../api/api';
 import { getLocalStorage } from './storage';
-import { IWord } from '../api/api';
+import { setUserWord, updateUserWord } from '../api/userWords';
 import TextbookPage from '../pages/textbookPage/textbookPage';
-import { updateUserWord, setUserWord } from '../api/userWords';
 
 export function insertElement(
   tagName: string,
@@ -53,10 +52,15 @@ export const playAudio = (playList: Array<string>): void => {
   let playNum = 0;
   const audio = document.createElement('audio');
   audio.src = playList[playNum];
-  audio.play();
+  if (!storage.isPlayed) {
+    audio.play();
+    storage.isPlayed = true;
+  }
+  
   audio.onended = () => {
     if (playNum === playList.length - 1) {
       audio.pause();
+      storage.isPlayed = false;
     } else {
       playNum = playNum + 1;
       audio.src = playList[playNum];
@@ -65,7 +69,7 @@ export const playAudio = (playList: Array<string>): void => {
   };
 };
 
-export const getRandom = (min: number, max: number): number => {
+export const getRandom = (min: number, max: number) => {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -82,7 +86,7 @@ export const shuffle = (arr: number[]) => {
   return arr;
 }
 
-export const clicker = (el: HTMLElement): void =>{
+export const clicker = (el: HTMLElement) =>{
     const circle = document.createElement('div');
     circle.classList.add('circle');
     circle.style.left = 195 + 'px';
@@ -93,7 +97,7 @@ export const clicker = (el: HTMLElement): void =>{
 
 let changeDegLeft = 0;
 let changeDegright = 0;
-export const changeQuoteNumber = (doc: any): void => {
+export const changeQuoteNumber = (doc: any) => {
   changeDegLeft = changeDegLeft + 720;
   changeDegright = changeDegright - 720;
   doc[0].style.transform = `rotate(${changeDegLeft-27}deg)`;
@@ -103,11 +107,13 @@ export const changeQuoteNumber = (doc: any): void => {
 }
 
 export const renderResult = (arr: IWord[], parent: HTMLElement) => {
-  arr.forEach((el,i) => {
+  arr.forEach(el => {
     let elementVolume = insertElement('div', ['audio-control'],'', parent);
     elementVolume.classList.add('mini-audio');
-
     insertElement('div', ['word'],`${el.word} - ${el.wordTranslate}`, parent);
+    const audio = document.createElement('audio');
+    audio.src = `https://rs-lang-learn.herokuapp.com/${el.audio}`;
+    elementVolume.addEventListener('click', () => audio.play());
   });
 }
 

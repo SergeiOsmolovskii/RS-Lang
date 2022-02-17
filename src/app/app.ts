@@ -13,6 +13,7 @@ import Page from "../templates/page";
 import { logOut } from "../components/login-form/login-form";
 import TeamPage from "../pages/teamPage/teamPage";
 
+
 export class App {
   private static container: HTMLElement = document.body;
   private static defaultPageId = "current-page";
