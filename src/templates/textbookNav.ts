@@ -1,7 +1,7 @@
 import { Regime } from '../options/options';
 import TextbookPage from '../pages/textbookPage/textbookPage';
 import { insertElement } from '../services/services';
-import { setLocalStorage } from '../services/storage';
+import { getLocalStorage, setLocalStorage } from '../services/storage';
 
 export class TextbookNav {
   public container: HTMLElement;

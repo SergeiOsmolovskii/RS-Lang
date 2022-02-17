@@ -2,7 +2,6 @@ export const storage = {
 	userId : '',
 	userName : '',
 	userEmail: '',
-	userGameRegime: '',
 	isAuthorized: false,
 }
 

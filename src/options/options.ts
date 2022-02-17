@@ -8,12 +8,6 @@ export enum PageIds {
   TeamPage = "team",
 }
 
-export enum Difficulty {
-  studiedWord = "studied",
-  normalWord = "easy",
-  hardWords = "hard",
-}
-
 export enum Regime {
   group = "group",
   hard = "hard",
@@ -24,25 +18,21 @@ export const buttonsPage = [
     id: PageIds.MainPage,
     label: "главная страница",
     class: ["nav-link"],
-    forAuthorized: false,
   },
   {
     id: PageIds.TextbookPage,
     label: "учебник",
     class: ["nav-link"],
-    forAuthorized: false,
   },
   {
     id: PageIds.Games,
     label: "игры",
     class: ["nav-link"],
-    forAuthorized: false,
   },
   {
     id: PageIds.StatisticPage,
     label: "статистика",
     class: ["nav-link"],
-    forAuthorized: true,
   },
 ];
 
