@@ -100,10 +100,12 @@ export const changeQuoteNumber = (doc: any) => {
 }
 
 export const renderResult = (arr: IWord[], parent: HTMLElement) => {
-  arr.forEach((el,i) => {
+  arr.forEach(el => {
     let elementVolume = insertElement('div', ['audio-control'],'', parent);
     elementVolume.classList.add('mini-audio');
-
     insertElement('div', ['word'],`${el.word} - ${el.wordTranslate}`, parent);
+    const audio = document.createElement('audio');
+    audio.src = `https://rs-lang-learn.herokuapp.com/${el.audio}`;
+    elementVolume.addEventListener('click', () => audio.play());
   });
 }

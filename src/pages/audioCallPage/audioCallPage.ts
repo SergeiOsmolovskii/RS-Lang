@@ -1,7 +1,8 @@
 import "./audioCallPage.css";
 import { insertElement, getRandom, shuffle, clicker, renderResult } from "../../services/services";
 import { getWords, IWords } from '../../api/getWords';
-import { renderGame, renderNextButton, renderProgressGame, renderSvgExit, renderSprintResultAnswer } from "../../services/renderForm";
+import { renderGame, renderNextButton, renderProgressGame, renderSvgExit } from "../../services/renderFormAudioCall";
+import { renderSprintResultAnswer } from "../../services/renderFormSprint";
 import MiniGamesPage from "../games/game";
 import { IGameParam } from '../../api/api';
 import { setLocalStorage } from "../../services/storage";
@@ -58,10 +59,11 @@ class AudioCallPage extends MiniGamesPage {
     this.freeResultAnswer = (e: Event) => this.resultAnswer(e);
     this.freeAudioAnswer = () => clicker(this.audioPlay);
     this.listContainer.addEventListener('click', this.freeResultAnswer, false);
-    const audioNew: HTMLAudioElement = new Audio(`https://rs-lang-learn.herokuapp.com/${this.resultFetch[this.trueAnswer].audio}`);
+    const audioNew: HTMLAudioElement = await new Audio(`https://rs-lang-learn.herokuapp.com/${this.resultFetch[this.trueAnswer].audio}`);
     this.audioPlay = this.page.querySelector('.svg-volume');
     this.audioPlay?.addEventListener('click', this.freeAudioAnswer);
     this.audioPlay?.addEventListener('click', () => audioNew.play());
+    audioNew.muted;
     audioNew.play();
     return this.page;
   }
@@ -105,24 +107,22 @@ class AudioCallPage extends MiniGamesPage {
     nextStep.addEventListener('click', nextStepFunction);
     nextStep.addEventListener('click', () => this.clearNextPage());
     if(this.count === 15){
-      this.localaudioCallGetPut();
+      this.localaudioCall();
       nextStep.innerHTML = 'Результат'
       nextStep.removeEventListener('click', nextStepFunction);
       nextStep.addEventListener('click', () => this.renderConclusion());
     }
   }
 
-  localaudioCallGetPut(){
+  localaudioCall(){
     ++this.audioCallGameParam.gamesPlayed;
     this.audioCallGameParam.bestSeries = this.localSeries;
     const finalArr: IWords[] = [...this.localTotalWordssMistakes, ...this.localTotalWordssRight];
-
     const getLocal: string | null = localStorage.getItem('audioCallGameParam');
     const getLocalAmountWords: string | null = localStorage.getItem('totalWord');
     const arrWord = finalArr.map(item => item.word);
     const exceptionalValues = [...new Set(arrWord)];
-
-
+    
     if(getLocal === null || getLocalAmountWords === null){
       this.audioCallGameParam.newWords = arrWord.length
       setLocalStorage('audioCallGameParam', this.audioCallGameParam);
@@ -133,14 +133,8 @@ class AudioCallPage extends MiniGamesPage {
       const filtWord = exceptionalValues.filter(item => !parseTotalWord.includes(item));
       const resultExceptionalValues = [...parseTotalWord,...filtWord];
       setLocalStorage('totalWord', resultExceptionalValues);
-
-
-
-
-
       const parseAnswerWord: IGameParam = JSON.parse(getLocal);
       this.audioCallGameParam.newWords = parseAnswerWord.newWords + filtWord.length;
-
       const parseAnswers: IGameParam = JSON.parse(getLocal);
       const endGame = this.audioCallGameParam.gamesPlayed + parseAnswers.gamesPlayed;
       this.audioCallGameParam.gamesPlayed = endGame;

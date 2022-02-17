@@ -1,13 +1,13 @@
 import "./game.css"
 import { insertElement } from "../../services/services";
 import Page from "../../templates/page";
-import { renderFormLevel } from "../../services/renderForm";
+import { renderFormLevel } from "../../services/renderFormChoiseLvl";
 
 class MiniGamesPage extends Page {
   public checkInput: HTMLInputElement[] | null = null;
   public checkNumber: number = 0;
   public count: number = 0;
-  public dateGame: string = new Date().toLocaleDateString();;
+  public dateGame: string = new Date().toLocaleDateString();
 
   constructor(id: string) {
     super(id);
@@ -32,6 +32,8 @@ class MiniGamesPage extends Page {
   checkData(){
     if(localStorage.getItem('date') !== this.dateGame){
       localStorage.removeItem('sprintGameParam');
+      localStorage.removeItem('audioCallGameParam');
+      localStorage.removeItem('totalWord');
     }
     localStorage.setItem('date', this.dateGame)
   }
