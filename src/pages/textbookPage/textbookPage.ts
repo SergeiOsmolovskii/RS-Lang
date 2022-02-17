@@ -31,10 +31,9 @@ class TextbookPage extends Page {
     const headerButtonContainer = insertElement('div', ['page-header-buttons'], '', headerPageContainer);
     const btnGameAudioCall = <HTMLAnchorElement>insertElement('a', ['btn-game'], 'Аудиовызов', headerButtonContainer);
     btnGameAudioCall.href='#game/audio-call';
-    btnGameAudioCall.addEventListener('click', () => storage.userGameRegime = 'filtrWords') 
     const btnGameSprint = <HTMLAnchorElement>insertElement('a', ['btn-game'], 'Спринт', headerButtonContainer);
     btnGameSprint.href='#game/sprint';
-    btnGameSprint.addEventListener('click', () => storage.userGameRegime = 'filtrWords');
+
     return headerPageContainer;
   }
 

@@ -51,3 +51,9 @@ body {
   display: flex;
   align-items: center;
 }
+
+@media (max-width: 1050px) {
+  .title {
+    font-size: 20px;
+  }
+}

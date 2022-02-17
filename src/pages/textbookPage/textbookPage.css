@@ -3,8 +3,7 @@
   justify-content: flex-end;
 }
 
-.page-header,
-.card-answers-container {
+.page-header {
   display: flex;
   justify-content: space-between;
   margin: 10px 0;
@@ -59,12 +58,17 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin: 10px;
+}
+
+.card-title-container,
+.card-header-container {
+  display: flex;
+  justify-content: space-between;
 }
 
 .card-title-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
 }
 
 .card-info {
@@ -74,7 +78,8 @@
   padding-left: 10px;
 }
 
-.card-title{
+.card-title {
+  margin: 0;
   font-size: 18px;
   padding-right: 10px;
   color: #000;
@@ -83,16 +88,24 @@
 .card-answers-container {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 115px;
   margin-right: 20px;
 }
 
 .card-answer {
   text-align: center;
-  width: 40%;
+  width: 45%;
   border-radius: 5px;
-  background-color: #fcaa23;
   color: #fff;
+}
+
+.card-answer__true {
+  background-color: #fcaa23;
+}
+
+.card-answer__false {
+  background-color:#aaa;
 }
 
 .card-text {
@@ -125,7 +138,8 @@
 .card-btn:hover,
 .group-item:hover,
 .page-item:hover,
-.group-hard:hover {
+.group-hard:hover,
+.btn-game:hover {
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25);
 }
 
@@ -167,18 +181,18 @@
 
 .btn-game {
   background-color: #fcaa23;
-}
-
-.btn-game {
   min-width: 140px;
   text-align: center;
 }
+
 .audio-control {
   width: 30px;
   height: 30px;
   background-image: url('/src/assets/svg/play.svg');
   background-position: center;
   background-size: cover;
+  cursor: pointer;
+  transition: all 0.3s;
 }
 
 .group-container {
@@ -227,6 +241,7 @@
 
 .group-item.active,
 .group-hard.active,
+.group-hard:hover,
 .btn-game:hover {
   color: #4a4b4e;
 }
@@ -257,6 +272,7 @@
 
 @media (max-width: 1050px) {
   .card-item {
+    width: 100%;
     gap: 5px;
     border-radius: 5px;
     padding: 10px;
@@ -264,7 +280,8 @@
   
   .page-item, 
   .group-item,
-  .group-hard {
+  .group-hard,
+  .btn-game {
     font-size: 16px;
     padding: 4px 8px;
   }
@@ -286,15 +303,9 @@
   }
 }
 
-@media (max-width: 950px) {
-  .card-title {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
-
 @media (max-width: 700px) {
-  .card-item {
+  .card-item,
+  .page-header {
     flex-direction: column;
   }
 

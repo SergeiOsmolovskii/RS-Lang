@@ -23,15 +23,16 @@ export class CardsContainer {
       const cardInfo = insertElement('div', ['card-info'], '', cardItem);
       const cardHeader = insertElement('div', ['card-header'], '', cardInfo);
       const cardTitle = insertElement('div', ['card-title-container'], '', cardHeader);
-      const word = insertElement('h3', ['card-title'], element.word, cardTitle);
+      const word = insertElement('p', ['card-title'], element.word, cardTitle);
       const transcription = insertElement('p', ['card-title'], element.transcription, cardTitle);
       const translate = insertElement('p', ['card-title'], element.wordTranslate, cardTitle);
+      const titleContainer = insertElement('div', ['card-header-container'], '', cardHeader);
       if (storage.isAuthorized) {
-        const answersContainer = insertElement('div', ['card-answers-container'], '', cardHeader);
-        const trueAnswers = insertElement('div', ['card-answer', 'card-answer__true'], element.userWord ? `${element.userWord.optional?.trueAnswersCount}` : '0', answersContainer);
+        const answersContainer = insertElement('div', ['card-answers-container'], '', titleContainer);
+        const trueAnswers = insertElement('div', ['card-answer',  `btn-color${idStyle + 1}`], element.userWord ? `${element.userWord.optional?.trueAnswersCount}` : '0', answersContainer);
         const falseAnswers = insertElement('div', ['card-answer', 'card-answer__false'], element.userWord ? `${element.userWord.optional?.falseAnswersCount}` : '0', answersContainer);
       }
-      const audioControl = insertElement('div', ['audio-control'], '', cardHeader);
+      const audioControl = insertElement('div', ['audio-control'], '', titleContainer);
       audioControl.onclick = () => {
         playAudio([
           `${baseUrl}/${element.audio}`,
