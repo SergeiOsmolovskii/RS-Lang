@@ -1,10 +1,11 @@
 import "./sprintPage.css"
-import { insertElement, getRandom, shuffle, changeQuoteNumber, renderResult } from "../../services/services";
+import { insertElement, getRandom, shuffle, changeQuoteNumber, renderResult, playAudio } from "../../services/services";
 import MiniGamesPage from "../games/game";
-import { renderTimerForm, renderFormSprintGame, renderSvgExit, renderFormSprintProgress, renderFormSptintAnswerButton, renderSprintResultAnswer } from "../../services/renderForm";
+import { renderTimerForm, renderFormSprintGame, renderSvgExit, renderFormSprintProgress, renderFormSptintAnswerButton, renderSprintResultAnswer } from "../../services/renderFormSprint";
 import { getWords, IWords } from '../../api/getWords';
-import { IGameParam } from '../../api/api';
+import { IGameParam, storage } from '../../api/api';
 import { setLocalStorage } from "../../services/storage";
+import { getAllAggregatedWords } from '../../api/aggregatedWords';
 
 
 class SprintPage extends MiniGamesPage {
@@ -26,14 +27,27 @@ class SprintPage extends MiniGamesPage {
   private localTotalWordssRight: IWords[] = [];
   private localTotalWordssMistakes: IWords[] = [];
   private seconds: number = 60;
+  private linkRight!: (e: Event) => void;
+  private linkLeft!: (e: Event) => void;
+
+
   constructor(id: string) {
     super(id);
     this.page = insertElement('main', ['sprint-page'], '','');
   }
 
   async render(): Promise<HTMLElement> {
+    // if(!storage.isAuthorized){
+      this.resultFetch = await getWords(getRandom(0, 29), this.checkNumber);
+    // } else {
+      // const page = getLocalStorage('page') ? Number(getLocalStorage('page')) : 0;
+      // const group = getLocalStorage('group') ? Number(getLocalStorage('group')) : 0;
+      // await getAllAggregatedWords(`${group}`, '0', '20', `{"page":${page}},{"userWord.difficulty":"${stydied.hardWords}"}`);
+    // }
+
+
+
     this.checkData();
-    this.resultFetch = await getWords(getRandom(0, 29), this.checkNumber);
     if(!this.page.querySelector('.point-progress')){
       this.timer();
       this.page.insertAdjacentHTML('beforeend', renderFormSprintProgress);
@@ -52,8 +66,10 @@ class SprintPage extends MiniGamesPage {
     this.trueAnswer = randomAll[getRandom(0, 1)];
     this.englishWord.innerHTML = this.resultFetch[randomAll[1]].word;
     this.russianWord.innerHTML = this.resultFetch[this.trueAnswer].wordTranslate;
-    this.choiseFalseAnswer.addEventListener('click', () => this.choiseDirectionLeft());
-    this.choiseTrueAnswer.addEventListener('click', () => this.choiseDirectionRight());
+    this.linkLeft = () => this.choiseDirectionLeft();
+    this.linkRight = () => this.choiseDirectionRight();
+    this.choiseFalseAnswer.addEventListener('click', this.linkLeft);
+    this.choiseTrueAnswer.addEventListener('click', this.linkRight);
     return this.page;
   }
 
@@ -172,6 +188,8 @@ class SprintPage extends MiniGamesPage {
   }
 
   renderConclusion() {
+    this.choiseFalseAnswer?.removeEventListener('click', this.linkLeft);
+    this.choiseTrueAnswer?.removeEventListener('click', this.linkRight);
     const amountPoints = <HTMLElement>document.querySelector('.quantity-true-points');
     const amountPercent = <HTMLElement>document.querySelector('.percent-answers');
     const amountSprintTrueAnswer = <HTMLElement>document.querySelector('.game-true-answer');
@@ -179,19 +197,12 @@ class SprintPage extends MiniGamesPage {
     const numberSprintTrueAnswer = <HTMLElement>document.querySelector('.number-amount-green');
     const numberSprintFalseAnswer = <HTMLElement>document.querySelector('.number-amount-red');
     const nextGame = <HTMLElement>document.querySelector('.next-game');
-    numberSprintTrueAnswer.textContent = `${this.localTrueAnswer}`;
     numberSprintFalseAnswer.textContent = `${this.count-this.localTrueAnswer}`;
+    numberSprintTrueAnswer.textContent = `${this.localTrueAnswer}`;
     renderResult(this.localTotalWordssMistakes, amountSprintFalseAnswer);
     renderResult(this.localTotalWordssRight, amountSprintTrueAnswer);
     const maxPercent = Math.round((this.localTrueAnswer/this.count) * 100);
     amountPoints.textContent= `${this.point} Очков`;
-    amountPoints.addEventListener('animationend', () => {
-      amountPoints.textContent = `${amountPoints.textContent}'animation ended'`;
-      amountPoints.classList.remove('active');
-      amountPoints.textContent= `${this.point} Очков`;
-    });
-
-
 
     if(isNaN(maxPercent)){
       amountPercent.textContent = `${0}%`;
