@@ -27,11 +27,9 @@ export function insertElement(
 export const renderHeaderButtons = (): HTMLElement => {
   const headerButtons = insertElement('nav', ['nav'], '');
   buttonsPage.forEach((button) => {
-    if (storage.isAuthorized || (!storage.isAuthorized && !button.forAuthorized)){
-        const buttonHTML = <HTMLAnchorElement>insertElement('a', [...button.class], button.label, '');
-        buttonHTML.href = `#${button.id}`;
-        headerButtons.append(buttonHTML);
-      } 
+    const buttonHTML = <HTMLAnchorElement>insertElement('a', [...button.class], button.label, '');
+    buttonHTML.href = `#${button.id}`;
+    headerButtons.append(buttonHTML);
    });
   return headerButtons;
 };

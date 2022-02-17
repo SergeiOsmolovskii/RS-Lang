@@ -3,7 +3,7 @@ import { insertElement, getRandom, shuffle, clicker, renderResult } from "../../
 import { getWords, IWords } from '../../api/getWords';
 import { renderGame, renderNextButton, renderProgressGame, renderSvgExit, renderSprintResultAnswer } from "../../services/renderForm";
 import MiniGamesPage from "../games/game";
-import { IGameParam } from '../../api/api';
+import { IGameParam, storage } from '../../api/api';
 import { setLocalStorage } from "../../services/storage";
 
 class AudioCallPage extends MiniGamesPage {

@@ -3,7 +3,8 @@
   justify-content: flex-end;
 }
 
-.page-header {
+.page-header,
+.card-answers-container {
   display: flex;
   justify-content: space-between;
   margin: 10px 0;
@@ -77,6 +78,21 @@
   font-size: 18px;
   padding-right: 10px;
   color: #000;
+}
+
+.card-answers-container {
+  display: flex;
+  justify-content: space-between;
+  width: 115px;
+  margin-right: 20px;
+}
+
+.card-answer {
+  text-align: center;
+  width: 40%;
+  border-radius: 5px;
+  background-color: #fcaa23;
+  color: #fff;
 }
 
 .card-text {
