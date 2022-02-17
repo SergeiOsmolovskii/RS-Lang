@@ -4,7 +4,7 @@ import { getWords, IWords } from '../../api/getWords';
 import { renderGame, renderNextButton, renderProgressGame, renderSvgExit } from "../../services/renderFormAudioCall";
 import { renderSprintResultAnswer } from "../../services/renderFormSprint";
 import MiniGamesPage from "../games/game";
-import { IGameParam, storage } from '../../api/api';
+import { IGameParam } from '../../api/api';
 import { setLocalStorage } from "../../services/storage";
 
 class AudioCallPage extends MiniGamesPage {

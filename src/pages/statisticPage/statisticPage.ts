@@ -5,6 +5,7 @@ import Page from "../../templates/page";
 import { WORD_PER_GAME, TRUE_ANSWERS_STROKE } from "../../options/options";
 import { IGamesStatistic, storage } from "../../api/api";
 import { getUserStatistic } from "../../api/statistic";
+import { addGraphNewWordsForAllDays, addGraphNewWordsPerDay } from "./graph";
 
 interface IGameParam {
   newWords: number,
@@ -20,7 +21,7 @@ class StatisticPage extends Page {
   }
 
   async render(): Promise<HTMLElement> {
-    const title = insertElement('h2', ['title-statistic'], 'Статистика за сутки', this.page);
+    const title = insertElement('h2', ['title-statistic'], 'Статистика за все время', this.page);
     const statisticBlock = insertElement('div', ['statistic-block'], '', this.page);
 
     if (!storage.isAuthorized) {
@@ -49,8 +50,6 @@ class StatisticPage extends Page {
       statisticBlock.insertAdjacentHTML('beforeend', gamesStatistic(gamesStatisticParam));
     } else {
       const storageStatistic = await getUserStatistic();
-      console.log(storageStatistic)
-
       const bestSeries = calcBestSeries(
         storageStatistic.optional.games.sprint.bestSeries,
         storageStatistic.optional.games.audioCall.bestSeries
@@ -76,9 +75,34 @@ class StatisticPage extends Page {
         )
       );
       statisticBlock.insertAdjacentHTML("beforeend", gamesStatistic(gamesStatisticParam));
+      const title = insertElement('h2', ['title-statistic'], 'Успеваемость', this.page);
+
+      addGraphs(this.page)
     }
     return this.page;
   }
+}
+
+const addGraphs = async (page: HTMLElement) => {
+
+  const graphCanvasNewWordsPerDay = document.createElement('canvas');
+  const graphNewWordsForAllDays = document.createElement('canvas');
+  const graphContainer = document.createElement('div');
+  const firstGraphContainer = document.createElement('div');
+  const secondGraphContainer = document.createElement('div');
+  firstGraphContainer.classList.add('graph');
+  secondGraphContainer.classList.add('graph');
+
+  graphContainer.classList.add('graph-container');
+  page.append(graphContainer);
+
+  graphContainer.append(firstGraphContainer);
+  firstGraphContainer.append(graphCanvasNewWordsPerDay)
+  graphContainer.append(secondGraphContainer);
+  secondGraphContainer.append(graphNewWordsForAllDays);
+
+  await addGraphNewWordsPerDay(graphCanvasNewWordsPerDay);
+  await addGraphNewWordsForAllDays(graphNewWordsForAllDays);
 }
 
 const statistic = async ( answrsCount: number, newWords: number, longestSeria: number, storkParam: number) => `
@@ -147,6 +171,5 @@ const calcTruAnswersPercent = (sprintGames: number, sprintTrueAnswers: number, a
 const calcBestSeries = (sprintSeria: number, audioCallsSeria: number) => {
   return Math.max(sprintSeria, audioCallsSeria);
 }
-
 
 export default StatisticPage;
