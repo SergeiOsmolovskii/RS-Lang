@@ -3,6 +3,7 @@ import { insertElement } from '../../services/services';
 import { createUser, authorization } from '../../api/registration';
 import { IAuthorization, IRegistrationData, storage } from '../../api/api';
 import { getCurrentUser } from '../../api/users';
+import { setUserStatistic } from '../../api/statistic';
 
 const body = document.querySelector('body');
 
@@ -71,7 +72,7 @@ const renderRegistrForm = (): string => `
 </div>
 `;
 
-const appendLoginForm = async (): Promise<void> => {
+ const appendLoginForm = async (): Promise<void> => {
   await removeForm();
   body?.insertAdjacentHTML('beforeend', renderLogInForm());
   closeOverlayListener();
@@ -83,7 +84,7 @@ const appendLoginForm = async (): Promise<void> => {
 
 }
 
-async function appendRegistrationForm (): Promise<void> {
+export async function appendRegistrationForm (): Promise<void> {
   await removeForm();
   body?.insertAdjacentHTML('beforeend', renderRegistrForm());
   closeOverlayListener();
@@ -144,10 +145,35 @@ export const registrationNewUser = async (e: Event): Promise<void> => {
     "password": userPassword.value
   });
 
+  let wordsPerDateMap = new Map<string, number>();
+  wordsPerDateMap.set(new Date().toLocaleDateString(), 0);
+
   if (userID && authorizationData) {
     localStorage.setItem('currentUserID', userID.id);
     localStorage.setItem('currentUserToken', authorizationData.token);
     await getCurrentUser(userID.id, authorizationData.token);
+    await setUserStatistic(userID.id, {
+      learnedWords: 0,
+      optional: {
+        general: Object.fromEntries(wordsPerDateMap),
+        games: {
+          sprint: {
+            newWords: 0,
+            trueAnswers: 0,
+            bestSeries: 0,
+            gamesPlayed: 0,
+            wrongAnswers: 0,
+          },
+          audioCall: {
+            newWords: 0,
+            trueAnswers: 0,
+            bestSeries: 0,
+            gamesPlayed: 0,
+            wrongAnswers: 0,
+          }
+        }
+      }
+    });  
     location.reload();
   }
 }

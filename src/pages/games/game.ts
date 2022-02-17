@@ -7,7 +7,7 @@ class MiniGamesPage extends Page {
   public checkInput: HTMLInputElement[] | null = null;
   public checkNumber: number = 0;
   public count: number = 0;
-  public dateGame: Date = new Date();
+  public dateGame: string = new Date().toLocaleDateString();;
 
   constructor(id: string) {
     super(id);
@@ -27,6 +27,13 @@ class MiniGamesPage extends Page {
         this.checkNumber = Number(el.value);
       }
     });
+  }
+
+  checkData(){
+    if(localStorage.getItem('date') !== this.dateGame){
+      localStorage.removeItem('sprintGameParam');
+    }
+    localStorage.setItem('date', this.dateGame)
   }
 
   clearPage() {
