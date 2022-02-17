@@ -29,6 +29,7 @@ class SprintPage extends MiniGamesPage {
   private seconds: number = 60;
   private linkRight!: (e: Event) => void;
   private linkLeft!: (e: Event) => void;
+  private count: number = 0;
 
 
   constructor(id: string) {

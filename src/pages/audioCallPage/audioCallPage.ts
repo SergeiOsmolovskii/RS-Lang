@@ -1,11 +1,13 @@
 import "./audioCallPage.css";
-import { insertElement, getRandom, shuffle, clicker, renderResult } from "../../services/services";
+import { insertElement, getRandom, clicker, renderResult, shuffle } from "../../services/services";
 import { getWords, IWords } from '../../api/getWords';
 import { renderGame, renderNextButton, renderProgressGame, renderSvgExit } from "../../services/renderFormAudioCall";
 import { renderSprintResultAnswer } from "../../services/renderFormSprint";
 import MiniGamesPage from "../games/game";
-import { IGameParam, storage } from '../../api/api';
-import { setLocalStorage } from "../../services/storage";
+import { IAggregatedWord, IGameParam, storage } from '../../api/api';
+import { getLocalStorage, setLocalStorage } from "../../services/storage";
+import { getAllAggregatedWords } from "../../api/aggregatedWords";
+import { Difficulty } from "../../options/options";
 
 class AudioCallPage extends MiniGamesPage {
   private answerOne: Element | null = null;
@@ -17,16 +19,18 @@ class AudioCallPage extends MiniGamesPage {
   private sprintGameParam: IGameParam = {newWords: 0, trueAnswers: 0, bestSeries: 0, gamesPlayed: 0};
   private localTotalWordssRight: IWords[] = [];
   private localTotalWordssMistakes: IWords[] = [];
+  private getFetch: IWords[] = [];
   private resultFetch: IWords[] = [];
   private listContainer: Element | null = null;
   private audioPlay: any = null;
-  private trueAnswer: number = 0;
+  // private trueAnswer: number = 0;
   private progress: any = null;
   private currentGetSeries: number = 0;
   private localSeries: number = 0;
   private localTrueAnswer: number = 0;
   private freeResultAnswer!: (e: Event) => void;
   private freeAudioAnswer!: (e: Event) => void;
+  private count: number = 0;
 
   constructor(id: string) {
     super(id);
@@ -35,7 +39,25 @@ class AudioCallPage extends MiniGamesPage {
   
   async render(): Promise<HTMLElement>{
     this.checkData();
-    this.resultFetch = await getWords(getRandom(0, 29), this.checkNumber);
+    const page = getLocalStorage('page') ? Number(getLocalStorage('page')) : 0;
+    const group = getLocalStorage('group') ? Number(getLocalStorage('group')) : 0;
+    const modes = getLocalStorage('mode') ? getLocalStorage('mode') : 0;
+    if(!storage.isAuthorized){
+      this.getFetch = await getWords(getRandom(0, 29), this.checkNumber);
+    } else if(modes === 'filtrWords'){
+      this.getFetch = await getAllAggregatedWords(`${group}`, `${page}`,'20', `{"$or": [{"userWord.difficulty":null}, {"userWord.difficulty":"easy"}]}`);
+
+    } else if(modes === 'normal'){
+      this.getFetch = await getAllAggregatedWords(`${this.checkNumber}`, `0`,'20', `{"page":${getRandom(0, 29)}}`);
+    };
+    const _ = require('lodash');
+    this.resultFetch =  _.cloneDeep(this.getFetch);
+    this.resultFetch.sort( () => Math.random() - 0.5);
+    this.renderPage();
+    return this.page;
+  }
+
+  renderPage() {
     if(!document.querySelector('.answer-point')){
       this.page.insertAdjacentHTML('beforeend', renderSvgExit);
       this.page.insertAdjacentHTML('beforeend', renderProgressGame);;
@@ -49,37 +71,39 @@ class AudioCallPage extends MiniGamesPage {
     this.listContainer = <Element>this.page.querySelector('.answers');
     this.progress = this.page.querySelectorAll('.heart');
     const arrAnswer = [this.answerOne, this.answerTwo, this.answerThree, this.answerFour, this.answerFife];
-    const allAnswer = Array.from(Array(20).keys());
-    const randomAll = shuffle(allAnswer);
-    randomAll.length = 5;
-    this.trueAnswer = randomAll[getRandom(0, 4)];
-    for(let i = 0; i < 5; i++){
-      arrAnswer[i].innerHTML = `${this.resultFetch[randomAll[i]].wordTranslate}`;
+    arrAnswer.sort(() => Math.random() - 0.5);
+    const perm = this.count
+    // const lengthSeria = arrAnswer.length + perm;
+    for(let i = perm, pos = 0; i < (5 + perm); i++, pos++){
+
+      arrAnswer[pos].textContent = `0`;
+      
     }
     this.freeResultAnswer = (e: Event) => this.resultAnswer(e);
     this.freeAudioAnswer = () => clicker(this.audioPlay);
-    this.listContainer.addEventListener('click', this.freeResultAnswer, false);
-    const audioNew: HTMLAudioElement = await new Audio(`https://rs-lang-learn.herokuapp.com/${this.resultFetch[this.trueAnswer].audio}`);
+    console.log(this.page)
+    this.listContainer.addEventListener('click', this.freeResultAnswer);
+
+    const audioNew: HTMLAudioElement = new Audio(`https://rs-lang-learn.herokuapp.com/${this.resultFetch[this.count].audio}`);
     this.audioPlay = this.page.querySelector('.svg-volume');
     this.audioPlay?.addEventListener('click', this.freeAudioAnswer);
     this.audioPlay?.addEventListener('click', () => audioNew.play());
     audioNew.muted;
     audioNew.play();
-    return this.page;
   }
 
   resultAnswer(e: Event) {
     this.audioPlay?.removeEventListener('click', this.freeAudioAnswer);
-    this.listContainer?.removeEventListener('click', this.freeResultAnswer, false);
+    // this.listContainer?.removeEventListener('click', this.freeResultAnswer);
     if(this.audioPlay !== null) {
       const target = e.target as HTMLElement; 
-      if(target.innerText === this.resultFetch[this.trueAnswer].wordTranslate) {
+      if(target.innerText === this.resultFetch[this.count].wordTranslate) {
         target.style.backgroundColor = "#32cd32";
         target.classList.add('animate-color');
         this.progress[this.count].style.background = "linear-gradient(300deg, black, 5%, #32cd32)";
-        this.audioPlay.style.background = `url(https://rs-lang-learn.herokuapp.com/${this.resultFetch[this.trueAnswer].image}) center no-repeat`;
+        this.audioPlay.style.background = `url(https://rs-lang-learn.herokuapp.com/${this.resultFetch[this.count].image}) center no-repeat`;
         this.listContainer?.insertAdjacentHTML('afterend', renderNextButton);
-        this.localTotalWordssRight.push(this.resultFetch[this.trueAnswer]);
+        this.localTotalWordssRight.push(this.resultFetch[this.count]);
         ++this.currentGetSeries;
         ++this.audioCallGameParam.trueAnswers;
         ++this.localTrueAnswer;
@@ -88,11 +112,11 @@ class AudioCallPage extends MiniGamesPage {
           this.localSeries = this.currentGetSeries;
         }
       } else {
-        this.localTotalWordssMistakes.push(this.resultFetch[this.trueAnswer]);
+        this.localTotalWordssMistakes.push(this.resultFetch[this.count]);
         target.style.backgroundColor = "#da6f63";
         this.progress[this.count].style.background = "linear-gradient(300deg, black, 5%, #fa8072)";
         target.classList.add('animate-color');
-        this.audioPlay.style.background = `url(https://rs-lang-learn.herokuapp.com/${this.resultFetch[this.trueAnswer].image}) center no-repeat`;
+        this.audioPlay.style.background = `url(https://rs-lang-learn.herokuapp.com/${this.resultFetch[this.count].image}) center no-repeat`;
         this.audioPlay.classList.add('animate-img');
         this.listContainer?.insertAdjacentHTML('afterend', renderNextButton);
         ++this.count;
@@ -103,12 +127,12 @@ class AudioCallPage extends MiniGamesPage {
       }
     }
     const nextStep = <Element>this.page.querySelector('.next-word');
-    const nextStepFunction = () => this.render();
+    const nextStepFunction = () => this.renderPage();
     nextStep.addEventListener('click', nextStepFunction);
     nextStep.addEventListener('click', () => this.clearNextPage());
     if(this.count === 15){
       this.localaudioCall();
-      nextStep.innerHTML = 'Результат'
+      nextStep.innerHTML = 'Результат';
       nextStep.removeEventListener('click', nextStepFunction);
       nextStep.addEventListener('click', () => this.renderConclusion());
     }

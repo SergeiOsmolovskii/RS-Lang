@@ -8,7 +8,6 @@ export const getAllAggregatedWords = async (group: string, page: string, wordsPe
     },
   });
   const content = await response.json();
-  console.log(content[0].paginatedResults);
   return content[0].paginatedResults;
 }
 
