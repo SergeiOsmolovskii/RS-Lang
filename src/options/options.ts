@@ -8,6 +8,12 @@ export enum PageIds {
   TeamPage = "team",
 }
 
+export enum Difficulty {
+  studiedWord = "studied",
+  normalWord = "easy",
+  hardWords = "hard",
+}
+
 export enum Regime {
   group = "group",
   hard = "hard",
