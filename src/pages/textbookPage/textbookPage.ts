@@ -19,14 +19,24 @@ class TextbookPage extends Page {
     this.navGroups = new NavGroups();
   }
 
-  static async renderCardContainer(regime: Regime) {
+  static async renderCardContainer(regime: Regime): Promise<HTMLElement> {
     const cardsContainerHTML = await TextbookPage.cardsContainer.render(regime);
     return cardsContainerHTML;
   }
 
+  private renderHeaderPage(): HTMLElement {
+    const headerPageContainer = insertElement('div', ['page-header']);
+    const title = insertElement('h2', ['title'], 'электронный учебник', headerPageContainer);
+    const headerButtonContainer = insertElement('div', ['page-header-buttons'], '', headerPageContainer);
+    const btnGameAudioCall = <HTMLAnchorElement>insertElement('a', ['btn-game'], 'Аудиовызов', headerButtonContainer);
+    btnGameAudioCall.href='#game/audio-call';
+    const btnGameSprint = <HTMLAnchorElement>insertElement('a', ['btn-game'], 'Спринт', headerButtonContainer);
+    btnGameSprint.href='#game/sprint';
+    return headerPageContainer;
+  }
+
   async render(): Promise<HTMLElement> {
-    const title = insertElement('h2', ['title'], 'Учебник', this.page);
-    this.page.append(this.navGroups.render(), this.pagination.render(), await TextbookPage.cardsContainer.render(Regime.group));
+    this.page.append(this.renderHeaderPage(), this.navGroups.render(), this.pagination.render(), await TextbookPage.cardsContainer.render(Regime.group));
     return this.page;
   }
 }
