@@ -41,55 +41,90 @@ export class CardsContainer {
       const textExample = insertElement('p', ['card-text'], element.textExample, cardInfo);
       const textExampleTranslate = insertElement('p', ['card-text'], element.textExampleTranslate, cardInfo);
       if (storage.isAuthorized) {
-        const cardsButtonsHTML = this.renderCardsButtons(regime, idStyle, element._id);
-        cardInfo.append(cardsButtonsHTML);
         if (element.userWord) {
-          if (element.userWord.difficulty === Difficulty.hardWords) {
-            cardItem.classList.add('hard');
-          }
-          if (element.userWord.difficulty == Difficulty.studiedWord) {
-            cardItem.classList.add('studied');
-          }
+          switch (element.userWord.difficulty) {
+            case Difficulty.studiedWord:
+              cardItem.classList.add('studied');
+              const cardsButtonsHTML = this.renderCardsButtons(regime, idStyle, element._id, element.userWord.difficulty);
+              cardInfo.append(cardsButtonsHTML);
+              break;
+            case Difficulty.hardWords:
+              if (regime === Regime.group) {
+                cardItem.classList.add('hard');
+              }
+              if (regime === Regime.hard) {
+                const cardsButtonsHTML = this.renderCardsButtons(regime, idStyle, element._id);
+                cardInfo.append(cardsButtonsHTML);
+              }
+              break;
+            case Difficulty.normalWord:
+               const cardsButtonsHTML1 = this.renderCardsButtons(regime, idStyle, element._id, element.userWord.difficulty);
+                cardInfo.append(cardsButtonsHTML1);
+                break;
+            }
+        } else {
+          const cardsButtonsHTML = this.renderCardsButtons(regime, idStyle, element._id);
+          cardInfo.append(cardsButtonsHTML);
         }
       }
     });
   }
 
-  private renderCardsButtons(regime: Regime, idStyle: number, elementId: string): HTMLElement {
+  private renderCardsButtons(regime: Regime, idStyle: number, elementId: string, difficulty?: Difficulty): HTMLElement {
     const cardsButtonsWrapper = insertElement('div', ['card-buttons']);
     if (regime === Regime.group) {
-      const btnHard = <HTMLButtonElement>(
-        insertElement('button', ['card-btn', `btn-color${idStyle + 1}`], 'сложное', cardsButtonsWrapper)
-      );
-      const btnStudied = <HTMLButtonElement>(
-        insertElement('button', ['card-btn', `btn-color${idStyle + 1}`], 'изученое', cardsButtonsWrapper)
-      );
-
-      btnHard.addEventListener('click', async (event: Event) => {
-        await setUserWord(elementId, {
-          difficulty: Difficulty.hardWords,
-          optional: { trueAnswersCount: 0, falseAnswersCount: 0, trueAnswersSeria: 0, falseAnswersSeria: 0 },
+      if (difficulty === Difficulty.studiedWord) {
+        const btnStudied = <HTMLButtonElement>(
+          insertElement('button', ['card-btn', `btn-color${idStyle + 1}`], 'убрать из изученных', cardsButtonsWrapper)
+        );
+        btnStudied.addEventListener('click', async (event: Event) => {
+          await updateUserWord(elementId, { difficulty: Difficulty.normalWord });
+          TextbookPage.renderCardContainer(regime);
         });
-        TextbookPage.renderCardContainer(Regime.group);
-      });
-
-      btnStudied.addEventListener('click', async (event: Event) => {
-        await setUserWord(elementId, {
-          difficulty: Difficulty.studiedWord,
-          optional: { trueAnswersCount: 0, falseAnswersCount: 0, trueAnswersSeria: 0, falseAnswersSeria: 0 },
-        });
-        TextbookPage.renderCardContainer(Regime.group);
-      });
+      } else {
+        const btnHard = <HTMLButtonElement>(
+          insertElement('button', ['card-btn', `btn-color${idStyle + 1}`], 'сложное', cardsButtonsWrapper)
+        );
+        const btnStudied = <HTMLButtonElement>(
+          insertElement('button', ['card-btn', `btn-color${idStyle + 1}`], 'изученое', cardsButtonsWrapper)
+        );
+        if (difficulty === Difficulty.normalWord){
+          btnHard.addEventListener('click', async (event: Event) => {
+            await updateUserWord(elementId, { difficulty: Difficulty.hardWords });
+            TextbookPage.renderCardContainer(regime);
+          });
+  
+          btnStudied.addEventListener('click', async (event: Event) => {
+            await updateUserWord(elementId, { difficulty: Difficulty.studiedWord });
+            TextbookPage.renderCardContainer(regime);
+          });
+        } else {
+          btnHard.addEventListener('click', async (event: Event) => {
+            await setUserWord(elementId, {
+              difficulty: Difficulty.hardWords,
+              optional: { trueAnswersCount: 0, falseAnswersCount: 0, trueAnswersSeria: 0 },
+            });
+            TextbookPage.renderCardContainer(regime);
+          });
+  
+          btnStudied.addEventListener('click', async (event: Event) => {
+            await setUserWord(elementId, {
+              difficulty: Difficulty.studiedWord,
+              optional: { trueAnswersCount: 0, falseAnswersCount: 0, trueAnswersSeria: 0 },
+            });
+            TextbookPage.renderCardContainer(regime);
+          });
+      }
     }
-    
+  }
     if (regime === Regime.hard) {
       const btnHard = <HTMLButtonElement>(
         insertElement('button', ['card-btn', `btn-color7`], 'убрать из сложныx', cardsButtonsWrapper)
       );
 
       btnHard.addEventListener('click', async (event: Event) => {
-        await updateUserWord(elementId, {difficulty: Difficulty.normalWord});
-        TextbookPage.renderCardContainer(Regime.hard);
+        await updateUserWord(elementId, { difficulty: Difficulty.normalWord });
+        TextbookPage.renderCardContainer(regime);
       });
     }
     return cardsButtonsWrapper;
@@ -106,12 +141,17 @@ export class CardsContainer {
     if (regime === Regime.group) {
       const wordsData = storage.isAuthorized
         ? await getAllAggregatedWords(`${group}`, '0', '20', `{"page":${page}}`)
-        : ( await getWords(+`${page}`, +`${group}`));
+        : await getWords(+`${page}`, +`${group}`);
       this.draw(regime, wordsData, group);
     }
 
     if (regime === Regime.hard) {
-      const wordsData = await getAllAggregatedWords('', '0', '600', `{"userWord.difficulty":"${Difficulty.hardWords}"}`);
+      const wordsData = await getAllAggregatedWords(
+        '',
+        '0',
+        '600',
+        `{"userWord.difficulty":"${Difficulty.hardWords}"}`
+      );
       if (wordsData.length === 0) {
         this.clear();
         const message = insertElement('div', ['message-box'], 'Здесь пока ничего нет', this.container);
@@ -119,7 +159,6 @@ export class CardsContainer {
         this.draw(regime, wordsData, group);
       }
     }
-
     return this.container;
   }
 }

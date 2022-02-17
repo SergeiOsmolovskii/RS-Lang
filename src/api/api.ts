@@ -78,7 +78,6 @@ export interface IUserWordOptions {
 	trueAnswersCount: number,
 	falseAnswersCount: number,
 	trueAnswersSeria: number,
-	falseAnswersSeria: number
 }
 
 /* AggregatedWord */
