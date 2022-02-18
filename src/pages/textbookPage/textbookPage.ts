@@ -5,7 +5,6 @@ import { CardsContainer } from './cards';
 import { Pagination } from './pagination';
 import { NavGroups } from './navGroups';
 import { Regime } from '../../options/options';
-import { storage } from '../../api/api';
 import { setLocalStorage } from '../../services/storage';
 
 class TextbookPage extends Page {

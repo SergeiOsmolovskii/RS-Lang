@@ -53,10 +53,15 @@ export const playAudio = (playList: Array<string>): void => {
   let playNum = 0;
   const audio = document.createElement('audio');
   audio.src = playList[playNum];
-  audio.play();
+  if (!storage.isPlayed) {
+    audio.play();
+    storage.isPlayed = true;
+  }
+  
   audio.onended = () => {
     if (playNum === playList.length - 1) {
       audio.pause();
+      storage.isPlayed = false;
     } else {
       playNum = playNum + 1;
       audio.src = playList[playNum];
@@ -182,15 +187,14 @@ export const renderCardsButtons = (regime: Regime, idStyle: number, elementId: s
   return <HTMLElement>cardsButtonsWrapper;
 }
 
-
 export const putBackEndFalseAnswer = async (arr: any, truePos: number)=>{
-  if(storage.isAuthorized){
-    if(arr[truePos].userWord === undefined){
+  if (storage.isAuthorized) {
+    if (arr[truePos].userWord === undefined) {
       await setUserWord(arr[truePos]._id, {
         difficulty: Difficulty.normalWord,
         optional: {trueAnswersCount: 0, falseAnswersCount: 1, trueAnswersSeria: 0},
       });
-    }else if(arr[truePos].userWord.difficulty === 'stydied') {
+    } else if (arr[truePos].userWord.difficulty === 'stydied') {
       await updateUserWord(arr[truePos]._id, {
         difficulty: Difficulty.normalWord,
         optional: {trueAnswersCount: arr[truePos].userWord.optional.trueAnswersCount, 

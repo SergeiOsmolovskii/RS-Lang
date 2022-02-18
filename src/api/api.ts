@@ -4,6 +4,7 @@ export const storage = {
 	userEmail: '',
 	userGameRegime: '',
 	isAuthorized: false,
+	isPlayed: false,
 }
 
 export const baseUrl = 'https://rs-lang-learn.herokuapp.com';
