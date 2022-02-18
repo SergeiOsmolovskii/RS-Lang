@@ -51,6 +51,9 @@ export class App {
       case PageIds.TeamPage:
         page = new TeamPage(idPage);
         break;
+      case PageIds.AboutAppPage:
+        page = new AboutAppPage(idPage);
+        break;
     }
 
     if (page) {
