@@ -1,4 +1,4 @@
-import "./game.css"
+import "./gamePage.css"
 import { insertElement } from "../../services/services";
 import Page from "../../templates/page";
 import { renderFormLevel } from "../../services/renderFormChoiseLvl";
@@ -26,6 +26,7 @@ class MiniGamesPage extends Page {
   checkLevel() {
     this.checkInput?.forEach(el => {
       if(el?.checked){
+        console.log('Работает')
         this.checkNumber = Number(el.value);
       }
     });

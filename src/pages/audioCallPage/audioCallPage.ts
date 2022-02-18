@@ -1,13 +1,12 @@
 import "./audioCallPage.css";
-import { insertElement, getRandom, clicker, renderResult, shuffle } from "../../services/services";
+import { insertElement, getRandom, clicker, renderResult, putBackEndFalseAnswer, putBackEndTrueAnswer } from "../../services/services";
 import { getWords, IWords } from '../../api/getWords';
 import { renderGame, renderNextButton, renderProgressGame, renderSvgExit } from "../../services/renderFormAudioCall";
 import { renderSprintResultAnswer } from "../../services/renderFormSprint";
-import MiniGamesPage from "../games/game";
-import { IAggregatedWord, IGameParam, storage } from '../../api/api';
+import MiniGamesPage from "../games/gamePage";
+import { IGameParam, storage } from '../../api/api';
 import { getLocalStorage, setLocalStorage } from "../../services/storage";
 import { getAllAggregatedWords } from "../../api/aggregatedWords";
-import { Difficulty } from "../../options/options";
 
 class AudioCallPage extends MiniGamesPage {
   private answerOne: Element | null = null;
@@ -19,11 +18,11 @@ class AudioCallPage extends MiniGamesPage {
   private sprintGameParam: IGameParam = {newWords: 0, trueAnswers: 0, bestSeries: 0, gamesPlayed: 0};
   private localTotalWordssRight: IWords[] = [];
   private localTotalWordssMistakes: IWords[] = [];
-  private getFetch: IWords[] = [];
-  private resultFetch: IWords[] = [];
-  private listContainer: Element | null = null;
+  private getFetch: any = [];
+  private resultFetch: any = [];
+  private listContainer: HTMLElement[] | null = [];
   private audioPlay: any = null;
-  // private trueAnswer: number = 0;
+  private containButton: Element | null = null;
   private progress: any = null;
   private currentGetSeries: number = 0;
   private localSeries: number = 0;
@@ -44,15 +43,16 @@ class AudioCallPage extends MiniGamesPage {
     const modes = getLocalStorage('mode') ? getLocalStorage('mode') : 0;
     if(!storage.isAuthorized){
       this.getFetch = await getWords(getRandom(0, 29), this.checkNumber);
-    } else if(modes === 'filtrWords'){
+      console.log('Не авторизированный')
+    } else if(modes === 'filtrWords' && storage.isAuthorized){
       this.getFetch = await getAllAggregatedWords(`${group}`, `${page}`,'20', `{"$or": [{"userWord.difficulty":null}, {"userWord.difficulty":"easy"}]}`);
-
-    } else if(modes === 'normal'){
-      this.getFetch = await getAllAggregatedWords(`${this.checkNumber}`, `0`,'20', `{"page":${getRandom(0, 29)}}`);
-    };
+    } else if(modes === 'normal' && storage.isAuthorized){
+      this.getFetch = await getAllAggregatedWords(`${this.checkNumber}`, `0`,'20', `{"page":${0}}`);
+      console.log(this.getFetch)
+    }
     const _ = require('lodash');
     this.resultFetch =  _.cloneDeep(this.getFetch);
-    this.resultFetch.sort( () => Math.random() - 0.5);
+    this.resultFetch.sort(() => Math.random() - 0.5);
     this.renderPage();
     return this.page;
   }
@@ -60,7 +60,7 @@ class AudioCallPage extends MiniGamesPage {
   renderPage() {
     if(!document.querySelector('.answer-point')){
       this.page.insertAdjacentHTML('beforeend', renderSvgExit);
-      this.page.insertAdjacentHTML('beforeend', renderProgressGame);;
+      this.page.insertAdjacentHTML('beforeend', renderProgressGame);
     }
     this.page.insertAdjacentHTML('beforeend', renderGame);
     this.answerOne = <Element>this.page.querySelector('.answer-item-1');
@@ -68,22 +68,16 @@ class AudioCallPage extends MiniGamesPage {
     this.answerThree = <Element>this.page.querySelector('.answer-item-3');
     this.answerFour = <Element>this.page.querySelector('.answer-item-4');
     this.answerFife = <Element>this.page.querySelector('.answer-item-5');
-    this.listContainer = <Element>this.page.querySelector('.answers');
+    this.listContainer = Array.from(this.page.querySelectorAll('.level-1'));
     this.progress = this.page.querySelectorAll('.heart');
     const arrAnswer = [this.answerOne, this.answerTwo, this.answerThree, this.answerFour, this.answerFife];
     arrAnswer.sort(() => Math.random() - 0.5);
-    const perm = this.count
-    // const lengthSeria = arrAnswer.length + perm;
-    for(let i = perm, pos = 0; i < (5 + perm); i++, pos++){
-
-      arrAnswer[pos].textContent = `0`;
-      
+    for(let i = 0, pos = 0; pos < arrAnswer.length; i++, pos++){
+      arrAnswer[pos].textContent = `${this.resultFetch[i + this.count].wordTranslate}`;
     }
     this.freeResultAnswer = (e: Event) => this.resultAnswer(e);
     this.freeAudioAnswer = () => clicker(this.audioPlay);
-    console.log(this.page)
-    this.listContainer.addEventListener('click', this.freeResultAnswer);
-
+    this.listContainer.forEach(el => el.addEventListener('click', this.freeResultAnswer));
     const audioNew: HTMLAudioElement = new Audio(`https://rs-lang-learn.herokuapp.com/${this.resultFetch[this.count].audio}`);
     this.audioPlay = this.page.querySelector('.svg-volume');
     this.audioPlay?.addEventListener('click', this.freeAudioAnswer);
@@ -93,16 +87,19 @@ class AudioCallPage extends MiniGamesPage {
   }
 
   resultAnswer(e: Event) {
+
     this.audioPlay?.removeEventListener('click', this.freeAudioAnswer);
-    // this.listContainer?.removeEventListener('click', this.freeResultAnswer);
+    this.listContainer?.forEach(el => el.removeEventListener('click', this.freeResultAnswer));
+    this.containButton = this.page.querySelector('.answers');
     if(this.audioPlay !== null) {
-      const target = e.target as HTMLElement; 
+      const target = e.target as HTMLElement;
       if(target.innerText === this.resultFetch[this.count].wordTranslate) {
+        putBackEndTrueAnswer(this.resultFetch, this.count);
         target.style.backgroundColor = "#32cd32";
         target.classList.add('animate-color');
         this.progress[this.count].style.background = "linear-gradient(300deg, black, 5%, #32cd32)";
         this.audioPlay.style.background = `url(https://rs-lang-learn.herokuapp.com/${this.resultFetch[this.count].image}) center no-repeat`;
-        this.listContainer?.insertAdjacentHTML('afterend', renderNextButton);
+        this.containButton?.insertAdjacentHTML('afterend', renderNextButton);
         this.localTotalWordssRight.push(this.resultFetch[this.count]);
         ++this.currentGetSeries;
         ++this.audioCallGameParam.trueAnswers;
@@ -112,13 +109,14 @@ class AudioCallPage extends MiniGamesPage {
           this.localSeries = this.currentGetSeries;
         }
       } else {
-        this.localTotalWordssMistakes.push(this.resultFetch[this.count]);
+        putBackEndFalseAnswer(this.resultFetch, this.count);
         target.style.backgroundColor = "#da6f63";
+        this.localTotalWordssMistakes.push(this.resultFetch[this.count]);
         this.progress[this.count].style.background = "linear-gradient(300deg, black, 5%, #fa8072)";
         target.classList.add('animate-color');
         this.audioPlay.style.background = `url(https://rs-lang-learn.herokuapp.com/${this.resultFetch[this.count].image}) center no-repeat`;
         this.audioPlay.classList.add('animate-img');
-        this.listContainer?.insertAdjacentHTML('afterend', renderNextButton);
+        this.containButton?.insertAdjacentHTML('afterend', renderNextButton);
         ++this.count;
         if(this.localSeries < this.currentGetSeries){
           this.localSeries = this.currentGetSeries;
@@ -127,9 +125,11 @@ class AudioCallPage extends MiniGamesPage {
       }
     }
     const nextStep = <Element>this.page.querySelector('.next-word');
-    const nextStepFunction = () => this.renderPage();
+    const nextStepFunction = () => {
+      this.clearNextPage();
+      this.renderPage();
+    }
     nextStep.addEventListener('click', nextStepFunction);
-    nextStep.addEventListener('click', () => this.clearNextPage());
     if(this.count === 15){
       this.localaudioCall();
       nextStep.innerHTML = 'Результат';
@@ -138,7 +138,7 @@ class AudioCallPage extends MiniGamesPage {
     }
   }
 
-  localaudioCall(){
+  localaudioCall() {
     ++this.audioCallGameParam.gamesPlayed;
     this.audioCallGameParam.bestSeries = this.localSeries;
     const finalArr: IWords[] = [...this.localTotalWordssMistakes, ...this.localTotalWordssRight];
@@ -185,7 +185,6 @@ class AudioCallPage extends MiniGamesPage {
     numberSprintFalseAnswer.textContent = `${this.count - this.localTrueAnswer}`;
     renderResult(this.localTotalWordssMistakes, amountSprintFalseAnswer);
     renderResult(this.localTotalWordssRight, amountSprintTrueAnswer);
-
     const maxPercent = Math.round((this.localTrueAnswer/this.count) * 100);
     if(isNaN(maxPercent)){
       amountPercent.textContent = `${0}%`;
@@ -210,6 +209,7 @@ class AudioCallPage extends MiniGamesPage {
     const clearVolumePosition: Element | null = <Element>this.page.querySelector('.img-volume-position');
     const clearAnswers: Element | null = <Element>this.page.querySelector('.answers');
     const clearNextStep: Element | null = <Element>this.page.querySelector('.next-word');
+    console.log()
     clearNextStep.remove();
     clearVolumePosition.remove();
     clearAnswers.remove();

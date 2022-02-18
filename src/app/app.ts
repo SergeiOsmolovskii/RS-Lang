@@ -5,7 +5,7 @@ import Header from "../components/header/header";
 import { PageIds } from "../options/options";
 import AudioCallPage from "../pages/audioCallPage/audioCallPage";
 import MainPage from "../pages/mainPage/mainPage";
-import MiniGamesPage from "../pages/games/game";
+import MiniGamesPage from "../pages/games/gamePage";
 import SprintPage from "../pages/sprintPage/sprintPage";
 import StatisticPage from "../pages/statisticPage/statisticPage";
 import TextbookPage from "../pages/textbookPage/textbookPage";
