@@ -38,6 +38,7 @@
         "webpack-dev-server": "^4.4.0"
     },
     "dependencies": {
-        "nouislider": "^15.5.0"
+        "nouislider": "^15.5.0",
+        "parallax-js": "^3.1.0"
     }
 }
