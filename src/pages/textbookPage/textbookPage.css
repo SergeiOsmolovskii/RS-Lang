@@ -1,3 +1,14 @@
+.page-header-buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
 .cards-container {
   display: flex;
   justify-content: space-between;
@@ -7,12 +18,16 @@
 }
 
 .message-box {
-  max-width: 400px;
+  max-width: 600px;
   margin: 0px auto;
   height: 300px;
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: "Nunito", sans-serif;
+  color:#aa96dd;
+  text-transform: uppercase;
+  font-size: 30px;
 }
 
 .card-item {
@@ -26,10 +41,10 @@
 }
 
 .hard {
-  background-color: rgb(235, 236, 173);
+  background-color: #fcaa23;
 } 
 
-.easy {
+.studied {
   background-color: #aa96dd;
 }
 
@@ -43,12 +58,17 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin: 10px;
+}
+
+.card-title-container,
+.card-header-container {
+  display: flex;
+  justify-content: space-between;
 }
 
 .card-title-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
 }
 
 .card-info {
@@ -58,10 +78,34 @@
   padding-left: 10px;
 }
 
-.card-title{
+.card-title {
+  margin: 0;
   font-size: 18px;
   padding-right: 10px;
   color: #000;
+}
+
+.card-answers-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 115px;
+  margin-right: 20px;
+}
+
+.card-answer {
+  text-align: center;
+  width: 45%;
+  border-radius: 5px;
+  color: #fff;
+}
+
+.card-answer__true {
+  background-color: #fcaa23;
+}
+
+.card-answer__false {
+  background-color:#aaa;
 }
 
 .card-text {
@@ -82,15 +126,20 @@
   align-self: flex-end;
   display: block;
   color: #fff;
-  border-radius: 12px;
-  text-transform: capitalize;
+  font-family: "Nunito", sans-serif;
+  border-radius: 5px;
   font-size: 16px;
   padding: 5px 10px;
   margin-left: 10px;
   transition: all 0.3s;
+  cursor: pointer;
 }
 
-.card-btn:hover {
+.card-btn:hover,
+.group-item:hover,
+.page-item:hover,
+.group-hard:hover,
+.btn-game:hover {
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25);
 }
 
@@ -118,10 +167,22 @@
   background-color: rgb(199, 95, 81);
 }
 
+.btn-color7{
+  background-color: #aa96dd;
+}
+
+.btn-game,
 .group-hard {
+  font-family: "Nunito", sans-serif;
   background-color: #aa96dd;
   color: #fff;
   text-transform: uppercase;
+}
+
+.btn-game {
+  background-color: #fcaa23;
+  min-width: 140px;
+  text-align: center;
 }
 
 .audio-control {
@@ -130,6 +191,8 @@
   background-image: url('/src/assets/svg/play.svg');
   background-position: center;
   background-size: cover;
+  cursor: pointer;
+  transition: all 0.3s;
 }
 
 .group-container {
@@ -152,8 +215,10 @@
 
 .page-item, 
 .group-item,
-.group-hard {
+.group-hard,
+.btn-game {
   padding: 8px 16px;
+  border-radius: 5px;
   margin: 4px;
   font-size: 18px;
   cursor: pointer;
@@ -162,7 +227,6 @@
 
 .page-item {
   border: 2px solid #fff;
-  border-radius: 5px;
 }
 
 .group-item {
@@ -170,18 +234,24 @@
   color: #fff;
 }
 
-.page-item.active, 
-.group-item.active {
-  color: #ff0;
-  border-color: #ff0;
+.page-item.active {
+  color: #aa96dd;
+  border-color:#aa96dd;
+}
+
+.group-item.active,
+.group-hard.active,
+.group-hard:hover,
+.btn-game:hover {
+  color: #4a4b4e;
 }
 
 .group-item:hover {
-  color: #ff0;
+  color:#aa96dd;
 }
 
 .page-item:hover {
-  border-color: #ff0;
+  border-color: #aa96dd;
 }
 
 @media (max-width: 1600px) {
@@ -202,6 +272,7 @@
 
 @media (max-width: 1050px) {
   .card-item {
+    width: 100%;
     gap: 5px;
     border-radius: 5px;
     padding: 10px;
@@ -209,7 +280,8 @@
   
   .page-item, 
   .group-item,
-  .group-hard {
+  .group-hard,
+  .btn-game {
     font-size: 16px;
     padding: 4px 8px;
   }
@@ -231,15 +303,9 @@
   }
 }
 
-@media (max-width: 950px) {
-  .card-title {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
-
 @media (max-width: 700px) {
-  .card-item {
+  .card-item,
+  .page-header {
     flex-direction: column;
   }
 

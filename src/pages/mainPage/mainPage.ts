@@ -18,7 +18,7 @@ class MainPage extends Page {
   renderImg(): HTMLElement {
     //const imagesContainer = insertElement('div', ['images-container'])
     const imagesContainer = <HTMLAnchorElement>insertElement('a', ['images-container'])
-    imagesContainer.href = "/#about-"
+    imagesContainer.href = "/#about-app"
     imagesContainer.id ="scene"
     //const mainImgContainer = insertElement('div', ['main-img-container'], '', );
     const mainImg = <HTMLImageElement>insertElement('img', ['main-img'], '', this.page);

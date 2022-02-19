@@ -12,6 +12,8 @@ import TextbookPage from "../pages/textbookPage/textbookPage";
 import Page from "../templates/page";
 import { logOut } from "../components/login-form/login-form";
 import TeamPage from "../pages/teamPage/teamPage";
+import AboutAppPage from "../pages/aboutAppPage/aboutAppPage";
+
 
 export class App {
   private static container: HTMLElement = document.body;
@@ -50,11 +52,25 @@ export class App {
       case PageIds.TeamPage:
         page = new TeamPage(idPage);
         break;
+      case PageIds.AboutAppPage:
+        page = new AboutAppPage(idPage);
+        break;
     }
 
     if (page) {
       const userId = localStorage.getItem('currentUserID');
       const userToken = localStorage.getItem('currentUserToken');
+
+      if(!localStorage.getItem('audioCallGameParam') && !localStorage.getItem('audioCallGameParam')) {
+        const startSettingParam = {
+          newWords: 0,
+          trueAnswers: 0,
+          bestSeries: 0,
+          gamesPlayed: 0
+        }
+        localStorage.setItem('audioCallGameParam', JSON.stringify(startSettingParam));
+        localStorage.setItem('sprintGameParam', JSON.stringify(startSettingParam));
+      }
 
       if (userId !== null && userToken !== null) {
         const currentUser = await getCurrentUser(userId, userToken);
@@ -63,11 +79,15 @@ export class App {
         storage.userId = userId;
         storage.isAuthorized = true;
       }
+
       const headerHTML = new Header("header", ["header"]);
       const pageHTML = page.render();
       (await pageHTML).id = this.defaultPageId;
-      const footerHTML = new Footer("footer", ["footer"]);
-      App.container.append(headerHTML.render(), await pageHTML, footerHTML.render());
+      App.container.append(headerHTML.render(), await pageHTML);
+      if (idPage !== PageIds.AudioCallPage && idPage !== PageIds.SprintPage) {
+        const footerHTML = new Footer("footer", ["footer"]);
+        App.container.append(footerHTML.render());
+      }
       const logOutButton = document.querySelector('.log-out') as HTMLElement;
       logOutButton?.addEventListener('click', logOut);
     }

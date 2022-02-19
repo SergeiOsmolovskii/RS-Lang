@@ -8,12 +8,11 @@ export const getUserStatistic = async () => {
     },
   });
   const content: IStatistic = await response.json();
-  console.log(content);
   return content;
 }
 
-export const setUserStatistic = async (body: IStatistic) => {
-  const response = await fetch(`${baseUrl}${Path.user}/${storage.userId}${Path.statistics}`, {
+export const setUserStatistic = async (userID: string, body: IStatistic) => {
+  const response = await fetch(`${baseUrl}${Path.user}/${userID}${Path.statistics}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -22,6 +21,5 @@ export const setUserStatistic = async (body: IStatistic) => {
     body: JSON.stringify(body)
   });
   const content: IStatistic = await response.json();
-  console.log(content);
   return content;
 }
