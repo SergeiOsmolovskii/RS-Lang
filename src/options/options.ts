@@ -6,6 +6,7 @@ export enum PageIds {
   TextbookPage = "textbook",
   Games = "game",
   TeamPage = "team",
+  AboutAppPage = "about-app",
 }
 
 export enum Difficulty {
