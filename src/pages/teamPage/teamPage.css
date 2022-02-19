@@ -1,0 +1,106 @@
+.about-team {
+  display: flex;
+  justify-content: space-between;
+}
+
+.member__info {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.member__links {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  width: 170px;
+  height: 216px;
+}
+
+.member__name {
+  margin: 5px 0px;
+  color: #fcaa23;
+}
+
+.member__role {
+  margin: 0;
+}
+
+.member__git, .member__linkidin, .member__email {
+  height: 30px;
+  width: 30px;
+  padding: 2px 0px;
+  color: #AA96DD;
+  font-size: 20px;
+  text-decoration: none;
+  text-align: center;
+}
+
+.member__git:hover::before {
+  filter: invert(80%) sepia(18%) saturate(5529%) hue-rotate(341deg) brightness(102%) contrast(98%);
+}
+
+.member__linkidin:hover::before {
+  filter: invert(53%) sepia(76%) saturate(1751%) hue-rotate(177deg) brightness(92%) contrast(85%);
+}
+
+.member__email:hover::before {
+  filter: invert(53%) sepia(76%) saturate(1751%) hue-rotate(177deg) brightness(92%) contrast(85%);
+}
+
+.member__linkidin::before,
+.member__git::before,
+.member__email::before {
+  content: '';
+  position: absolute;
+  right: calc(40% - 12px);
+  width: 30px;
+  height: 30px;
+}
+
+.member__git::before {
+  background: url(../../assets/svg/github-logo.svg) center no-repeat;
+  background-size: cover;
+}
+
+.member__linkidin::before {
+  background: url(../../assets/svg/linkedin-logo.svg) center no-repeat;
+  background-size: cover;
+}
+
+.member__email::before {
+  background: url(../../assets/svg/email-icon.svg) center no-repeat;
+  background-size: cover;
+}
+
+.member__card {
+  position: relative;
+  width: 340px;
+  background: #F7F7F7;
+  box-shadow: 10px 10px 10px rgb(0 0 0 / 25%);
+  border-radius: 31px;
+}
+
+.member__photo {
+  min-height: 150px;
+  width: 50%;
+  border-radius: 31px 0px 31px 31px;
+  border: 10px solid #AA96DD;
+  background-size: cover;
+}
+
+#member-2 {
+  background:url(../../assets/photos/vlad.jpg) center no-repeat;
+  background-size: cover;
+}
+
+.member__speciality-name {
+  width: 50%;
+  text-align: center;
+}
+
+.member__completed-tasks {
+  padding: 20px;
+  font-size: 20px;
+  margin: 0;
+  color: #AAAAAA;
+}
