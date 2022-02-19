@@ -136,8 +136,8 @@ export const MEMBER_INFO = [
     githubLink: 'https://github.com/SergeiOsmolovskii',
     linkidInLink: 'https://www.linkedin.com/in/sergei-asmalouski-038a5820a/', 
     email: 'osmolovskii_sergei@mail.ru', 
-    completedTasks: `Lorem, ipsum dolor sit amet consectetur adipisicing elit. Blanditiis quae ab officiis mollitia! Ducimus, vero
-    Sit, dolores iste, nobis et dolor optio commodi minus eaque ab quibusdam fuga in ratione.`
+    completedTasks: `Реализовал авторизацию и разавторизацию. Настроил получение данных с бекенда. Создал страницу
+     статистики, страницу "О команде" и мини-игр.`
   },
   {
     name: 'Anna Rabychyna',
@@ -146,8 +146,7 @@ export const MEMBER_INFO = [
     githubLink: 'https://github.com/annarabychina',
     linkidInLink: '', 
     email: 'annarabychina@mail.ru', 
-    completedTasks: `Lorem, ipsum dolor sit amet consectetur adipisicing elit. Blanditiis quae ab officiis mollitia! Ducimus, vero
-    Sit, dolores iste, nobis et dolor optio commodi minus eaque ab quibusdam fuga in ratione.`
+    completedTasks: `Настроила роутинг. Создала главную страницу, страницу "О приложении" и раздел "Учебник".`
   },
   {
     name: 'Vlad Hitrikov',
@@ -156,7 +155,6 @@ export const MEMBER_INFO = [
     githubLink: 'https://github.com/vlad48-star',
     linkidInLink: 'https://www.linkedin.com/in/vlad-hitrikov-1aa217212/', 
     email: 'vlad.hitrikov@yahoo.com', 
-    completedTasks: `Lorem, ipsum dolor sit amet consectetur adipisicing elit. Blanditiis quae ab officiis mollitia! Ducimus, vero
-    Sit, dolores iste, nobis et dolor optio commodi minus eaque ab quibusdam fuga in ratione.`
+    completedTasks: `Настроил бекенд. Реализовал игры и "Аудиовызов" и "Спринт". Разработал дизайн проекта.`
   }
 ]
