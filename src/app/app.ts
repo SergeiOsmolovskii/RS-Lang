@@ -12,7 +12,7 @@ import TextbookPage from "../pages/textbookPage/textbookPage";
 import Page from "../templates/page";
 import { logOut } from "../components/login-form/login-form";
 import TeamPage from "../pages/teamPage/teamPage";
-
+import AboutAppPage from "../pages/aboutAppPage/aboutAppPage";
 
 export class App {
   private static container: HTMLElement = document.body;
@@ -51,6 +51,9 @@ export class App {
       case PageIds.TeamPage:
         page = new TeamPage(idPage);
         break;
+      case PageIds.AboutAppPage:
+        page = new AboutAppPage(idPage);
+        break;
     }
 
     if (page) {
@@ -79,8 +82,11 @@ export class App {
       const headerHTML = new Header("header", ["header"]);
       const pageHTML = page.render();
       (await pageHTML).id = this.defaultPageId;
-      const footerHTML = new Footer("footer", ["footer"]);
-      App.container.append(headerHTML.render(), await pageHTML, footerHTML.render());
+      App.container.append(headerHTML.render(), await pageHTML);
+      if (idPage !== PageIds.AudioCallPage && idPage !== PageIds.SprintPage) {
+        const footerHTML = new Footer("footer", ["footer"]);
+        App.container.append(footerHTML.render());
+      }
       const logOutButton = document.querySelector('.log-out') as HTMLElement;
       logOutButton?.addEventListener('click', logOut);
     }
