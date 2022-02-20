@@ -15,13 +15,16 @@ class Header extends Component {
     logoLink.href = `/#${PageIds.MainPage}`;
     const logo = insertElement('div', ['logo'], '', logoLink);
     const logoTitle = insertElement('h1', ['logo-title'], 'lang', logoLink);
- 
-    this.container.append(logoContainer, renderHeaderButtons());
+    const navHamburger = insertElement('button', ['nav-hamburger']);
+    navHamburger.addEventListener('click',  () => {
+    document.querySelector('.nav')?.classList.toggle('show');
+    });
+    this.container.append(logoContainer, renderHeaderButtons(), navHamburger);
     
     if (localStorage.getItem('currentUserID') === null && localStorage.getItem('currentUserToken') === null) {
       this.container.append(renderLogInButton());
     } else {
-      this.container.insertAdjacentHTML('beforeend', renderProfileBlock());
+      this.container.insertAdjacentHTML('beforeend', renderProfileBlock(),);
     }
     return this.container;
   }
