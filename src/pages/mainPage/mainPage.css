@@ -179,7 +179,6 @@
     max-height: 110%;
   }
 
-
   .main-page-info {
     font-size: 14px;
     max-width: 200px;
@@ -199,6 +198,11 @@
 }
 
 @media (max-width: 550px) {
+
+  .main-page {
+    max-width: 350px !important;
+    height: 500px;
+  }
 
   .main-img,
   .dialog-img {
