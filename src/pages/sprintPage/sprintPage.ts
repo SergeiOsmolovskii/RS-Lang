@@ -1,11 +1,15 @@
 import "./sprintPage.css"
-import { insertElement, getRandom, changeQuoteNumber, renderResult, putBackEndTrueAnswer, putBackEndFalseAnswer } from "../../services/services";
+import { insertElement, getRandom, changeQuoteNumber, renderResult } from "../../services/services";
 import MiniGamesPage from "../games/gamePage";
 import { renderTimerForm, renderFormSprintGame, renderSvgExit, renderFormSprintProgress, renderFormSptintAnswerButton, renderSprintResultAnswer } from "../../services/renderFormSprint";
 import { getWords, IWords } from '../../api/getWords';
 import { IGameParam, storage } from '../../api/api';
 import { getLocalStorage, setLocalStorage } from "../../services/storage";
 import { getAllAggregatedWords } from '../../api/aggregatedWords';
+import { getUserStatistic, setUserStatistic } from "../../api/statistic";
+import { getAllUserWords, setUserWord, updateUserWord } from "../../api/userWords";
+import { Difficulty } from "../../options/options";
+import { putBackEndFalseAnswer, putBackEndTrueAnswer } from "../../services/statistic";
 
 
 class SprintPage extends MiniGamesPage {
@@ -13,7 +17,7 @@ class SprintPage extends MiniGamesPage {
   private choiseTrueAnswer: Element | null = null;
   private renderPoint: Element | null = null;
   private pointSum: Element | null = null;
-  private resultFetch: IWords[] = [];
+  private resultFetch: any = [];
   private trueAnswer: number = 0;
   private englishWord: Element | null = null;
   private russianWord: Element | null = null;
@@ -24,14 +28,17 @@ class SprintPage extends MiniGamesPage {
   private localTrueAnswer: number = 0;
   private point: number = 0;
   private progress: any = null;
-  private localTotalWordssRight: IWords[] = [];
-  private localTotalWordssMistakes: IWords[] = [];
+  private localTotalWordssRight: any = [];
+  private localTotalWordssMistakes: any = [];
   private seconds: number = 60;
   private linkRight!: (e: Event) => void;
   private linkLeft!: (e: Event) => void;
   private count: number = 0;
-  private getFetch: IWords[] = [];
   private pageStr: number = 0;
+  private userStatistic: import("d:/RS-Lang/src/api/api").IStatistic | undefined;
+  private exceptionalValues: string[] = [];
+  private localWrongAnswer: number = 0;
+  private getFetch: any = [];
 
   constructor(id: string) {
     super(id);
@@ -43,7 +50,7 @@ class SprintPage extends MiniGamesPage {
     this.pageStr = getLocalStorage('page') ? Number(getLocalStorage('page')) : 0;
     const group = getLocalStorage('group') ? Number(getLocalStorage('group')) : 0;
     const modes = getLocalStorage('mode') ? getLocalStorage('mode') : 0;
-    for(let i = 0; i < 6; i++){
+    for(let i = 0; i < 3; i++){
       if(!storage.isAuthorized){
         this.getFetch = await getWords(getRandom(0, 29), this.checkNumber);
       } else if(modes === 'filtrWords' && storage.isAuthorized){
@@ -62,12 +69,10 @@ class SprintPage extends MiniGamesPage {
       } 
       this.resultFetch = [...this.resultFetch,...this.getFetch];
     }
-    this.resultFetch.sort(() => Math.random() - 0.5);
-    console.log(this.resultFetch)
+    [...new Set(this.resultFetch)].sort(() => Math.random() - 0.5);
     this.renderPage();
     return this.page;
   }
-
 
   renderPage(){
     if(!this.page.querySelector('.point-progress')){
@@ -83,27 +88,32 @@ class SprintPage extends MiniGamesPage {
     this.englishWord = <HTMLElement>this.page.querySelector('.english-word');
     this.russianWord = <HTMLElement>this.page.querySelector('.russian-word');
 
-    this.trueAnswer = getRandom(this.count, 1 + this.count);
+    this.trueAnswer = getRandom(this.count, 3 + this.count);
     this.englishWord.textContent = `${this.resultFetch[this.count].word}`;
     this.russianWord.textContent = `${this.resultFetch[this.trueAnswer].wordTranslate}`;
-    // console.log(this.count)
-    console.log(this.resultFetch[this.trueAnswer])
 
     this.linkLeft = () => this.choiseDirectionLeft();
     this.linkRight = () => this.choiseDirectionRight();
-    // this.page.contain-answer-button
+
+    document.onkeyup = (e) =>{
+      if(e.keyCode === 37){
+        this.choiseDirectionLeft();
+      } else if(e.keyCode === 39) {
+        this.choiseDirectionRight()
+      } else if(this.seconds === 0 && e.keyCode === 13){
+        this.render();
+        this.clearPage();
+        this.timer();
+      } else if(e.keyCode === 27){
+
+      }
+    }
     this.choiseFalseAnswer.addEventListener('click', this.linkLeft);
     this.choiseTrueAnswer.addEventListener('click', this.linkRight);
     return this.page;
   }
 
   choiseDirectionLeft () {
-    this.englishWord = <HTMLElement>this.page.querySelector('.english-word');
-    this.russianWord = <HTMLElement>this.page.querySelector('.russian-word');
-    this.trueAnswer = getRandom(this.count, 1 + this.count);
-    this.englishWord.textContent = `${this.resultFetch[this.count].word}`;
-    this.russianWord.textContent = `${this.resultFetch[this.trueAnswer].wordTranslate}`;
-    ++this.count;
     if(this.englishWord?.innerHTML !== this.resultFetch[this.trueAnswer].word){
       this.choiseRight();
     }else{
@@ -111,16 +121,14 @@ class SprintPage extends MiniGamesPage {
     }
     this.progress = this.page.querySelectorAll('.arrow');
     changeQuoteNumber(this.progress);
+    this.choiseFalseAnswer?.removeEventListener('click', this.linkLeft);
+    this.choiseTrueAnswer?.removeEventListener('click', this.linkRight);
+    ++this.count;
+    this.renderPage();
     this.clearPage ();
   }
 
   choiseDirectionRight () {
-    this.englishWord = <HTMLElement>this.page.querySelector('.english-word');
-    this.russianWord = <HTMLElement>this.page.querySelector('.russian-word');
-    this.trueAnswer = getRandom(this.count, 1 + this.count);
-    this.englishWord.textContent = `${this.resultFetch[this.count].word}`;
-    this.russianWord.textContent = `${this.resultFetch[this.trueAnswer].wordTranslate}`;
-    ++this.count;
     if (this.englishWord?.innerHTML === this.resultFetch[this.trueAnswer].word){
       this.choiseRight();
     } else {
@@ -128,28 +136,38 @@ class SprintPage extends MiniGamesPage {
     }
     this.progress = this.page.querySelectorAll('.arrow');
     changeQuoteNumber(this.progress);
-    this.clearPage ();
+    this.choiseFalseAnswer?.removeEventListener('click', this.linkLeft);
+    this.choiseTrueAnswer?.removeEventListener('click', this.linkRight);
+    ++this.count;
+    this.renderPage();
+    this.clearPage();
   }
 
   async choiseWrong () {
-    await putBackEndFalseAnswer(this.resultFetch, this.trueAnswer);
+    const audio = document.createElement('audio');
+    audio.src = `/assets/audio/wrong.mp3`;
+    audio.play();
+    await putBackEndFalseAnswer(this.resultFetch, this.count);
     if (this.localSeries < this.currentGetSeries){
       this.localSeries = this.currentGetSeries;
     }
     this.currentGetSeries = 0;
-    this.localTotalWordssMistakes.push(this.resultFetch[this.trueAnswer]);
+    this.localTotalWordssMistakes.push(this.resultFetch[this.count]);
   }
 
   async choiseRight () {
-    // console.log('угадал')
-    await putBackEndTrueAnswer(this.resultFetch, this.trueAnswer);
+    const audio = document.createElement('audio');
+    audio.src = `/assets/audio/right.mp3`;
+    audio.play();
+    await putBackEndTrueAnswer(this.resultFetch, this.count);
     ++this.currentGetSeries;
     ++this.sprintGameParam.trueAnswers;
     ++this.localTrueAnswer;
     if (this.localSeries < this.currentGetSeries){
       this.localSeries = this.currentGetSeries;
     }
-    this.localTotalWordssRight.push(this.resultFetch[this.trueAnswer]);
+    this.localTotalWordssRight.push(this.resultFetch[this.count]);
+    console.log()
     this.renderPoint = <Element>this.page.querySelector('.point');
     this.pointSum = <Element>this.page.querySelector('.point-sum');
     if (this.currentGetSeries > 3 && this.currentGetSeries < 6){
@@ -165,7 +183,7 @@ class SprintPage extends MiniGamesPage {
   }
 
   timer () {
-    this.seconds = 30;
+    this.seconds = 10;
     const timer = setInterval(async () => {
       const timerShow: Element | null = <Element>this.page.querySelector(".timer");
       timerShow.innerHTML = `${this.seconds}`;
@@ -192,15 +210,15 @@ class SprintPage extends MiniGamesPage {
     const getLocal: string | null = localStorage.getItem('sprintGameParam');
     const getLocalAmountWords: string | null = localStorage.getItem('totalWord');
     const arrWord = finalArr.map(item => item.word);
-    const exceptionalValues = [...new Set(arrWord)];
+    this.exceptionalValues = [...new Set(arrWord)];
     if (getLocal === null || getLocalAmountWords === null) { 
       this.sprintGameParam.newWords = arrWord.length;
       localStorage.setItem('sprintGameParam', JSON.stringify(this.sprintGameParam));
-      setLocalStorage('totalWord', exceptionalValues);
+      setLocalStorage('totalWord', this.exceptionalValues);
       setLocalStorage('audioCallGameParam' ,this.audioCallGameParam);
     } else {
       const parseTotalWord: string[] = JSON.parse(getLocalAmountWords);
-      const filtWord = exceptionalValues.filter(item => !parseTotalWord.includes(item));
+      const filtWord = this.exceptionalValues.filter(item => !parseTotalWord.includes(item));
       const resultExceptionalValues = [...parseTotalWord,...filtWord];
       setLocalStorage('totalWord', resultExceptionalValues);
       const parseAnswerWord: IGameParam = JSON.parse(getLocal);
@@ -223,8 +241,7 @@ class SprintPage extends MiniGamesPage {
   }
 
   renderConclusion () {
-    // this.choiseFalseAnswer?.removeEventListener('click', this.linkLeft);
-    // this.choiseTrueAnswer?.removeEventListener('click', this.linkRight);
+    this.putDateBack();
     const amountPoints = <HTMLElement>document.querySelector('.quantity-true-points');
     const amountPercent = <HTMLElement>document.querySelector('.percent-answers');
     const amountSprintTrueAnswer = <HTMLElement>document.querySelector('.game-true-answer');
@@ -238,7 +255,6 @@ class SprintPage extends MiniGamesPage {
     renderResult(this.localTotalWordssRight, amountSprintTrueAnswer);
     const maxPercent = Math.round((this.localTrueAnswer/this.count) * 100);
     amountPoints.textContent= `${this.point} Очков`;
-
     if (isNaN(maxPercent)) {
       amountPercent.textContent = `${0}%`;
       amountPercent.style.background = `red`;
@@ -267,9 +283,51 @@ class SprintPage extends MiniGamesPage {
     if(clearTable !== null){
       clearTable.remove();
     }
-    // const clearAnswers: HTMLElement | null = <HTMLElement>document.querySelector('.contain-answer-button');
-    // clearAnswers.remove();
   }
 
+  async putDateBack () {
+    if(storage.isAuthorized) {
+      this.userStatistic = await getUserStatistic();
+      const getJson = JSON.parse(this.userStatistic.optional.maxWords);
+      const filterValuesWords = this.exceptionalValues.filter(item => !getJson.includes(item)); 
+      const joinValuesWords = [...filterValuesWords,...getJson];
+      const jsonWords = JSON.stringify(joinValuesWords);
+      if(this.userStatistic.optional.maxWords === '[]'){
+        this.userStatistic.optional.games.sprint.newWords = this.count;
+      } else {
+        this.userStatistic.optional.games.sprint.newWords = this.userStatistic.optional.games.sprint.newWords + filterValuesWords.length;
+      }
+      let wordsPerDateMap = new Map(Object.entries(this.userStatistic.optional.general));
+      wordsPerDateMap.set(new Date().toLocaleDateString(), joinValuesWords.length);
+      if(this.userStatistic.optional.games.sprint.bestSeries < this.localSeries){
+        this.currentGetSeries = this.localSeries;
+      }else{
+        this.currentGetSeries = this.userStatistic.optional.games.sprint.bestSeries;
+      }
+      await setUserStatistic(storage.userId, {
+        learnedWords: 0,
+        optional: {
+          general: Object.fromEntries(wordsPerDateMap),
+          games: {
+            sprint: {
+              newWords: this.userStatistic.optional.games.sprint.newWords,
+              trueAnswers: this.userStatistic.optional.games.sprint.trueAnswers + this.localTrueAnswer,
+              bestSeries: this.currentGetSeries,
+              gamesPlayed: this.userStatistic.optional.games.sprint.gamesPlayed + 1,
+              wrongAnswers: this.userStatistic.optional.games.sprint.wrongAnswers + this.localWrongAnswer,
+            },
+            audioCall: {
+              newWords:  this.userStatistic.optional.games.audioCall.newWords,
+              trueAnswers: this.userStatistic.optional.games.audioCall.trueAnswers,
+              bestSeries: this.userStatistic.optional.games.audioCall.bestSeries,
+              gamesPlayed: this.userStatistic.optional.games.audioCall.gamesPlayed,
+              wrongAnswers: this.userStatistic.optional.games.audioCall.wrongAnswers,
+            }
+          },
+          maxWords: jsonWords
+        }
+      });
+    }
+  }
 }
 export default SprintPage;

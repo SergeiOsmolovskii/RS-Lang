@@ -107,7 +107,8 @@ export interface IStatistic {
 	learnedWords: number,
 	optional: {
 		general: object,
-		games: IGames
+		games: IGames,
+		maxWords: string
 	}
 }
 

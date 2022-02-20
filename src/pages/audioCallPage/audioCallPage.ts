@@ -1,12 +1,14 @@
 import "./audioCallPage.css";
-import { insertElement, getRandom, clicker, renderResult, putBackEndFalseAnswer, putBackEndTrueAnswer } from "../../services/services";
+import { insertElement, getRandom, clicker, renderResult } from "../../services/services";
 import { getWords, IWords } from '../../api/getWords';
 import { renderGame, renderNextButton, renderProgressGame, renderSvgExit } from "../../services/renderFormAudioCall";
 import { renderSprintResultAnswer } from "../../services/renderFormSprint";
 import MiniGamesPage from "../games/gamePage";
-import { IGameParam, storage } from '../../api/api';
+import { IAggregatedWord, IGameParam, storage } from '../../api/api';
 import { getLocalStorage, setLocalStorage } from "../../services/storage";
 import { getAllAggregatedWords } from "../../api/aggregatedWords";
+import { getUserStatistic, setUserStatistic } from "../../api/statistic";
+import { putBackEndFalseAnswer, putBackEndTrueAnswer } from "../../services/statistic";
 
 class AudioCallPage extends MiniGamesPage {
   private answerOne: Element | null = null;
@@ -18,7 +20,6 @@ class AudioCallPage extends MiniGamesPage {
   private sprintGameParam: IGameParam = {newWords: 0, trueAnswers: 0, bestSeries: 0, gamesPlayed: 0};
   private localTotalWordssRight: IWords[] = [];
   private localTotalWordssMistakes: IWords[] = [];
-  private getFetch: any = [];
   private resultFetch: any = [];
   private listContainer: HTMLElement[] | null = [];
   private audioPlay: any = null;
@@ -27,9 +28,12 @@ class AudioCallPage extends MiniGamesPage {
   private currentGetSeries: number = 0;
   private localSeries: number = 0;
   private localTrueAnswer: number = 0;
+  private localWrongAnswer: number = 0;
   private freeResultAnswer!: (e: Event) => void;
   private freeAudioAnswer!: (e: Event) => void;
   private count: number = 0;
+  private userStatistic: import("d:/RS-Lang/src/api/api").IStatistic | undefined;
+  private exceptionalValues: string[] = [];
 
   constructor(id: string) {
     super(id);
@@ -42,16 +46,12 @@ class AudioCallPage extends MiniGamesPage {
     const group = getLocalStorage('group') ? Number(getLocalStorage('group')) : 0;
     const modes = getLocalStorage('mode') ? getLocalStorage('mode') : 0;
     if(!storage.isAuthorized){
-      this.getFetch = await getWords(getRandom(0, 29), this.checkNumber);
-      console.log('Не авторизированный')
+      this.resultFetch = await getWords(getRandom(0, 29), this.checkNumber);
     } else if(modes === 'filtrWords' && storage.isAuthorized){
-      this.getFetch = await getAllAggregatedWords(`${group}`, `${page}`,'20', `{"$or": [{"userWord.difficulty":null}, {"userWord.difficulty":"easy"}]}`);
+      this.resultFetch = await getAllAggregatedWords(`${group}`, `${page}`,'20', `{"$or": [{"userWord.difficulty":null}, {"userWord.difficulty":"easy"}]}`);
     } else if(modes === 'normal' && storage.isAuthorized){
-      this.getFetch = await getAllAggregatedWords(`${this.checkNumber}`, `0`,'20', `{"page":${0}}`);
-      console.log(this.getFetch)
+      this.resultFetch = await getAllAggregatedWords(`${this.checkNumber}`, `0`,'20', `{"page":${0}}`);
     }
-    const _ = require('lodash');
-    this.resultFetch =  _.cloneDeep(this.getFetch);
     this.resultFetch.sort(() => Math.random() - 0.5);
     this.renderPage();
     return this.page;
@@ -68,13 +68,39 @@ class AudioCallPage extends MiniGamesPage {
     this.answerThree = <Element>this.page.querySelector('.answer-item-3');
     this.answerFour = <Element>this.page.querySelector('.answer-item-4');
     this.answerFife = <Element>this.page.querySelector('.answer-item-5');
-    this.listContainer = Array.from(this.page.querySelectorAll('.level-1'));
+    this.listContainer = Array.from(this.page.querySelectorAll('.answer-item'));
+    
     this.progress = this.page.querySelectorAll('.heart');
     const arrAnswer = [this.answerOne, this.answerTwo, this.answerThree, this.answerFour, this.answerFife];
     arrAnswer.sort(() => Math.random() - 0.5);
+
     for(let i = 0, pos = 0; pos < arrAnswer.length; i++, pos++){
       arrAnswer[pos].textContent = `${this.resultFetch[i + this.count].wordTranslate}`;
     }
+
+    // document.onkeyup = (e) => {
+    //   switch(e.keyCode){
+    //     case 49 :
+    //         e.preventDefault();
+    //         this.resultAnswer(e);
+
+    //     case 50:
+    //       this.resultAnswer(e);
+    //         break
+    //     case 51:
+    //       this.resultAnswer(e);
+    //         break
+    //     case 52 :
+    //       this.resultAnswer(e);
+    //         break
+    //     case 53 :
+    //       this.resultAnswer(e);
+    //         break
+    //     case 53 :
+    //       this.resultAnswer(e);
+    //         break
+    //     }
+    // }
     this.freeResultAnswer = (e: Event) => this.resultAnswer(e);
     this.freeAudioAnswer = () => clicker(this.audioPlay);
     this.listContainer.forEach(el => el.addEventListener('click', this.freeResultAnswer));
@@ -87,7 +113,6 @@ class AudioCallPage extends MiniGamesPage {
   }
 
   resultAnswer(e: Event) {
-
     this.audioPlay?.removeEventListener('click', this.freeAudioAnswer);
     this.listContainer?.forEach(el => el.removeEventListener('click', this.freeResultAnswer));
     this.containButton = this.page.querySelector('.answers');
@@ -96,6 +121,7 @@ class AudioCallPage extends MiniGamesPage {
       if(target.innerText === this.resultFetch[this.count].wordTranslate) {
         putBackEndTrueAnswer(this.resultFetch, this.count);
         target.style.backgroundColor = "#32cd32";
+        target.style.color = "#ffffff";
         target.classList.add('animate-color');
         this.progress[this.count].style.background = "linear-gradient(300deg, black, 5%, #32cd32)";
         this.audioPlay.style.background = `url(https://rs-lang-learn.herokuapp.com/${this.resultFetch[this.count].image}) center no-repeat`;
@@ -109,8 +135,10 @@ class AudioCallPage extends MiniGamesPage {
           this.localSeries = this.currentGetSeries;
         }
       } else {
+        ++this.localWrongAnswer;
         putBackEndFalseAnswer(this.resultFetch, this.count);
         target.style.backgroundColor = "#da6f63";
+        target.style.border = "2px";
         this.localTotalWordssMistakes.push(this.resultFetch[this.count]);
         this.progress[this.count].style.background = "linear-gradient(300deg, black, 5%, #fa8072)";
         target.classList.add('animate-color');
@@ -141,20 +169,19 @@ class AudioCallPage extends MiniGamesPage {
   localaudioCall() {
     ++this.audioCallGameParam.gamesPlayed;
     this.audioCallGameParam.bestSeries = this.localSeries;
-    const finalArr: IWords[] = [...this.localTotalWordssMistakes, ...this.localTotalWordssRight];
+    const finalArr = [...this.localTotalWordssMistakes, ...this.localTotalWordssRight];
     const getLocal: string | null = localStorage.getItem('audioCallGameParam');
     const getLocalAmountWords: string | null = localStorage.getItem('totalWord');
     const arrWord = finalArr.map(item => item.word);
-    const exceptionalValues = [...new Set(arrWord)];
-    
+    this.exceptionalValues = [...new Set(arrWord)];
     if(getLocal === null || getLocalAmountWords === null){
       this.audioCallGameParam.newWords = arrWord.length
       setLocalStorage('audioCallGameParam', this.audioCallGameParam);
-      setLocalStorage('totalWord', exceptionalValues);
+      setLocalStorage('totalWord', this.exceptionalValues);
       setLocalStorage('sprintGameParam',this.sprintGameParam);
     } else {
       const parseTotalWord: string[] = JSON.parse(getLocalAmountWords);
-      const filtWord = exceptionalValues.filter(item => !parseTotalWord.includes(item));
+      const filtWord = this.exceptionalValues.filter(item => !parseTotalWord.includes(item));
       const resultExceptionalValues = [...parseTotalWord,...filtWord];
       setLocalStorage('totalWord', resultExceptionalValues);
       const parseAnswerWord: IGameParam = JSON.parse(getLocal);
@@ -170,6 +197,52 @@ class AudioCallPage extends MiniGamesPage {
         this.audioCallGameParam.bestSeries = parseAnswers.bestSeries;
         setLocalStorage('audioCallGameParam', this.audioCallGameParam);
       }
+      this.putDateBack();
+    }
+  }
+
+  async putDateBack () {
+    if(storage.isAuthorized) {
+      this.userStatistic = await getUserStatistic();
+      const getJson = JSON.parse(this.userStatistic.optional.maxWords);
+      const filterValuesWords = this.exceptionalValues.filter(item => !getJson.includes(item)); 
+      const joinValuesWords = [...filterValuesWords,...getJson];
+      const jsonWords = JSON.stringify(joinValuesWords);
+      if(this.userStatistic.optional.maxWords === '[]'){
+        this.userStatistic.optional.games.audioCall.newWords = 15;
+      } else {
+        this.userStatistic.optional.games.audioCall.newWords = this.userStatistic.optional.games.audioCall.newWords + filterValuesWords.length;
+      }
+      let wordsPerDateMap = new Map(Object.entries(this.userStatistic.optional.general));
+      wordsPerDateMap.set(new Date().toLocaleDateString(), joinValuesWords.length);
+      if(this.userStatistic.optional.games.audioCall.bestSeries < this.localSeries){
+        this.currentGetSeries = this.localSeries;
+      }else{
+        this.currentGetSeries = this.userStatistic.optional.games.audioCall.bestSeries;
+      }
+      await setUserStatistic(storage.userId, {
+        learnedWords: 0,
+        optional: {
+          general: Object.fromEntries(wordsPerDateMap),
+          games: {
+            sprint: {
+              newWords: this.userStatistic.optional.games.sprint.newWords,
+              trueAnswers: this.userStatistic.optional.games.sprint.trueAnswers,
+              bestSeries: this.userStatistic.optional.games.sprint.bestSeries,
+              gamesPlayed: this.userStatistic.optional.games.sprint.gamesPlayed,
+              wrongAnswers: this.userStatistic.optional.games.sprint.wrongAnswers,
+            },
+            audioCall: {
+              newWords:  this.userStatistic.optional.games.audioCall.newWords,
+              trueAnswers: this.userStatistic.optional.games.audioCall.trueAnswers + this.localTrueAnswer,
+              bestSeries: this.currentGetSeries,
+              gamesPlayed: this.userStatistic.optional.games.audioCall.gamesPlayed + 1,
+              wrongAnswers: this.userStatistic.optional.games.audioCall.wrongAnswers + this.localWrongAnswer,
+            }
+          },
+          maxWords: jsonWords
+        }
+      });
     }
   }
 
@@ -194,9 +267,9 @@ class AudioCallPage extends MiniGamesPage {
       amountPercent.style.background = `linear-gradient(to right, green ${maxPercent}%, red ${100 - maxPercent}%)`;
     }
     this.audioCallGameParam = {newWords: 0, trueAnswers: 0, bestSeries: 0, gamesPlayed: 0};
+    this.localWrongAnswer = 0;
     this.localSeries = 0;
     this.currentGetSeries = 0;
-    this.localTrueAnswer = 0;
     this.count = 0;
     this.localTotalWordssRight = [];
     this.localTotalWordssMistakes = [];
@@ -214,6 +287,5 @@ class AudioCallPage extends MiniGamesPage {
     clearVolumePosition.remove();
     clearAnswers.remove();
   }
-
 }
 export default AudioCallPage;

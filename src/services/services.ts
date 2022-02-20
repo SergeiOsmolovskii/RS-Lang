@@ -70,13 +70,24 @@ export const playAudio = (playList: Array<string>): void => {
   };
 };
 
+// export const shuffle = (arr: number[]) => {
+//   let j, x;
+//   for (let i = arr.length - 1; i > 0; i--) {
+//       j = Math.floor(Math.random() * (i + 1));
+//       x = arr[i];
+//       arr[i] = arr[j];
+//       arr[j] = x;
+//   }
+//   return arr;
+// }
+
 export const getRandom = (min: number, max: number): number => {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-export const clicker = (el: HTMLElement): void =>{
+export const clicker = (el: Element): void =>{
     const circle = document.createElement('div');
     circle.classList.add('circle');
     circle.style.left = 195 + 'px';
@@ -185,66 +196,4 @@ export const renderCardsButtons = (regime: Regime, idStyle: number, elementId: s
     });
   }
   return <HTMLElement>cardsButtonsWrapper;
-}
-
-export const putBackEndFalseAnswer = async (arr: any, truePos: number)=>{
-  if (storage.isAuthorized) {
-    if (arr[truePos].userWord === undefined) {
-      await setUserWord(arr[truePos]._id, {
-        difficulty: Difficulty.normalWord,
-        optional: {trueAnswersCount: 0, falseAnswersCount: 1, trueAnswersSeria: 0},
-      });
-    } else if (arr[truePos].userWord.difficulty === 'stydied') {
-      await updateUserWord(arr[truePos]._id, {
-        difficulty: Difficulty.normalWord,
-        optional: {trueAnswersCount: arr[truePos].userWord.optional.trueAnswersCount, 
-                  falseAnswersCount: arr[truePos].userWord.optional.falseAnswersCount+1, 
-                  trueAnswersSeria: 0
-                },
-      });
-    } else {
-      await updateUserWord(arr[truePos]._id, {
-        difficulty: arr[truePos].userWord.difficulty,
-        optional: {trueAnswersCount: arr[truePos].userWord.optional.trueAnswersCount, 
-                  falseAnswersCount: arr[truePos].userWord.optional.falseAnswersCount+1, 
-                  trueAnswersSeria: 0
-                },
-      });
-    }
-  }
-}
-
-export const putBackEndTrueAnswer = async (arr: any, truePos: number)=>{
-  if(storage.isAuthorized){
-    if(arr[truePos].userWord === undefined){
-      await setUserWord(arr[truePos]._id, {
-        difficulty: Difficulty.normalWord,
-        optional: {trueAnswersCount: 1, falseAnswersCount: 0, trueAnswersSeria: 1},
-      });
-    } else if (arr[truePos].userWord.difficulty === 'easy' && arr[truePos].userWord.optional.trueAnswersSeria === 3) {
-      await updateUserWord(arr[truePos]._id, {
-        difficulty: Difficulty.studiedWord,
-        optional: {trueAnswersCount: arr[truePos].userWord.optional.trueAnswersCount, 
-                  falseAnswersCount: arr[truePos].userWord.optional.falseAnswersCount, 
-                  trueAnswersSeria: arr[truePos].userWord.optional.trueAnswersSeria,
-                },
-      });
-    } else if (arr[truePos].userWord.difficulty === 'hard' && arr[truePos].userWord.optional.trueAnswersSeria === 5) {
-      await updateUserWord(arr[truePos]._id, {
-        difficulty: Difficulty.studiedWord,
-        optional: {trueAnswersCount: arr[truePos].userWord.optional.trueAnswersCount, 
-                  falseAnswersCount: arr[truePos].userWord.optional.falseAnswersCount,
-                  trueAnswersSeria: arr[truePos].userWord.optional.trueAnswersSeria,
-                }, 
-      })            
-    } else {
-      await updateUserWord(arr[truePos]._id, {
-        difficulty: arr[truePos].userWord.difficulty,
-        optional: {trueAnswersCount: arr[truePos].userWord.optional.trueAnswersCount+1, 
-                  falseAnswersCount: arr[truePos].userWord.optional.falseAnswersCount, 
-                  trueAnswersSeria: arr[truePos].userWord.optional.trueAnswersSeria+1,
-                }, 
-      })
-    }
-  }
 }

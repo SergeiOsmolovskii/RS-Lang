@@ -171,7 +171,8 @@ export const registrationNewUser = async (e: Event): Promise<void> => {
             gamesPlayed: 0,
             wrongAnswers: 0,
           }
-        }
+        },
+        maxWords: '[]',
       }
     });  
     location.reload();
