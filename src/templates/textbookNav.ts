@@ -1,7 +1,7 @@
 import { Regime } from '../options/options';
 import TextbookPage from '../pages/textbookPage/textbookPage';
 import { insertElement } from '../services/services';
-import { getLocalStorage, setLocalStorage } from '../services/storage';
+import { setLocalStorage } from '../services/storage';
 
 export class TextbookNav {
   public container: HTMLElement;
@@ -20,6 +20,8 @@ export class TextbookNav {
         const numItem = <string>target.dataset[field];
         target.classList.add('active');
         setLocalStorage(field, numItem);
+        document.querySelector('.page-header-buttons')?.classList.remove('hide')
+        document.querySelector('.pagination-container')?.classList.remove('hide');
         TextbookPage.renderCardContainer(Regime.group);
       }
     });

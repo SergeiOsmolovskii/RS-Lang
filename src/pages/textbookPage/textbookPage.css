@@ -3,6 +3,10 @@
   justify-content: flex-end;
 }
 
+.page-header-buttons.hide {
+  display: none;
+}
+
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -82,7 +86,7 @@
   margin: 0;
   font-size: 18px;
   padding-right: 10px;
-  color: #000;
+  text-shadow: 1px 1px 2px #4a4b4e;
 }
 
 .card-answers-container {
@@ -110,7 +114,7 @@
 
 .card-text {
   font-size: 16px;
-  color: #000;
+  color: #4a4b4e;
   margin: 0;
   padding: 5px 0;
 }
@@ -171,6 +175,34 @@
   background-color: #aa96dd;
 }
 
+.text-color1 {
+  color: rgb(84, 189, 207);
+}
+
+.text-color2 {
+  color: rgb(8, 107, 124);
+}
+
+.text-color3{
+  color: rgb(247, 191, 109);
+}
+
+.text-color4{
+  color: rgb(240, 160, 40);
+}
+
+.text-color5{
+ color: rgb(248, 185, 169);
+}
+
+.text-color6{
+  color: rgb(199, 95, 81);
+}
+
+.text-color7{
+  color: #aa96dd;
+}
+
 .btn-game,
 .group-hard {
   font-family: "Nunito", sans-serif;
@@ -205,6 +237,10 @@
 .groups-btn {
   display: flex;
   flex-wrap: wrap;
+}
+
+.pagination-container.hide {
+  display: none;
 }
 
 .pagination {
@@ -247,7 +283,7 @@
 }
 
 .group-item:hover {
-  color:#aa96dd;
+  color:#4a4b4e;
 }
 
 .page-item:hover {

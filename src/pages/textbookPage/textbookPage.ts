@@ -4,11 +4,10 @@ import Page from '../../templates/page';
 import { CardsContainer } from './cards';
 import { Pagination } from './pagination';
 import { NavGroups } from './navGroups';
-import { Regime } from '../../options/options';
-import { storage } from '../../api/api';
+import { PageIds, Regime } from '../../options/options';
 
 class TextbookPage extends Page {
-  private static cardsContainer: CardsContainer;
+  static cardsContainer: CardsContainer;
   private pagination: Pagination;
   private navGroups: NavGroups;
 
@@ -25,20 +24,19 @@ class TextbookPage extends Page {
     return cardsContainerHTML;
   }
 
-  private renderHeaderPage(): HTMLElement {
+  private renderTitlePage(): HTMLElement {
     const headerPageContainer = insertElement('div', ['page-header']);
     const title = insertElement('h2', ['title'], 'электронный учебник', headerPageContainer);
     const headerButtonContainer = insertElement('div', ['page-header-buttons'], '', headerPageContainer);
     const btnGameAudioCall = <HTMLAnchorElement>insertElement('a', ['btn-game'], 'Аудиовызов', headerButtonContainer);
-    btnGameAudioCall.href='#game/audio-call';
+    btnGameAudioCall.href=`#${PageIds.AudioCallPage}`;
     const btnGameSprint = <HTMLAnchorElement>insertElement('a', ['btn-game'], 'Спринт', headerButtonContainer);
-    btnGameSprint.href='#game/sprint';
-
+    btnGameSprint.href=`#${PageIds.SprintPage}`;
     return headerPageContainer;
   }
 
   async render(): Promise<HTMLElement> {
-    this.page.append(this.renderHeaderPage(), this.navGroups.render(), this.pagination.render(), await TextbookPage.cardsContainer.render(Regime.group));
+    this.page.append(this.renderTitlePage(), this.navGroups.render(), this.pagination.render(), await TextbookPage.cardsContainer.render(Regime.group));
     return this.page;
   }
 }

@@ -128,6 +128,7 @@ export const MAIN_PAGE_CONTENT_HTML = `
 `;
 
 
+export const GROUP_HARD = '6';
 export const MEMBER_INFO = [
   {
     name: 'Asmalouski Siarhei',
