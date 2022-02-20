@@ -1,8 +1,9 @@
+import { storage } from '../api/api';
 import { buttonsGroups1, buttonsPage, Difficulty, Regime } from '../options/options';
-import { IWord, storage } from '../api/api';
 import { getLocalStorage } from './storage';
-import { setUserWord, updateUserWord } from '../api/userWords';
+import { IWord } from '../api/api';
 import TextbookPage from '../pages/textbookPage/textbookPage';
+import { updateUserWord, setUserWord } from '../api/userWords';
 
 export function insertElement(
   tagName: string,
@@ -69,24 +70,24 @@ export const playAudio = (playList: Array<string>): void => {
   };
 };
 
-export const getRandom = (min: number, max: number) => {
+// export const shuffle = (arr: number[]) => {
+//   let j, x;
+//   for (let i = arr.length - 1; i > 0; i--) {
+//       j = Math.floor(Math.random() * (i + 1));
+//       x = arr[i];
+//       arr[i] = arr[j];
+//       arr[j] = x;
+//   }
+//   return arr;
+// }
+
+export const getRandom = (min: number, max: number): number => {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-export const shuffle = (arr: number[]) => {
-  let j, x;
-  for (let i = arr.length - 1; i > 0; i--) {
-      j = Math.floor(Math.random() * (i + 1));
-      x = arr[i];
-      arr[i] = arr[j];
-      arr[j] = x;
-  }
-  return arr;
-}
-
-export const clicker = (el: HTMLElement) =>{
+export const clicker = (el: Element): void =>{
     const circle = document.createElement('div');
     circle.classList.add('circle');
     circle.style.left = 195 + 'px';
@@ -97,7 +98,7 @@ export const clicker = (el: HTMLElement) =>{
 
 let changeDegLeft = 0;
 let changeDegright = 0;
-export const changeQuoteNumber = (doc: any) => {
+export const changeQuoteNumber = (doc: any): void => {
   changeDegLeft = changeDegLeft + 720;
   changeDegright = changeDegright - 720;
   doc[0].style.transform = `rotate(${changeDegLeft-27}deg)`;

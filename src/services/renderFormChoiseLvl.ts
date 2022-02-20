@@ -70,4 +70,3 @@ export const renderFormLevel = `
         </div>
       </div>
     </div>`;
-  

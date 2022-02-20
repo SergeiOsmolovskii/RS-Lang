@@ -5,7 +5,7 @@ import { CardsContainer } from './cards';
 import { Pagination } from './pagination';
 import { NavGroups } from './navGroups';
 import { Regime } from '../../options/options';
-import { storage } from '../../api/api';
+import { setLocalStorage } from '../../services/storage';
 
 class TextbookPage extends Page {
   private static cardsContainer: CardsContainer;
@@ -31,9 +31,10 @@ class TextbookPage extends Page {
     const headerButtonContainer = insertElement('div', ['page-header-buttons'], '', headerPageContainer);
     const btnGameAudioCall = <HTMLAnchorElement>insertElement('a', ['btn-game'], 'Аудиовызов', headerButtonContainer);
     btnGameAudioCall.href='#game/audio-call';
+    btnGameAudioCall.addEventListener('click', () => setLocalStorage('mode', 'filtrWords'));
     const btnGameSprint = <HTMLAnchorElement>insertElement('a', ['btn-game'], 'Спринт', headerButtonContainer);
     btnGameSprint.href='#game/sprint';
-
+    btnGameSprint.addEventListener('click', () => setLocalStorage('mode', 'filtrWords'));
     return headerPageContainer;
   }
 

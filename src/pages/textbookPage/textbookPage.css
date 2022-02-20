@@ -3,6 +3,9 @@
   justify-content: flex-end;
 }
 
+
+.page-header,
+.card-answers-container,
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -93,21 +96,6 @@
   margin-right: 20px;
 }
 
-.card-answer {
-  text-align: center;
-  width: 45%;
-  border-radius: 5px;
-  color: #fff;
-}
-
-.card-answer__true {
-  background-color: #fcaa23;
-}
-
-.card-answer__false {
-  background-color:#aaa;
-}
-
 .card-text {
   font-size: 16px;
   color: #000;
@@ -138,6 +126,7 @@
 .card-btn:hover,
 .group-item:hover,
 .page-item:hover,
+.group-hard:hover,
 .group-hard:hover,
 .btn-game:hover {
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25);
@@ -181,6 +170,9 @@
 
 .btn-game {
   background-color: #fcaa23;
+}
+
+.btn-game {
   min-width: 140px;
   text-align: center;
 }
