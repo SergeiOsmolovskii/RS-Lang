@@ -32,6 +32,8 @@
 .answer-item:hover{
   background-color: rgb(243, 186, 0);
   transition: 0.7s linear;
+  box-shadow: 0px 4px 6px rgb(0 0 0 / 25%);
+  color:#ffffff;
 }
 
 .animate-color{
@@ -42,7 +44,7 @@
 .svg-volume{
   position: relative;
   background: url(/src/assets/svg/audio.svg) center no-repeat;
-  width: 390px;
+  width: 300px;
   height: 260px;
   cursor: pointer;
   margin: 50px 0 50px;
@@ -89,7 +91,7 @@
 .next-word{
   border-radius: 6px;
   display: grid;
-  margin: 25px auto;
+  margin: 15px auto;
   width: 100px;
   height: 35px;
   align-items: center;
@@ -121,4 +123,38 @@ button:focus {
     transform: translate(-50%, -50%) scale(2);
     opacity: 0;
   }
+}
+
+@media (max-width: 1024px) {
+  .answer-item{
+    min-width: 90px;
+    font-size: 12px;
+  }
+  .answers {
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 10px;
+  }
+
+  .last-level {
+    grid-column-start: 1;
+    grid-column-end: 3;
+  }
+
+  .answer-point{
+    grid-gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .heart{
+    width: 10px;
+    height: 10px;
+  }
+
+  .svg-volume{
+    margin: 0 0 0 0;
+  }
+  .audio-call-page{
+    padding: 15px 0 15px 0;
+  }
+
 }
