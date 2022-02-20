@@ -6,6 +6,7 @@ import { TextbookNav } from '../../templates/textbookNav';
 export class Pagination extends TextbookNav {
   constructor() {
     super();
+    this.container.classList.add('pagination-container');
   }
 
   renderNavButtons(): HTMLElement {

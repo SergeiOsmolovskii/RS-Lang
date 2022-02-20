@@ -117,7 +117,7 @@ export const renderResult = (arr: IWord[], parent: HTMLElement) => {
   });
 }
 
-export const selectCardType = (regime: Regime, idStyle: number, elementId: string, difficulty: string, cardItem: HTMLElement, cardInfo: HTMLElement): void =>{
+export const selectCardType = (regime: Regime, idStyle: string, elementId: string, difficulty: string, cardItem: HTMLElement, cardInfo: HTMLElement): void =>{
   switch (difficulty) {
     case Difficulty.studiedWord:
       cardItem.classList.add('studied');
@@ -137,33 +137,33 @@ export const selectCardType = (regime: Regime, idStyle: number, elementId: strin
     }
 }
 
-export const renderCardsButtons = (regime: Regime, idStyle: number, elementId: string, difficulty?: Difficulty): HTMLElement => {
+export const renderCardsButtons = (regime: Regime, idStyle: string, elementId: string, difficulty?: Difficulty): HTMLElement => {
   const cardsButtonsWrapper = insertElement('div', ['card-buttons']);
   if (regime === Regime.group) {
     if (difficulty === Difficulty.studiedWord) {
       const btnStudied = <HTMLButtonElement>(
-        insertElement('button', ['card-btn', `btn-color${idStyle + 1}`], 'убрать из изученных', cardsButtonsWrapper)
+        insertElement('button', ['card-btn', `btn-color${+idStyle + 1}`], 'убрать из изученных', cardsButtonsWrapper)
       );
       btnStudied.addEventListener('click', async (event: Event) => {
         await updateUserWord(elementId, { difficulty: Difficulty.normalWord });
-        TextbookPage.renderCardContainer(regime);
+        TextbookPage.cardsContainer.render(regime)
       });
     } else {
       const btnHard = <HTMLButtonElement>(
-        insertElement('button', ['card-btn', `btn-color${idStyle + 1}`], 'сложное', cardsButtonsWrapper)
+        insertElement('button', ['card-btn', `btn-color${+idStyle + 1}`], 'сложное', cardsButtonsWrapper)
       );
       const btnStudied = <HTMLButtonElement>(
-        insertElement('button', ['card-btn', `btn-color${idStyle + 1}`], 'изученое', cardsButtonsWrapper)
+        insertElement('button', ['card-btn', `btn-color${+idStyle + 1}`], 'изученое', cardsButtonsWrapper)
       );
       if (difficulty === Difficulty.normalWord){
         btnHard.addEventListener('click', async (event: Event) => {
           await updateUserWord(elementId, { difficulty: Difficulty.hardWords });
-          TextbookPage.renderCardContainer(regime);
+          TextbookPage.cardsContainer.render(regime);
         });
 
         btnStudied.addEventListener('click', async (event: Event) => {
           await updateUserWord(elementId, { difficulty: Difficulty.studiedWord });
-          TextbookPage.renderCardContainer(regime);
+          TextbookPage.cardsContainer.render(regime);
         });
       } else {
         btnHard.addEventListener('click', async (event: Event) => {
@@ -171,7 +171,7 @@ export const renderCardsButtons = (regime: Regime, idStyle: number, elementId: s
             difficulty: Difficulty.hardWords,
             optional: { trueAnswersCount: 0, falseAnswersCount: 0, trueAnswersSeria: 0 },
           });
-          TextbookPage.renderCardContainer(regime);
+          TextbookPage.cardsContainer.render(regime);
         });
 
         btnStudied.addEventListener('click', async (event: Event) => {
@@ -179,7 +179,7 @@ export const renderCardsButtons = (regime: Regime, idStyle: number, elementId: s
             difficulty: Difficulty.studiedWord,
             optional: { trueAnswersCount: 0, falseAnswersCount: 0, trueAnswersSeria: 0 },
           });
-          TextbookPage.renderCardContainer(regime);
+          TextbookPage.cardsContainer.render(regime);
         });
       }
     }
@@ -191,7 +191,7 @@ export const renderCardsButtons = (regime: Regime, idStyle: number, elementId: s
 
     btnHard.addEventListener('click', async (event: Event) => {
       await updateUserWord(elementId, { difficulty: Difficulty.normalWord });
-      TextbookPage.renderCardContainer(regime);
+      TextbookPage.cardsContainer.render(regime);
     });
   }
   return <HTMLElement>cardsButtonsWrapper;

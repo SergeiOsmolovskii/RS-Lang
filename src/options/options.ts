@@ -126,3 +126,4 @@ export const MAIN_PAGE_CONTENT_HTML = `
   <p class="main-page-info">Проходи интерактивные игры и пополняй свой словарный запас каждый день</p>
 `;
 
+export const GROUP_HARD = '6';

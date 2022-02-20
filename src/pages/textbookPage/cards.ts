@@ -13,7 +13,7 @@ export class CardsContainer {
     this.container.classList.add('cards-container');
   }
 
-  draw(regime: Regime, data: Array<IAggregatedWord>, idStyle: number): void {
+  draw(regime: Regime, data: Array<IAggregatedWord>, idStyle: string): void {
     this.clear();
     data.forEach((element) => {
       const cardItem = insertElement('div', ['card-item'], '', this.container);
@@ -23,13 +23,13 @@ export class CardsContainer {
       const cardInfo = insertElement('div', ['card-info'], '', cardItem);
       const cardHeader = insertElement('div', ['card-header'], '', cardInfo);
       const cardTitle = insertElement('div', ['card-title-container'], '', cardHeader);
-      const word = insertElement('p', ['card-title'], element.word, cardTitle);
-      const transcription = insertElement('p', ['card-title'], element.transcription, cardTitle);
-      const translate = insertElement('p', ['card-title'], element.wordTranslate, cardTitle);
+      const word = insertElement('h3', ['card-title',`text-color${+idStyle + 1}`], element.word, cardTitle);
+      const transcription = insertElement('p', ['card-title',`text-color${+idStyle + 1}`], element.transcription, cardTitle);
+      const translate = insertElement('p', ['card-title',`text-color${+idStyle + 1}`], element.wordTranslate, cardTitle);
       const titleContainer = insertElement('div', ['card-header-container'], '', cardHeader);
       if (storage.isAuthorized) {
         const answersContainer = insertElement('div', ['card-answers-container'], '', titleContainer);
-        const trueAnswers = insertElement('div', ['card-answer',  `btn-color${idStyle + 1}`], element.userWord ? `${element.userWord.optional?.trueAnswersCount}` : '0', answersContainer);
+        const trueAnswers = insertElement('div', ['card-answer',  `btn-color${+idStyle + 1}`], element.userWord ? `${element.userWord.optional?.trueAnswersCount}` : '0', answersContainer);
         const falseAnswers = insertElement('div', ['card-answer', 'card-answer__false'], element.userWord ? `${element.userWord.optional?.falseAnswersCount}` : '0', answersContainer);
       }
       const audioControl = insertElement('div', ['audio-control'], '', titleContainer);
@@ -59,9 +59,10 @@ export class CardsContainer {
   }
 
   async render(regime: Regime): Promise<HTMLElement> {
-    const page = getLocalStorage('page') ? Number(getLocalStorage('page')) : 0;
-    const group = getLocalStorage('group') ? Number(getLocalStorage('group')) : 0;
-
+    const page = getLocalStorage('page') ? <string>getLocalStorage('page') : '0';
+    const group = getLocalStorage('group') ? <string>getLocalStorage('group') : '0';
+    this.clear();
+    
     if (regime === Regime.group) {
       const wordsData = storage.isAuthorized
         ? await getAllAggregatedWords(`${group}`, '0', '20', `{"page":${page}}`)
