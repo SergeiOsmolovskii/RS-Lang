@@ -37,7 +37,6 @@ export const authorization = async (user: IUser) => {
       body: JSON.stringify(user),
     });
     const content: IAuthorization = await response.json();
-  console.log(content)
 
     return content;
   } catch (error) {

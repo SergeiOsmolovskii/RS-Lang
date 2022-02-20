@@ -127,3 +127,35 @@ export const MAIN_PAGE_CONTENT_HTML = `
   <p class="main-page-info">Проходи интерактивные игры и пополняй свой словарный запас каждый день</p>
 `;
 
+
+export const GROUP_HARD = '6';
+export const MEMBER_INFO = [
+  {
+    name: 'Asmalouski Siarhei',
+    id: 'member-0',
+    role: 'Frontend developer',
+    githubLink: 'https://github.com/SergeiOsmolovskii',
+    linkidInLink: 'https://www.linkedin.com/in/sergei-asmalouski-038a5820a/', 
+    email: 'osmolovskii_sergei@mail.ru', 
+    completedTasks: `Реализовал авторизацию и разавторизацию. Настроил получение данных с бекенда. Создал страницу
+     статистики, страницу "О команде" и мини-игр.`
+  },
+  {
+    name: 'Anna Rabychyna',
+    id: 'member-1',
+    role: 'Frontend developer',
+    githubLink: 'https://github.com/annarabychina',
+    linkidInLink: '', 
+    email: 'annarabychina@mail.ru', 
+    completedTasks: `Настроила роутинг. Создала главную страницу, страницу "О приложении" и раздел "Учебник".`
+  },
+  {
+    name: 'Vlad Hitrikov',
+    id: 'member-2',
+    role: 'Frontend developer',
+    githubLink: 'https://github.com/vlad48-star',
+    linkidInLink: 'https://www.linkedin.com/in/vlad-hitrikov-1aa217212/', 
+    email: 'vlad.hitrikov@yahoo.com', 
+    completedTasks: `Настроил бекенд. Реализовал игры и "Аудиовызов" и "Спринт". Разработал дизайн проекта.`
+  }
+]

@@ -14,7 +14,6 @@ import { logOut } from "../components/login-form/login-form";
 import TeamPage from "../pages/teamPage/teamPage";
 import AboutAppPage from "../pages/aboutAppPage/aboutAppPage";
 
-
 export class App {
   private static container: HTMLElement = document.body;
   private static defaultPageId = "current-page";
