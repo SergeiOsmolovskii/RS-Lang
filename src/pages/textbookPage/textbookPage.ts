@@ -39,13 +39,13 @@ class TextbookPage extends Page {
   }
 
   async render(): Promise<HTMLElement> {
+    setLocalStorage('mode', 'filtrWords');
     const group = <string>getLocalStorage('group');
     if  (group !== GROUP_HARD) {
       this.page.append(this.renderTitlePage(group), this.navGroups.render(), this.pagination.render(), await TextbookPage.cardsContainer.render(Regime.group));
     } else {
       this.page.append(this.renderTitlePage(group), this.navGroups.render(), await TextbookPage.cardsContainer.render(Regime.hard));
     }
-
     return this.page;
   }
 }
