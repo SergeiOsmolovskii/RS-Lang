@@ -31,7 +31,6 @@ class SprintPage extends MiniGamesPage {
   private seconds: number = 60;
   private linkRight!: (e: Event) => void;
   private linkLeft!: (e: Event) => void;
-  // private count: number = 0;
   private pageStr: number = 0;
   private userStatistic: import("../../api/api").IStatistic | undefined;
   private exceptionalValues: string[] = [];
@@ -81,6 +80,12 @@ class SprintPage extends MiniGamesPage {
       this.page.insertAdjacentHTML('beforeend', renderFormSprintGame);
       this.page.insertAdjacentHTML('beforeend', renderFormSptintAnswerButton);
     }
+    const exitPage = <HTMLLinkElement>this.page.querySelector('.svg-exit');
+    if(getLocalStorage('mode') === 'normal'){
+      exitPage.href = '/#game';
+    }else{
+      exitPage.href = '/#textbook';
+    }
     this.choiseFalseAnswer = <HTMLElement>this.page.querySelector('.arrow-position-left');
     this.choiseTrueAnswer = <HTMLElement>this.page.querySelector('.arrow-position-right');
     this.englishWord = <HTMLElement>this.page.querySelector('.english-word');
@@ -89,11 +94,10 @@ class SprintPage extends MiniGamesPage {
     this.trueAnswer = getRandom(this.count, 3 + this.count);
     this.englishWord.textContent = `${this.resultFetch[this.count].word}`;
     this.russianWord.textContent = `${this.resultFetch[this.trueAnswer].wordTranslate}`;
-
     this.linkLeft = () => this.choiseDirectionLeft();
     this.linkRight = () => this.choiseDirectionRight();
 
-    document.onkeyup = (e) =>{
+    document.onkeyup = (e: KeyboardEvent) =>{
       if(e.keyCode === 37){
         this.choiseDirectionLeft();
       } else if(e.keyCode === 39) {
@@ -103,7 +107,11 @@ class SprintPage extends MiniGamesPage {
         this.clearPage();
         this.timer();
       } else if(e.keyCode === 27){
-
+          if(getLocalStorage('mode') === 'normal'){
+            location.href = `/#game`;
+          }else{
+            location.href = `/#textbook`;
+          }
       }
     }
     this.choiseFalseAnswer.addEventListener('click', this.linkLeft);
@@ -146,6 +154,7 @@ class SprintPage extends MiniGamesPage {
     audio.src = `/assets/audio/wrong.mp3`;
     audio.play();
     await putBackEndFalseAnswer(this.resultFetch, this.count);
+    ++this.localWrongAnswer
     if (this.localSeries < this.currentGetSeries){
       this.localSeries = this.currentGetSeries;
     }
@@ -167,20 +176,21 @@ class SprintPage extends MiniGamesPage {
     this.localTotalWordssRight.push(this.resultFetch[this.count]);
     this.renderPoint = <Element>this.page.querySelector('.point');
     this.pointSum = <Element>this.page.querySelector('.point-sum');
+    const progress = this.page.querySelectorAll('.point-progress')
     if (this.currentGetSeries > 3 && this.currentGetSeries < 6){
       this.pointSum.innerHTML = `+25`
       this.point = this.point + 25;
     } else if (this.currentGetSeries > 6){
       this.pointSum.innerHTML = `+50`
       this.point = this.point + 50;
-    } else { 
+    } else if(this.currentGetSeries < 3){ 
       this.point = this.point + 10;
     }
-    this.renderPoint.innerHTML = `${this.point}`
+    this.renderPoint.innerHTML = `${this.point}`;
   }
 
   timer () {
-    this.seconds = 10;
+    this.seconds = 30;
     const timer = setInterval(async () => {
       const timerShow: Element | null = <Element>this.page.querySelector(".timer");
       timerShow.innerHTML = `${this.seconds}`;
@@ -188,14 +198,14 @@ class SprintPage extends MiniGamesPage {
       const exitGame = this.page.querySelector(".svg-exit");
       exitGame?.addEventListener('click',() => clearInterval(timer));
       if (this.seconds === 0){
-        this.page.insertAdjacentHTML('beforeend', renderSprintResultAnswer);
         this.localSprint();
-        this.putDateBack();
-        this.renderConclusion();
+        this.putDateBack(); 
+        this.page.insertAdjacentHTML('beforeend', renderSprintResultAnswer);
         this.renderPoint = <Element>this.page.querySelector('.point');
         this.pointSum = <Element>this.page.querySelector('.point-sum');
         this.renderPoint.textContent = `0`;
         this.pointSum.textContent = `+10`;
+        this.renderConclusion();
         clearInterval(timer);
       }
     }, 1000)
@@ -235,7 +245,7 @@ class SprintPage extends MiniGamesPage {
     }
   }
 
-  renderConclusion () {
+  async renderConclusion () {
     const amountPoints = <HTMLElement>document.querySelector('.quantity-true-points');
     const amountPercent = <HTMLElement>document.querySelector('.percent-answers');
     const amountSprintTrueAnswer = <HTMLElement>document.querySelector('.game-true-answer');
@@ -257,15 +267,27 @@ class SprintPage extends MiniGamesPage {
       amountPercent.style.background = `linear-gradient(to right, green ${maxPercent}%, red ${100 - maxPercent}%)`;
       amountPercent.style.transition = `0.7s linear`
     }
-    this.sprintGameParam = {newWords: 0, trueAnswers: 0, bestSeries: 0, gamesPlayed: 0};
-    this.localSeries = 0;
-    this.currentGetSeries = 0;
-    this.localTrueAnswer = 0;
-    this.count = 0;
-    this.localTotalWordssRight = [];
-    this.localTotalWordssMistakes = [];
-    this.point = 0;
-    this.resultFetch = [];
+    if(!storage.isAuthorized){
+      this.localWrongAnswer = 0;
+      this.sprintGameParam = {newWords: 0, trueAnswers: 0, bestSeries: 0, gamesPlayed: 0};
+      this.localSeries = 0;
+      this.currentGetSeries = 0;
+      this.localTrueAnswer = 0;
+      this.count = 0;
+      this.localTotalWordssRight = [];
+      this.localTotalWordssMistakes = [];
+      this.point = 0;
+      this.resultFetch = [];
+    }
+    document.onkeyup = (e: KeyboardEvent) =>{
+      if(e.keyCode === 13){
+        this.choiseFalseAnswer?.removeEventListener('click', this.linkLeft);
+        this.choiseTrueAnswer?.removeEventListener('click', this.linkRight);
+        this.render();
+        this.clearPage();
+        this.timer();
+      }
+    }
     nextGame.addEventListener('click', () =>{
       this.choiseFalseAnswer?.removeEventListener('click', this.linkLeft);
       this.choiseTrueAnswer?.removeEventListener('click', this.linkRight);
@@ -282,8 +304,8 @@ class SprintPage extends MiniGamesPage {
     }
   }
 
-  async putDateBack () {
-    if(storage.isAuthorized) {
+  async putDateBack (){
+    if(storage.isAuthorized){
       this.userStatistic = await getUserStatistic();
       const getJson = JSON.parse(this.userStatistic.optional.maxWords);
       const filterValuesWords = this.exceptionalValues.filter(item => !getJson.includes(item)); 
@@ -324,6 +346,16 @@ class SprintPage extends MiniGamesPage {
           maxWords: jsonWords
         }
       });
+    this.localWrongAnswer = 0;
+    this.sprintGameParam = {newWords: 0, trueAnswers: 0, bestSeries: 0, gamesPlayed: 0};
+    this.localSeries = 0;
+    this.currentGetSeries = 0;
+    this.localTrueAnswer = 0;
+    this.count = 0;
+    this.localTotalWordssRight = [];
+    this.localTotalWordssMistakes = [];
+    this.point = 0;
+    this.resultFetch = [];
     }
   }
 }

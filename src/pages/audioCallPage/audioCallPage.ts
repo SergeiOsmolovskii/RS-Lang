@@ -11,11 +11,11 @@ import { getUserStatistic, setUserStatistic } from "../../api/statistic";
 import { putBackEndFalseAnswer, putBackEndTrueAnswer } from "../../services/statistic";
 
 class AudioCallPage extends MiniGamesPage {
-  private answerOne: Element | null = null;
-  private answerTwo: Element | null = null;
-  private answerThree: Element | null = null;
-  private answerFour: Element | null = null;
-  private answerFife: Element | null = null;
+  private answerOne: HTMLElement | null = null;
+  private answerTwo: HTMLElement | null = null;
+  private answerThree: HTMLElement | null = null;
+  private answerFour: HTMLElement | null = null;
+  private answerFife: HTMLElement | null = null;
   private audioCallGameParam: IGameParam = {newWords: 0, trueAnswers: 0, bestSeries: 0, gamesPlayed: 0};
   private sprintGameParam: IGameParam = {newWords: 0, trueAnswers: 0, bestSeries: 0, gamesPlayed: 0};
   private localTotalWordssRight: IWords[] = [];
@@ -31,6 +31,7 @@ class AudioCallPage extends MiniGamesPage {
   private localWrongAnswer: number = 0;
   private freeResultAnswer!: (e: Event) => void;
   private freeAudioAnswer!: (e: Event) => void;
+  private freeKeyBord!: (e: KeyboardEvent) => void;
   private userStatistic: import("../../api/api").IStatistic | undefined;
   private exceptionalValues: string[] = [];
 
@@ -49,7 +50,7 @@ class AudioCallPage extends MiniGamesPage {
     } else if(modes === 'filtrWords' && storage.isAuthorized){
       this.resultFetch = await getAllAggregatedWords(`${group}`, `${page}`,'20', `{"$or": [{"userWord.difficulty":null}, {"userWord.difficulty":"easy"}]}`);
     } else if(modes === 'normal' && storage.isAuthorized){
-      this.resultFetch = await getAllAggregatedWords(`${this.checkNumber}`, `0`,'20', `{"page":${0}}`);
+      this.resultFetch = await getAllAggregatedWords(`${this.checkNumber}`, `0`,'20', `{"page":${getRandom(0, 29)}}`);
     }
     this.resultFetch.sort(() => Math.random() - 0.5);
     this.renderPage();
@@ -62,44 +63,57 @@ class AudioCallPage extends MiniGamesPage {
       this.page.insertAdjacentHTML('beforeend', renderProgressGame);
     }
     this.page.insertAdjacentHTML('beforeend', renderGame);
-    this.answerOne = <Element>this.page.querySelector('.answer-item-1');
-    this.answerTwo = <Element>this.page.querySelector('.answer-item-2');
-    this.answerThree = <Element>this.page.querySelector('.answer-item-3');
-    this.answerFour = <Element>this.page.querySelector('.answer-item-4');
-    this.answerFife = <Element>this.page.querySelector('.answer-item-5');
+    this.answerOne = <HTMLElement>this.page.querySelector('.answer-item-1');
+    this.answerTwo = <HTMLElement>this.page.querySelector('.answer-item-2');
+    this.answerThree = <HTMLElement>this.page.querySelector('.answer-item-3');
+    this.answerFour = <HTMLElement>this.page.querySelector('.answer-item-4');
+    this.answerFife = <HTMLElement>this.page.querySelector('.answer-item-5');
     this.listContainer = Array.from(this.page.querySelectorAll('.answer-item'));
-    
     this.progress = this.page.querySelectorAll('.heart');
     const arrAnswer = [this.answerOne, this.answerTwo, this.answerThree, this.answerFour, this.answerFife];
-    arrAnswer.sort(() => Math.random() - 0.5);
-
-    for(let i = 0, pos = 0; pos < arrAnswer.length; i++, pos++){
-      arrAnswer[pos].textContent = `${this.resultFetch[i + this.count].wordTranslate}`;
+    const arr = [];
+    for(let i = 0, pos = 0; pos < 5; i++, pos++) {
+      arr.push(this.resultFetch[i + this.count].wordTranslate);
     }
+    arr.sort(() => Math.random() - 0.5);
+    for(let i = 0; i < 5; i++ ) {
+      arrAnswer[i].textContent = arr[i];
+    }
+    const exitPage = <HTMLLinkElement>this.page.querySelector('.svg-exit');
 
-    // a.onkeyup = (e) => {
-    //   console.log('привет')
-    //   switch(e.keyCode){
-    //     case 49 :
-    //       this.resultAnswer(e);
-    //       break
-    //     case 50:
-    //       this.resultAnswer(e);
-    //       break
-    //     case 51:
-    //       this.resultAnswer(e);
-    //       break
-    //     case 52 :
-    //       this.resultAnswer(e);
-    //       break
-    //     case 53 :
-    //       this.resultAnswer(e);
-    //       break
-    //     case 27 :
-    //       location.href = `/#game`;
-    //       break
-    //     }
-  // }
+    const keyBordClick = (e: KeyboardEvent) => {
+      switch(e.keyCode){
+        case 49 :
+          this.resultAnswerKeybord(<HTMLElement>this.answerOne);
+          break
+        case 50:
+          this.resultAnswerKeybord(<HTMLElement>this.answerTwo);
+          break
+        case 51:
+          this.resultAnswerKeybord(<HTMLElement>this.answerThree);
+          break
+        case 52 :
+          this.resultAnswerKeybord(<HTMLElement>this.answerFour);
+          break
+        case 53 :
+          this.resultAnswerKeybord(<HTMLElement>this.answerFife);
+          break
+        case 27 :
+          if(getLocalStorage('mode') === 'normal'){
+            location.href = `/#game`;
+          }else{
+            location.href = `/#textbook`;
+          }
+          break
+      }
+    }
+    if(getLocalStorage('mode') === 'normal'){
+      exitPage.href = '/#game';
+    }else{
+      exitPage.href = '/#textbook';
+    }
+    this.freeKeyBord = (e: KeyboardEvent) => keyBordClick(e);
+    document.addEventListener('keyup', this.freeKeyBord);
     this.freeResultAnswer = (e: Event) => this.resultAnswer(e);
     this.freeAudioAnswer = () => clicker(this.audioPlay);
     this.listContainer.forEach(el => el.addEventListener('click', this.freeResultAnswer));
@@ -114,6 +128,7 @@ class AudioCallPage extends MiniGamesPage {
   resultAnswer(e: Event) {
     this.audioPlay?.removeEventListener('click', this.freeAudioAnswer);
     this.listContainer?.forEach(el => el.removeEventListener('click', this.freeResultAnswer));
+    document.removeEventListener('keyup', this.freeKeyBord);
     this.containButton = this.page.querySelector('.answers');
     if(this.audioPlay !== null) {
       const target = e.target as HTMLElement;
@@ -159,6 +174,7 @@ class AudioCallPage extends MiniGamesPage {
       this.clearNextPage();
       this.renderPage();
     }
+
     nextStep.addEventListener('click', nextStepFunction);
     if(this.count === 15){
       this.putDateBack();
@@ -166,8 +182,8 @@ class AudioCallPage extends MiniGamesPage {
       nextStep.innerHTML = 'Результат';
       nextStep.removeEventListener('click', nextStepFunction);
       nextStep.addEventListener('click', () => {
-        this.clearNextPage();
-        this.renderConclusion();
+      this.clearNextPage();
+      this.renderConclusion();
       });
     }
   }
@@ -209,7 +225,6 @@ class AudioCallPage extends MiniGamesPage {
   async putDateBack () {
     if(storage.isAuthorized) {
       this.userStatistic = await getUserStatistic();
-      console.log(this.exceptionalValues)
       const getJson = JSON.parse(this.userStatistic.optional.maxWords);
       const filterValuesWords = this.exceptionalValues.filter(item => !getJson.includes(item)); 
       const joinValuesWords = [...filterValuesWords,...getJson];
@@ -226,10 +241,6 @@ class AudioCallPage extends MiniGamesPage {
       }else{
         this.currentGetSeries = this.userStatistic.optional.games.audioCall.bestSeries;
       }
-      console.log(this.userStatistic.optional.games.audioCall.trueAnswers)
-      console.log(this.userStatistic.optional.games.audioCall.wrongAnswers)
-      console.log(this.localTrueAnswer)
-      console.log(this.localWrongAnswer)
       await setUserStatistic(storage.userId, {
         learnedWords: 0,
         optional: {
@@ -284,8 +295,16 @@ class AudioCallPage extends MiniGamesPage {
     this.localTotalWordssRight = [];
     this.localTotalWordssMistakes = [];
     this.localTrueAnswer = 0;
-    nextGame.addEventListener('click',() => this.render());
-    nextGame.addEventListener('click',() => this.clearPage());
+    document.onkeyup = (e: KeyboardEvent) =>{
+      if(e.keyCode === 13){
+        this.render();
+        this.clearPage();
+      }
+    }
+    nextGame.addEventListener('click',() =>{
+      this.render();
+      this.clearPage();
+    });
   }
 
   clearNextPage() {
@@ -296,6 +315,67 @@ class AudioCallPage extends MiniGamesPage {
     clearNextStep.remove();
     clearVolumePosition.remove();
     clearAnswers.remove();
+  }
+
+  resultAnswerKeybord(el: HTMLElement) {
+    this.audioPlay?.removeEventListener('click', this.freeAudioAnswer);
+    document.removeEventListener('keyup', this.freeKeyBord);
+    this.listContainer?.forEach(el => el.removeEventListener('click', this.freeResultAnswer));
+    this.containButton = this.page.querySelector('.answers');
+    if(this.audioPlay !== null) {
+      if(el.innerText === this.resultFetch[this.count].wordTranslate) {
+        putBackEndTrueAnswer(this.resultFetch, this.count);
+        el.style.backgroundColor = "#32cd32";
+        el.style.color = "#ffffff";
+        el.classList.add('animate-color');
+        this.progress[this.count].style.background = "linear-gradient(300deg, black, 5%, #32cd32)";
+        this.audioPlay.style.background = `url(https://rs-lang-learn.herokuapp.com/${this.resultFetch[this.count].image}) center no-repeat`;
+        const equation: Element = document.createElement('div');
+        this.audioPlay.append(equation)
+        this.containButton?.insertAdjacentHTML('afterend', renderNextButton);
+        this.localTotalWordssRight.push(this.resultFetch[this.count]);
+        ++this.currentGetSeries;
+        ++this.audioCallGameParam.trueAnswers;
+        ++this.localTrueAnswer;
+        ++this.count;
+        if(this.localSeries < this.currentGetSeries){
+          this.localSeries = this.currentGetSeries;
+        }
+      } else {
+        ++this.localWrongAnswer;
+        putBackEndFalseAnswer(this.resultFetch, this.count);
+        el.style.backgroundColor = "#da6f63";
+        el.style.border = "2px";
+        this.localTotalWordssMistakes.push(this.resultFetch[this.count]);
+        this.progress[this.count].style.background = "linear-gradient(300deg, black, 5%, #fa8072)";
+        el.classList.add('animate-color');
+        this.audioPlay.style.background = `url(https://rs-lang-learn.herokuapp.com/${this.resultFetch[this.count].image}) center no-repeat`;
+        this.audioPlay.style.width = '300px'
+        this.audioPlay.classList.add('animate-img');
+        this.containButton?.insertAdjacentHTML('afterend', renderNextButton);
+        ++this.count;
+        if(this.localSeries < this.currentGetSeries){
+          this.localSeries = this.currentGetSeries;
+        }
+        this.currentGetSeries = 0;
+      }
+    }
+    const nextStep = <Element>this.page.querySelector('.next-word');
+    const nextStepFunction = () => {
+      this.clearNextPage();
+      this.renderPage();
+    }
+    nextStep.addEventListener('click', nextStepFunction);
+    if(this.count === 15){
+      this.putDateBack();
+      this.localaudioCall();
+      nextStep.innerHTML = 'Результат';
+      nextStep.removeEventListener('click', nextStepFunction);
+      nextStep.addEventListener('click', () => {
+      this.clearNextPage();
+      this.renderConclusion();
+      });
+    }
   }
 }
 export default AudioCallPage;
