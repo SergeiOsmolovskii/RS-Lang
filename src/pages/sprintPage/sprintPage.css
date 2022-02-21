@@ -15,14 +15,22 @@
   box-shadow: 10px 10px 10px rgb(0 0 0 / 25%);
 }
 
-.border-line{
-  color: rgb(14, 12, 12);
-  border: 8px solid rgb(243, 186, 0);
-  border-radius: 50%;
-  padding: 15px;
+.time-container{
   position: absolute;
-  top: 18%;
-  right: 84%;
+  top: 10%;
+  right: 74%;
+}
+
+.circle-svg-sprint circle{
+  stroke-width: 7px;
+  fill: none;
+  transform-origin: center;
+  transform: rotate(-90deg);
+}
+
+.sprint-circle{
+  text-align: center;
+  width: 30px;
 }
 
 .answers-options{
@@ -287,7 +295,9 @@
   .wrap-answer {
     max-width: 500px;
   }
-
+  .border-line{
+    right: 75%;
+  }
   .sprint-page{
     padding: 15px 0 15px 0;
   }
@@ -307,5 +317,17 @@
   .wrap-answer {
     max-width: 350px;
     font-size: 16px;
+  }
+
+  .contain-answer-button {
+    grid-gap: 10px;
+  }
+
+  .answers-options {
+    font-size: 24px;
+  }
+
+  .arrow-position {
+    grid-gap:80px
   }
 }

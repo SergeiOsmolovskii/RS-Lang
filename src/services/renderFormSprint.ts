@@ -1,11 +1,17 @@
 export const renderSvgExit = `
 <a href="#game" class="svg-exit"></a>
 `
+
 export const renderTimerForm = `
-<div class="border-line">
-  <h3 class="timer">60</h3>
+<div class="time-container">
+  <svg class="circle-svg-sprint" height="100" width="100">
+    <circle class="outer-circle" cx="60" cy="60" r="30" fill="#fff"> </circle>
+    <circle  style="stroke-dasharray: ${188}, 188;" class="inner-circle" cx="60" cy="60" r="30"> </circle>
+    <text class="sprint-circle" x="50" y="50">${30}</text>
+  </svg>
 </div>
 `
+
 export const renderFormSprintGame = `
 <div class="answers-options">
   <span class="english-word">Hello</span>
