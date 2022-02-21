@@ -118,3 +118,24 @@
   margin: 0;
   color: #AAAAAA;
 }
+
+@media (max-width: 1100px) {
+
+  .about-team {
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+
+  .member__card {
+    margin-bottom: 40px;
+  }
+
+}
+
+@media (max-width: 500px) {
+
+  .member__completed-tasks {
+    padding: 10px;
+  }
+
+}
