@@ -39,6 +39,7 @@ class TextbookPage extends Page {
   }
 
   async render(): Promise<HTMLElement> {
+    setLocalStorage('mode', 'filtrWords');
     this.page.append(this.renderTitlePage(), this.navGroups.render(), this.pagination.render(), await TextbookPage.cardsContainer.render(Regime.group));
     return this.page;
   }
