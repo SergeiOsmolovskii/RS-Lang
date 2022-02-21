@@ -2,6 +2,7 @@ import "./game.css"
 import { insertElement } from "../../services/services";
 import Page from "../../templates/page";
 import { renderFormLevel } from "../../services/renderFormChoiseLvl";
+import { setLocalStorage } from "../../services/storage";
 
 class MiniGamesPage extends Page {
   public checkInput: HTMLInputElement[] | null = null;
@@ -18,6 +19,7 @@ class MiniGamesPage extends Page {
     this.page.insertAdjacentHTML('beforeend', renderFormLevel);
     this.checkInput = Array.from(this.page.querySelectorAll('.item-input'));
     this.checkInput?.forEach(el => el.addEventListener('change', () => this.checkLevel()));
+    setLocalStorage('mode', 'normal');
     return this.page;
   }
 

@@ -2,6 +2,7 @@ export const storage = {
 	userId : '',
 	userName : '',
 	userEmail: '',
+	userGameRegime: '',
 	isAuthorized: false,
 	isPlayed: false,
 }
@@ -106,7 +107,8 @@ export interface IStatistic {
 	learnedWords: number,
 	optional: {
 		general: object,
-		games: IGames
+		games: IGames,
+		maxWords: string
 	}
 }
 
