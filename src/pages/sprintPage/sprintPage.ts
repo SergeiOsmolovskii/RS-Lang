@@ -305,32 +305,34 @@ class SprintPage extends MiniGamesPage {
   }
 
   async putDateBack (){
-    // if(storage.isAuthorized){
-    //   this.userStatistic = await getUserStatistic();
-    //   let wordsPerDateMap = new Map(Object.entries(this.userStatistic.optional.general));
-    //   const words = this.userStatistic.optional.general;
-    //   const today = new Date().toLocaleDateString();
-    //   let wordsPerDate = new Map(Object.entries(words));
-    //   let newWords = 0;
-    //   const getJson = JSON.parse(this.userStatistic.optional.maxWords);
-    //   const filterValuesWords = this.exceptionalValues.filter(item => !getJson.includes(item));
-    //   for (const word of wordsPerDate) {
-    //     if (word[0] === today) {
-    //       newWords = word[1] + filterValuesWords.length;
-    //       wordsPerDateMap.set(new Date().toLocaleDateString(), newWords);
-    //     } else {
-    //       newWords = filterValuesWords.length;
-    //       wordsPerDateMap.set(new Date().toLocaleDateString(), newWords);
-    //     }
-    //   }
-    //   const joinValuesWords = [...filterValuesWords,...getJson];
-    //   const jsonWords = JSON.stringify(joinValuesWords);
+    if(storage.isAuthorized) {
+      this.userStatistic = await getUserStatistic();
+      let wordsPerDateMap = new Map(Object.entries(this.userStatistic.optional.general));
+      const words = this.userStatistic.optional.general;
+      const today = new Date().toLocaleDateString();
+      let wordsPerDate = new Map(Object.entries(words));
+      let newGameWords = 0;
+      const getJson = JSON.parse(this.userStatistic.optional.maxWords);
+      const filterValuesWords = this.exceptionalValues.filter(item => !getJson.includes(item)); 
+      
+      for (const word of wordsPerDate) {
+        if (word[0] !== today) {
+          wordsPerDateMap.set(new Date().toLocaleDateString(), filterValuesWords.length);
+        } else {
+          newGameWords = word[1] + filterValuesWords.length;
+          wordsPerDateMap.set(new Date().toLocaleDateString(), newGameWords);
+        }
+      }
+
+
+      const joinValuesWords = [...filterValuesWords,...getJson];
+      const jsonWords = JSON.stringify(joinValuesWords);
       if(this.userStatistic.optional.maxWords === '[]'){
         this.userStatistic.optional.games.sprint.newWords = this.count;
       } else {
         this.userStatistic.optional.games.sprint.newWords = this.userStatistic.optional.games.sprint.newWords + filterValuesWords.length;
       }
-      wordsPerDateMap.set(new Date().toLocaleDateString(), newWords);
+      //wordsPerDateMap.set(new Date().toLocaleDateString(), newWords);
       if(this.userStatistic.optional.games.sprint.bestSeries < this.localSeries){
         this.currentGetSeries = this.localSeries;
       }else{
