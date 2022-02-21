@@ -1,4 +1,4 @@
-import { buttonsGroups1, buttonsPage, Difficulty, Regime } from '../options/options';
+import { APP_REGIME_INFO, buttonsGroups, buttonsPage, Difficulty, Regime } from '../options/options';
 import { IWord, storage } from '../api/api';
 import { getLocalStorage } from './storage';
 import { setUserWord, updateUserWord } from '../api/userWords';
@@ -36,7 +36,7 @@ export const renderHeaderButtons = (): HTMLElement => {
 export const renderGroupsButtons = (): HTMLElement => {
   const groupButtonsContainer = insertElement('ul', ['groups-btn']);
   const value = getLocalStorage('group') ? getLocalStorage('group') : '0';
-  buttonsGroups1.forEach((button) => {
+  buttonsGroups.forEach((button) => {
     const buttonHTML = insertElement('li', [...button.class], button.label);
     buttonHTML.dataset.group = button.group;
     if (button.group === value) {
