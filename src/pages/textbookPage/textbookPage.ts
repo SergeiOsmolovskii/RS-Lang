@@ -4,7 +4,8 @@ import Page from '../../templates/page';
 import { CardsContainer } from './cards';
 import { Pagination } from './pagination';
 import { NavGroups } from './navGroups';
-import { PageIds, Regime } from '../../options/options';
+import { GROUP_HARD, PageIds, Regime } from '../../options/options';
+import { getLocalStorage } from '../../services/storage';
 
 class TextbookPage extends Page {
   static cardsContainer: CardsContainer;
@@ -13,7 +14,7 @@ class TextbookPage extends Page {
 
   constructor(id: string) {
     super(id);
-    this.page = insertElement('div', ['page'], '', '');
+    this.page = insertElement('div', ['page', 'page-textbook'], '', '');
     TextbookPage.cardsContainer = new CardsContainer();
     this.pagination = new Pagination();
     this.navGroups = new NavGroups();
@@ -24,19 +25,27 @@ class TextbookPage extends Page {
     return cardsContainerHTML;
   }
 
-  private renderTitlePage(): HTMLElement {
+  private renderTitlePage(group: string): HTMLElement {
     const headerPageContainer = insertElement('div', ['page-header']);
     const title = insertElement('h2', ['title'], 'электронный учебник', headerPageContainer);
-    const headerButtonContainer = insertElement('div', ['page-header-buttons'], '', headerPageContainer);
-    const btnGameAudioCall = <HTMLAnchorElement>insertElement('a', ['btn-game'], 'Аудиовызов', headerButtonContainer);
-    btnGameAudioCall.href=`#${PageIds.AudioCallPage}`;
-    const btnGameSprint = <HTMLAnchorElement>insertElement('a', ['btn-game'], 'Спринт', headerButtonContainer);
-    btnGameSprint.href=`#${PageIds.SprintPage}`;
+    if  (group !== GROUP_HARD) {
+      const headerButtonContainer = insertElement('div', ['page-header-buttons'], '', headerPageContainer);
+      const btnGameAudioCall = <HTMLAnchorElement>insertElement('a', ['btn-game'], 'Аудиовызов', headerButtonContainer);
+      btnGameAudioCall.href=`#${PageIds.AudioCallPage}`;
+      const btnGameSprint = <HTMLAnchorElement>insertElement('a', ['btn-game'], 'Спринт', headerButtonContainer);
+      btnGameSprint.href=`#${PageIds.SprintPage}`;
+    }
     return headerPageContainer;
   }
 
   async render(): Promise<HTMLElement> {
-    this.page.append(this.renderTitlePage(), this.navGroups.render(), this.pagination.render(), await TextbookPage.cardsContainer.render(Regime.group));
+    const group = <string>getLocalStorage('group');
+    if  (group !== GROUP_HARD) {
+      this.page.append(this.renderTitlePage(group), this.navGroups.render(), this.pagination.render(), await TextbookPage.cardsContainer.render(Regime.group));
+    } else {
+      this.page.append(this.renderTitlePage(group), this.navGroups.render(), await TextbookPage.cardsContainer.render(Regime.hard));
+    }
+
     return this.page;
   }
 }
