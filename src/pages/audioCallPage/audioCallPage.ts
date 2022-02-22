@@ -325,7 +325,6 @@ class AudioCallPage extends MiniGamesPage {
     const clearVolumePosition: Element | null = <Element>this.page.querySelector('.img-volume-position');
     const clearAnswers: Element | null = <Element>this.page.querySelector('.answers');
     const clearNextStep: Element | null = <Element>this.page.querySelector('.next-word');
-    console.log()
     clearNextStep.remove();
     clearVolumePosition.remove();
     clearAnswers.remove();

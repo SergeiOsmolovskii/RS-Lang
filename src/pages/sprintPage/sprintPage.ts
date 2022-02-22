@@ -28,7 +28,7 @@ class SprintPage extends MiniGamesPage {
   private progress: any = null;
   private localTotalWordssRight: any = [];
   private localTotalWordssMistakes: any = [];
-  private seconds: number = 60;
+  private seconds: number = 30;
   private linkRight!: (e: Event) => void;
   private linkLeft!: (e: Event) => void;
   private pageStr: number = 0;
@@ -36,6 +36,7 @@ class SprintPage extends MiniGamesPage {
   private exceptionalValues: string[] = [];
   private localWrongAnswer: number = 0;
   private getFetch: any = [];
+  private strick: any  = null;
 
   constructor(id: string) {
     super(id);
@@ -176,24 +177,33 @@ class SprintPage extends MiniGamesPage {
     this.localTotalWordssRight.push(this.resultFetch[this.count]);
     this.renderPoint = <Element>this.page.querySelector('.point');
     this.pointSum = <Element>this.page.querySelector('.point-sum');
-    const progress = this.page.querySelectorAll('.point-progress')
-    if (this.currentGetSeries > 3 && this.currentGetSeries < 6){
+
+    this.strick = this.page.querySelectorAll('.heart');
+
+    if (this.currentGetSeries >= 3 && this.currentGetSeries < 6){
       this.pointSum.innerHTML = `+25`
       this.point = this.point + 25;
-    } else if (this.currentGetSeries > 6){
+    } else if (this.currentGetSeries >= 6){
       this.pointSum.innerHTML = `+50`
       this.point = this.point + 50;
-    } else if(this.currentGetSeries < 3){ 
+    } else if(this.currentGetSeries < 3){
       this.point = this.point + 10;
     }
     this.renderPoint.innerHTML = `${this.point}`;
   }
 
   timer () {
-    this.seconds = 10;
+    this.seconds = 30;
+  
     const timer = setInterval(async () => {
-      const timerShow: Element | null = <Element>this.page.querySelector(".timer");
-      timerShow.innerHTML = `${this.seconds}`;
+      // const timerShow: Element | null = <Element>this.page.querySelector(".timer");
+      // timerShow.innerHTML = `${this.seconds}`;
+      const timeCircle =  <SVGAElement>this.page.querySelector(".inner-circle");
+      const textTimer = <HTMLElement>this.page.querySelector(".sprint-circle");
+      const storke = 6.27 * this.seconds;
+      textTimer.textContent = `${this.seconds}`;
+      timeCircle.style.strokeDasharray = `${storke}, 188`;
+
       --this.seconds;
       const exitGame = this.page.querySelector(".svg-exit");
       exitGame?.addEventListener('click',() => clearInterval(timer));
