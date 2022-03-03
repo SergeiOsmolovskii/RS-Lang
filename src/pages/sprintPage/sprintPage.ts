@@ -190,7 +190,7 @@ class SprintPage extends MiniGamesPage {
   }
 
   timer () {
-    this.seconds = 30;
+    this.seconds = 10;
     const timer = setInterval(async () => {
       const timerShow: Element | null = <Element>this.page.querySelector(".timer");
       timerShow.innerHTML = `${this.seconds}`;
@@ -305,19 +305,32 @@ class SprintPage extends MiniGamesPage {
   }
 
   async putDateBack (){
-    if(storage.isAuthorized){
-      this.userStatistic = await getUserStatistic();
-      const getJson = JSON.parse(this.userStatistic.optional.maxWords);
-      const filterValuesWords = this.exceptionalValues.filter(item => !getJson.includes(item)); 
-      const joinValuesWords = [...filterValuesWords,...getJson];
-      const jsonWords = JSON.stringify(joinValuesWords);
+    // if(storage.isAuthorized){
+    //   this.userStatistic = await getUserStatistic();
+    //   let wordsPerDateMap = new Map(Object.entries(this.userStatistic.optional.general));
+    //   const words = this.userStatistic.optional.general;
+    //   const today = new Date().toLocaleDateString();
+    //   let wordsPerDate = new Map(Object.entries(words));
+    //   let newWords = 0;
+    //   const getJson = JSON.parse(this.userStatistic.optional.maxWords);
+    //   const filterValuesWords = this.exceptionalValues.filter(item => !getJson.includes(item));
+    //   for (const word of wordsPerDate) {
+    //     if (word[0] === today) {
+    //       newWords = word[1] + filterValuesWords.length;
+    //       wordsPerDateMap.set(new Date().toLocaleDateString(), newWords);
+    //     } else {
+    //       newWords = filterValuesWords.length;
+    //       wordsPerDateMap.set(new Date().toLocaleDateString(), newWords);
+    //     }
+    //   }
+    //   const joinValuesWords = [...filterValuesWords,...getJson];
+    //   const jsonWords = JSON.stringify(joinValuesWords);
       if(this.userStatistic.optional.maxWords === '[]'){
         this.userStatistic.optional.games.sprint.newWords = this.count;
       } else {
         this.userStatistic.optional.games.sprint.newWords = this.userStatistic.optional.games.sprint.newWords + filterValuesWords.length;
       }
-      let wordsPerDateMap = new Map(Object.entries(this.userStatistic.optional.general));
-      wordsPerDateMap.set(new Date().toLocaleDateString(), joinValuesWords.length);
+      wordsPerDateMap.set(new Date().toLocaleDateString(), newWords);
       if(this.userStatistic.optional.games.sprint.bestSeries < this.localSeries){
         this.currentGetSeries = this.localSeries;
       }else{
