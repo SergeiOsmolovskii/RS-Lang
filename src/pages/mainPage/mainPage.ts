@@ -25,7 +25,7 @@ class MainPage extends Page {
     dialogImg.src = '../../assets/png/dialog-1.png';
     const scene = document.getElementById('scene');
     const parallaxInstance = new Parallax(imagesContainer);
-    parallaxInstance.friction(0.6, 0.6);
+    parallaxInstance.friction(0.2, 0.2);
     return imagesContainer;
   }
 

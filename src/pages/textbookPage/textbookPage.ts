@@ -5,7 +5,7 @@ import { CardsContainer } from './cards';
 import { Pagination } from './pagination';
 import { NavGroups } from './navGroups';
 import { GROUP_HARD, PageIds, Regime } from '../../options/options';
-import { getLocalStorage } from '../../services/storage';
+import { getLocalStorage, setLocalStorage } from '../../services/storage';
 
 class TextbookPage extends Page {
   static cardsContainer: CardsContainer;
