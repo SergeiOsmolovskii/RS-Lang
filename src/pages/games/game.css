@@ -1,0 +1,276 @@
+.buttons {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 250px 0px 0px 0px;
+}
+
+.basic,
+.intermediate,
+.advanced {
+  position: relative;
+  width: 30%;
+  border-radius: 20px 0px 0px 20px;
+  color: #fff;
+}
+
+.basic {
+  height: 100px;
+  background-color: rgb(8, 107, 124);
+}
+
+.intermediate {
+  height: 200px;
+  background-color: rgb(240, 160, 40);
+}
+
+.advanced {
+  height: 300px;
+  background-color: rgb(199, 95, 81);
+}
+
+.basic::before,
+.intermediate::before,
+.advanced::before {
+  content: '';
+  position: absolute;
+  top: -49px;
+  right: 0;
+  width: 50%;
+  height: 50px;
+  border-radius: 20px 0px 0px;
+}
+
+.basic::before {
+  background-color: rgb(8, 107, 124);
+}
+
+.intermediate::before {
+  background-color: rgb(240, 160, 40);
+}
+
+.advanced::before {
+  background-color: rgb(199, 95, 81);
+}
+
+.buttons__block h2 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  font-size: 36px;
+  text-transform: uppercase;
+}
+
+.item-input {
+  display: none;
+}
+
+.button-start {
+  min-width: 140px;
+  padding: 8px 16px;
+  text-align: center;
+  font-size: 18px;
+  font-family: "Nunito", sans-serif;
+  background-color: #fcaa23;
+  border-radius: 5px;
+  color: #fff;
+  transition: 0.5s linear;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.start-game-sprint:hover {
+  color: #4a4b4e;
+  box-shadow: 0px 4px 6px rgb(0 0 0 / 25%);
+}
+
+.start-game-audio-call {
+  background-color: #aa96dd;
+}
+
+.start-game-audio-call:hover {
+  color: #4a4b4e;
+  box-shadow: 0px 4px 6px rgb(0 0 0 / 25%);
+}
+
+.games-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-items: center;
+}
+
+.level-info__left,
+.level-info__right {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 40%;
+  height: 150px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.level-info__left {
+  top: -170px;
+  left: 5%;
+}
+
+.level-info__right {
+  top: -220px;
+  right: 5%;
+}
+
+.level-partial,
+.level-full {
+  padding: 10px 15px;
+  color: #fff;
+}
+
+.level-partial {
+  font-size: 40px;
+}
+
+.level-full {
+  text-align: right;
+  font-size: 22px;
+}
+
+.basic .level-info__left {
+  background-color: rgb(84, 189, 207);
+}
+
+.basic .level-info__right {
+  background-color: rgb(8, 107, 124);
+}
+
+.intermediate .level-info__left {
+  background-color: rgb(247, 191, 109);
+}
+
+.intermediate .level-info__right {
+  background-color: rgb(240, 160, 40);
+}
+
+
+.advanced .level-info__left {
+  background-color: rgb(248, 185, 169);
+}
+
+.advanced .level-info__right {
+  background-color: rgb(199, 95, 81);
+}
+
+.games-level input{
+  transition: 0.5s linear;
+}
+.games-level input:checked~label div {
+  transform: scale(0.6);
+  transition: 0.5s linear;
+  border: 5px solid #aa96dd;
+}
+
+@media (max-width: 1500px) {
+  .level-full {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .level-full {
+    display: none;
+  }
+}
+
+@media (max-width: 1100px) {
+  .buttons__block h2 {
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 800px) {
+  .buttons__block h2 {
+    font-size: 22px;
+  }
+
+  .basic {
+    height: 50px;
+  }
+
+  .intermediate {
+    height: 100px;
+  }
+
+  .advanced {
+    height: 150px;
+  }
+
+  .basic::before,
+  .intermediate::before,
+  .advanced::before {
+    top: -24px;
+    height: 25px;
+  }
+
+  .level-info__left,
+  .level-info__right {
+    height: 80px;
+  }
+
+  .level-info__right {
+    top: -120px;
+  }
+
+  .level-info__left {
+    top: -100px;
+  }
+}
+
+@media (max-width: 650px) {
+  .level-partial {
+    padding: 5px;
+    font-size: 26px;
+  }
+  .button-start{
+    padding: 2px 10px;
+  }
+
+  .buttons__block h2 {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 500px) {
+  .page {
+    padding: 0;
+  }
+
+  .buttons {
+    padding: 100px 0px 0px 0px;
+  }
+
+  .level-partial {
+    font-size: 20px;
+  }
+
+  .level-info__left,
+  .level-info__right {
+    top: -60px;
+    height: 50px;
+  }
+
+  .buttons__block h2,
+  .basic::before,
+  .intermediate::before,
+  .advanced::before {
+    display: none;
+  }
+
+  .basic,
+  .intermediate,
+  .advanced {
+    height: 50px;
+  }
+}
