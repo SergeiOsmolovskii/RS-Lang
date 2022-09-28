@@ -1,3 +1,5 @@
+import { baseUrl } from "./api";
+
 export interface IWords {
     id: string,
     group: number,
@@ -16,7 +18,7 @@ export interface IWords {
 }
 
 export const getWords = async(page: number, group: number) => {
-  const response = await fetch(`https://rs-lang-learn.herokuapp.com/words?page=${page}&group=${group}`, {
+  const response = await fetch(`${baseUrl}/words/?page=${page}&group=${group}`, {
     headers: {
       'Accept': 'application/json',
     },

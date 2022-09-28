@@ -7,7 +7,7 @@ export const storage = {
 	isPlayed: false,
 }
 
-export const baseUrl = 'https://rs-lang-learn.herokuapp.com';
+export const baseUrl = 'https://rs-lang-backend2021q3.herokuapp.com';
 
 export enum Path {
 	words = '/words',
